@@ -1909,5 +1909,3 @@ int getLineNumber(void) {
     return current_line;
 }
 
-#include "main.c"
-
