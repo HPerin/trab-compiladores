@@ -11,10 +11,8 @@ int main(int argc, char ** argv) {
 		printf ("Erro na abertura.");
 	yyin = file;
 	initMe();
-	while(isRunning())	
-		{
-		switch (yylex())
-			{
+	while(isRunning()) {
+		switch (yylex()) {
 			case KW_INT: printf("int @ linha %d \n", getLineNumber()); break;
 			case KW_REAL: printf("real @ linha %d \n", getLineNumber()); break;
 			case KW_BOOL: printf("bool @ linha %d \n", getLineNumber()); break;
@@ -25,8 +23,6 @@ int main(int argc, char ** argv) {
 			case KW_INPUT: printf("input @ linha %d \n", getLineNumber()); break;
 			case KW_OUTPUT: printf("output @ linha %d \n", getLineNumber()); break;
 			case KW_RETURN: printf("return @ linha %d \n", getLineNumber()); break;
-
-			}
-
 		}
+	}
 }

@@ -1,0 +1,4 @@
+int abc;
+for 1 2 33
+"ola"
+'a'
