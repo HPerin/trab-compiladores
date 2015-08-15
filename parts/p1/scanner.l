@@ -3,12 +3,16 @@
 #include "hash.h"
 #include "tokens.h"
 
+
+
 hash_map_t * hash_map;
 
 int current_line = 0;
 int running = 1;
 
 %}
+
+%x COMMENT
 
 %%
 
@@ -22,7 +26,8 @@ int running = 1;
 "input"                         { return KW_INPUT; }
 "output"                        { return KW_OUTPUT; }
 "return"                        { return KW_RETURN; }
-
+"/*"                            { BEGIN COMMENT; }
+"//".*                          { }
 [,;:(){}[]+-*/<>=!&$]           { return yytext[0]; }
 "<="                            { return OPERATOR_LE; }
 ">="                            { return OPERATOR_GE; }
@@ -30,9 +35,14 @@ int running = 1;
 "!="                            { return OPERATOR_NE; }
 "&&"                            { return OPERATOR_AND; }
 "||"                            { return OPERATOR_OR; }
-
 [a-zA-Z][_a-zA-Z]+              { hash_map_insert(hash_map, yytext); }
 "\n"                            { current_line++; }
+
+<COMMENT>.
+<COMMENT>"\n"                   { current_line++;}
+<COMMENT>"*/"                   { BEGIN INITIAL; }
+
+
 .                               { }
 
 %%
