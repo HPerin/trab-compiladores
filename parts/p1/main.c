@@ -3,9 +3,11 @@
 #include <stdio.h>
 #include "tokens.h"
 
+extern int getLineNumber();
+extern void initMe();
+extern int isRunning();
+
 int main(int argc, char ** argv) {
-
-
 	FILE* file;
 	if (!(file = fopen("teste.txt", "r")))
 		printf ("Erro na abertura.");
