@@ -1,7 +1,7 @@
 
 EXEC_FILE = etapa1
 SOURCE_FILES = $(wildcard *.c)
-OBJECT_FILES = $(patsubst %.c, %.o, $(SOURCE_FILES)) lex.yy.o
+OBJECT_FILES = lex.yy.o $(patsubst %.c, %.o, $(SOURCE_FILES))
 
 all: $(EXEC_FILE)
 	@echo "source: $(SOURCE_FILES)"
@@ -17,4 +17,4 @@ lex.yy.c lex.yy.h: scanner.l
 	gcc -c $<
 
 clean:
-	rm $(wildcard *.o) $(EXEC_FILE) *~ lex.yy.c lex.yy.h
+	rm $(wildcard *.o) $(EXEC_FILE) *~ lex.yy.c lex.yy.h lex.yy.h.gch
