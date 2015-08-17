@@ -8,6 +8,8 @@ auhhuashuashashuas
 
 %%^^
 
+"ola"
+
 ++
 int a;
 int b;

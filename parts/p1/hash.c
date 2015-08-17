@@ -33,6 +33,11 @@ void hash_map_insert(hash_map_t * hash_map, int type, const char *data) {
     hash_node_t * hash_node;
     int hash;
 
+    hash_node = hash_map_search(hash_map, data);
+    if (hash_node != NULL) {
+        return;
+    }
+
     hash_node = malloc(sizeof(hash_node_t));
     hash_node->data = calloc(strlen(data), sizeof(char));
     hash_node->type = type;

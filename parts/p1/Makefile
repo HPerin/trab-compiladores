@@ -17,4 +17,4 @@ lex.yy.c lex.yy.h: scanner.l
 	gcc -c $<
 
 clean:
-	rm $(wildcard *.o) $(EXEC_FILE) *~ lex.yy.c lex.yy.h lex.yy.h.gch
+	rm -f $(wildcard *.o) $(EXEC_FILE) *~ lex.yy.c lex.yy.h lex.yy.h.gch *.tgz
