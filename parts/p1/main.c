@@ -4,7 +4,7 @@
 #include "tokens.h"
 
 int main(int argc, char ** argv) {
-	
+
 
 	FILE* file;
 	if (!(file = fopen("teste.txt", "r")))
@@ -13,6 +13,7 @@ int main(int argc, char ** argv) {
 	initMe();
 	while(isRunning()) {
 		switch (yylex()) {
+			case TOKEN_ERROR: printf("error |%s| @ linha %d \n", yytext, getLineNumber()); break;
 			case KW_INT: printf("int @ linha %d \n", getLineNumber()); break;
 			case KW_REAL: printf("real @ linha %d \n", getLineNumber()); break;
 			case KW_BOOL: printf("bool @ linha %d \n", getLineNumber()); break;
@@ -23,6 +24,7 @@ int main(int argc, char ** argv) {
 			case KW_INPUT: printf("input @ linha %d \n", getLineNumber()); break;
 			case KW_OUTPUT: printf("output @ linha %d \n", getLineNumber()); break;
 			case KW_RETURN: printf("return @ linha %d \n", getLineNumber()); break;
+			default: printf("token |%s| @ linha %d \n", yytext, getLineNumber()); break;
 		}
 	}
 }
