@@ -29,15 +29,15 @@ int running = 1;
 "return"                                    { return KW_RETURN; }
 "/*"                                        { BEGIN COMMENT; }
 "//".*                                      { }
-[\-\,\;\:\(\)\{\}\[\]\+\*\/\<\>\=\!\&\$]      { return yytext[0]; }
+[\-\,\;\:\(\)\{\}\[\]\+\*\/\<\>\=\!\&\$]    { return yytext[0]; }
 "<="                                        { return OPERATOR_LE; }
 ">="                                        { return OPERATOR_GE; }
 "=="                                        { return OPERATOR_EQ; }
 "!="                                        { return OPERATOR_NE; }
 "&&"                                        { return OPERATOR_AND; }
 "||"                                        { return OPERATOR_OR; }
-"false"                                     { return LIT_FALSE; }
-"true"                                      { return LIT_TRUE; }
+"FALSE"                                     { hash_map_insert(hash_map, LIT_FALSE, yytext); return LIT_FALSE; }
+"TRUE"                                      { hash_map_insert(hash_map, LIT_TRUE, yytext); return LIT_TRUE; }
 '[a-zA-Z]'                                  { hash_map_insert(hash_map, LIT_CHAR, yytext); return LIT_CHAR; }
 \"[^\"]*\"                                  { hash_map_insert(hash_map, LIT_STRING, yytext); return LIT_STRING; }
 [0-9]+							            { hash_map_insert(hash_map, LIT_INTEGER, yytext); return LIT_INTEGER; }

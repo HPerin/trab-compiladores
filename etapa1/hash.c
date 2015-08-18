@@ -22,7 +22,7 @@ int get_hash(const char * data) {
 hash_map_t *hash_map_new() {
     hash_map_t * hash_map;
 
-    hash_map = malloc(sizeof(hash_map));
+    hash_map = calloc(1, sizeof(hash_map));
     hash_map->nodes = calloc(HASH_MAP_INITIAL_SIZE, sizeof(hash_node_t*));
     hash_map->size = 0;
 
@@ -38,22 +38,14 @@ void hash_map_insert(hash_map_t * hash_map, int type, const char *data) {
         return;
     }
 
-    hash_node = malloc(sizeof(hash_node_t));
+    hash_node = calloc(1, sizeof(hash_node_t));
     hash_node->data = calloc(strlen(data), sizeof(char));
     hash_node->type = type;
     strcpy(hash_node->data, data);
-    hash_node->next = NULL;
 
     hash = get_hash(data);
-    if (hash_map->nodes[hash] == NULL) {
-        hash_map->nodes[hash] = hash_node;
-    } else {
-        hash_node_t * hash_node_aux = hash_map->nodes[hash];
-        while(hash_node_aux->next != NULL)
-            hash_node_aux = hash_node_aux->next;
-
-        hash_node_aux->next = hash_node;
-    }
+    hash_node->next = hash_map->nodes[hash];
+    hash_map->nodes[hash] = hash_node;
 
     hash_map->size++;
 }
