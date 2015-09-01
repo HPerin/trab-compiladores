@@ -29,13 +29,13 @@ hash_map_t *hash_map_new() {
     return hash_map;
 }
 
-void hash_map_insert(hash_map_t * hash_map, int type, const char *data) {
+hash_node_t * hash_map_insert(hash_map_t * hash_map, int type, const char *data) {
     hash_node_t * hash_node;
     int hash;
 
     hash_node = hash_map_search(hash_map, data);
     if (hash_node != NULL) {
-        return;
+        //return;
     }
 
     hash_node = calloc(1, sizeof(hash_node_t));
@@ -48,6 +48,9 @@ void hash_map_insert(hash_map_t * hash_map, int type, const char *data) {
     hash_map->nodes[hash] = hash_node;
 
     hash_map->size++;
+
+   return hash_node;
+
 }
 
 hash_node_t * hash_map_search(hash_map_t * hash_map, const char *data) {

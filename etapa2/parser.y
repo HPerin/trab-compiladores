@@ -45,8 +45,70 @@
 
 %%
 
-program: KW_INPUT
+program: declaracoes_globais program ;
+	| ;
 
+declaracoes_globais: declaracao_variavel ';'
+		 | declaracao_vetor ';' 
+		 | declaracao_funcao ;
+
+declaracao_variavel: tipo TK_IDENTIFIER ':' literal ;
+
+declaracao_vetor: tipo TK_IDENTIFIER '[' LIT_INTEGER ']' 
+		| tipo TK_IDENTIFIER '[' LIT_INTEGER ']' ':' inicializacao_vetor ;
+
+inicializacao_vetor: literal inicializacao_vetor ;
+	        | ;
+
+declaracao_funcao: tipo TK_IDENTIFIER '(' parametros ')' bloco ;
+
+tipo: KW_INT | KW_CHAR | KW_REAL | KW_BOOL ;
+
+literal: LIT_INTEGER | LIT_CHAR | LIT_STRING | LIT_TRUE | LIT_FALSE ;
+
+bloco: '{' lista_comandos '}' ;
+
+lista_comandos: comando ';' lista_comandos ;
+	 | ;
+
+comando: TK_IDENTIFIER ':''=' expressao
+	 | expressao '='':' TK_IDENTIFIER 
+	 | TK_IDENTIFIER '['expressao']' ':''=' expressao
+	 | expressao '='':' TK_IDENTIFIER '['expressao']' 
+	 | KW_INPUT TK_IDENTIFIER
+	 | KW_OUTPUT lista_output
+	 | KW_RETURN expressao
+	 | controle_fluxo
+	 | bloco // (?)
+	 | ;
+
+controle_fluxo: KW_IF '('expressao')' comando
+	 | KW_IF '('expressao')' comando KW_ELSE comando
+	 | KW_IF '('expressao')' comando KW_LOOP ;
+
+parametros: parametro resto_parametros ;
+resto_parametros: ',' parametros
+	 | ;
+
+parametro: tipo TK_IDENTIFIER ;
+
+lista_output: expressao resto_output ;
+resto_output: ',' lista_output
+	 | ;
+
+expressao: TK_IDENTIFIER
+	 | TK_IDENTIFIER '['expressao']'
+	 | literal
+	 | expressao '+' expressao
+	 | expressao '-' expressao
+	 | expressao '*' expressao
+	 | expressao '/' expressao
+	 | expressao OPERATOR_LE expressao
+	 | expressao OPERATOR_GE expressao
+	 | expressao OPERATOR_EQ expressao
+	 | expressao OPERATOR_NE expressao
+	 | expressao OPERATOR_AND expressao
+	 | expressao OPERATOR_OR expressao ;
 
 
 %%

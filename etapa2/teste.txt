@@ -1,1 +1,7 @@
-input
+int a:5;
+
+int main()
+{
+a:=4;
+}
+
