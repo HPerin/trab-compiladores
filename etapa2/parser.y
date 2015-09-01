@@ -4,13 +4,13 @@
 #include "hash.h"
 %}
 
-%token UNDEFINED     1
-%token TK_IDENTIFIER 2
-%token LIT_INTEGER   3
-%token LIT_FALSE     4
-%token LIT_TRUE	     5
-%token LIT_CHAR      6
-%token LIT_STRING    7
+%token<symbol> UNDEFINED     1
+%token<symbol> TK_IDENTIFIER 2
+%token<symbol> LIT_INTEGER   3
+%token<symbol> LIT_FALSE     4
+%token<symbol> LIT_TRUE	     5
+%token<symbol> LIT_CHAR      6
+%token<symbol> LIT_STRING    7
 
 %token KW_INT        256
 %token KW_REAL       257
@@ -37,6 +37,10 @@
 %left '+' '-'
 %left '*' '%'
 
+%union
+{
+	hash_node_t* symbol;
+}
 
 
 %%

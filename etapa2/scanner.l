@@ -10,6 +10,7 @@ hash_map_t * hash_map;
 int current_line = 1;
 int running = 1;
 
+
 %}
 
 %x COMMENT
@@ -38,10 +39,10 @@ int running = 1;
 "||"                                        { return OPERATOR_OR; }
 "false"                                     { return LIT_FALSE; }
 "true"                                      { return LIT_TRUE; }
-'[a-zA-Z]'                                  { hash_map_insert(hash_map, LIT_CHAR, yytext); return LIT_CHAR; }
-\"[^\"]*\"                                  { hash_map_insert(hash_map, LIT_STRING, yytext); return LIT_STRING; }
-[0-9]+							            { hash_map_insert(hash_map, LIT_INTEGER, yytext); return LIT_INTEGER; }
-[a-zA-Z][_a-zA-Z]*                          { hash_map_insert(hash_map, TK_IDENTIFIER, yytext); return TK_IDENTIFIER; }
+'[a-zA-Z]'                                  { hash_map_insert(hash_map, LIT_CHAR, yytext); yylval.symbol = hash_map_search(hash_map, yytext); return LIT_CHAR; }
+\"[^\"]*\"                                  { hash_map_insert(hash_map, LIT_STRING, yytext); yylval.symbol = hash_map_search(hash_map, yytext); return LIT_STRING; }
+[0-9]+					    { hash_map_insert(hash_map, LIT_INTEGER, yytext); yylval.symbol = hash_map_search(hash_map, yytext); return LIT_INTEGER; }
+[a-zA-Z][_a-zA-Z]*                          { hash_map_insert(hash_map, TK_IDENTIFIER, yytext); yylval.symbol = hash_map_search(hash_map, yytext); return TK_IDENTIFIER; }
 "\n"                                        { current_line++; }
 
 <COMMENT>"\n"                               { current_line++; }

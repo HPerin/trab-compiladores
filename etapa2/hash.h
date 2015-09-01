@@ -19,7 +19,7 @@ typedef struct hash_map {
 } hash_map_t;
 
 hash_map_t * hash_map_new();
-void hash_map_insert(hash_map_t * hash_map, int type, const char * data);
+void hash_map_insert(hash_map_t * hash_map, int type, const char *data);
 hash_node_t * hash_map_search(hash_map_t * hash_map, const char * data);
 void hash_map_print(hash_map_t * hash_map);
 
