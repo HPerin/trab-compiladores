@@ -45,7 +45,7 @@
 
 %%
 
-program: declaracoes_globais program ;
+program: declaracoes_globais program 
 	| ;
 
 declaracoes_globais: declaracao_variavel ';'
@@ -60,7 +60,10 @@ declaracao_vetor: tipo TK_IDENTIFIER '[' LIT_INTEGER ']'
 inicializacao_vetor: literal inicializacao_vetor ;
 	        | ;
 
-declaracao_funcao: tipo TK_IDENTIFIER '(' parametros ')' bloco ;
+declaracao_funcao: tipo TK_IDENTIFIER '(' parametros ')' variaveis_locais bloco ';' ;
+variaveis_locais: declaracao_variavel ';' variaveis_locais 
+		| ;
+
 
 tipo: KW_INT | KW_CHAR | KW_REAL | KW_BOOL ;
 
@@ -68,8 +71,10 @@ literal: LIT_INTEGER | LIT_CHAR | LIT_STRING | LIT_TRUE | LIT_FALSE ;
 
 bloco: '{' lista_comandos '}' ;
 
-lista_comandos: comando ';' lista_comandos ;
+lista_comandos: comando resto_comandos ;
 	 | ;
+resto_comandos: ';' lista_comandos
+	| ;
 
 comando: TK_IDENTIFIER ':''=' expressao
 	 | expressao '='':' TK_IDENTIFIER 
@@ -79,7 +84,7 @@ comando: TK_IDENTIFIER ':''=' expressao
 	 | KW_OUTPUT lista_output
 	 | KW_RETURN expressao
 	 | controle_fluxo
-	 | bloco // (?)
+	 | bloco 
 	 | ;
 
 controle_fluxo: KW_IF '('expressao')' comando
@@ -91,6 +96,7 @@ resto_parametros: ',' parametros
 	 | ;
 
 parametro: tipo TK_IDENTIFIER ;
+	 | ;
 
 lista_output: expressao resto_output ;
 resto_output: ',' lista_output
@@ -108,7 +114,15 @@ expressao: TK_IDENTIFIER
 	 | expressao OPERATOR_EQ expressao
 	 | expressao OPERATOR_NE expressao
 	 | expressao OPERATOR_AND expressao
-	 | expressao OPERATOR_OR expressao ;
+	 | expressao OPERATOR_OR expressao 
+	 | expressao '<' expressao
+	 | expressao '>' expressao 
+	 | TK_IDENTIFIER '(' parametros_passados ')' ;
+
+parametros_passados: expressao resto_parametros_passados ;
+		| ;
+resto_parametros_passados: ',' parametros_passados
+		| ;
 
 
 %%
@@ -116,7 +130,8 @@ expressao: TK_IDENTIFIER
 
 int yyerror(char * str){
 
-	printf("yyerror\n");
+	printf("Erro sintatico na linha %d!\n", getLineNumber());
+	printf("-----------------\n");
 	exit(3);
 }
 
