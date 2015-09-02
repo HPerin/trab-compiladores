@@ -44,11 +44,11 @@
 
 
 %%
-
-program: declaracao_funcoes declaracao_variaveis_globais
+program: declaracao_funcoes  
 	| ;
 
 declaracao_funcoes: declaracao_funcao ';' declaracao_funcoes
+	|declaracao_variaveis_globais
 	| ;
 
 declaracao_variaveis_globais: declaracao_variavel ';' declaracao_variaveis_globais
@@ -122,6 +122,7 @@ expressao: TK_IDENTIFIER
 	 | expressao OPERATOR_OR expressao 
 	 | expressao '<' expressao
 	 | expressao '>' expressao 
+	 | '(' expressao ')'
 	 | TK_IDENTIFIER '(' parametros_passados ')' ;
 
 parametros_passados: expressao resto_parametros_passados ;
