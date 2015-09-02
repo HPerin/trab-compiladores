@@ -1,3 +1,5 @@
+all:	etapa2
+
 etapa2: lex.yy.o main.o hash.o y.tab.o
 	gcc -o etapa2 lex.yy.o main.o hash.o y.tab.o
 
