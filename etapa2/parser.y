@@ -45,12 +45,15 @@
 
 %%
 
-program: declaracoes_globais program 
+program: declaracao_funcoes declaracao_variaveis_globais
 	| ;
 
-declaracoes_globais: declaracao_variavel ';'
-		 | declaracao_vetor ';' 
-		 | declaracao_funcao ';' ;
+declaracao_funcoes: declaracao_funcao ';' declaracao_funcoes
+	| ;
+
+declaracao_variaveis_globais: declaracao_variavel ';' declaracao_variaveis_globais
+	| declaracao_vetor ';' declaracao_variaveis_globais
+	| ;
 
 declaracao_variavel: tipo TK_IDENTIFIER ':' literal ;
 
