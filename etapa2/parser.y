@@ -50,7 +50,7 @@ program: declaracoes_globais program
 
 declaracoes_globais: declaracao_variavel ';'
 		 | declaracao_vetor ';' 
-		 | declaracao_funcao ;
+		 | declaracao_funcao ';' ;
 
 declaracao_variavel: tipo TK_IDENTIFIER ':' literal ;
 
@@ -60,8 +60,8 @@ declaracao_vetor: tipo TK_IDENTIFIER '[' LIT_INTEGER ']'
 inicializacao_vetor: literal inicializacao_vetor ;
 	        | ;
 
-declaracao_funcao: tipo TK_IDENTIFIER '(' parametros ')' variaveis_locais bloco ';' 
-		|  tipo TK_IDENTIFIER '(' ')' variaveis_locais bloco ';' ;
+declaracao_funcao: tipo TK_IDENTIFIER '(' parametros ')' variaveis_locais comando  
+		|  tipo TK_IDENTIFIER '(' ')' variaveis_locais comando ;
 
 
 variaveis_locais: declaracao_variavel ';' variaveis_locais 
