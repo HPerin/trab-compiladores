@@ -60,7 +60,10 @@ declaracao_vetor: tipo TK_IDENTIFIER '[' LIT_INTEGER ']'
 inicializacao_vetor: literal inicializacao_vetor ;
 	        | ;
 
-declaracao_funcao: tipo TK_IDENTIFIER '(' parametros ')' variaveis_locais bloco ';' ;
+declaracao_funcao: tipo TK_IDENTIFIER '(' parametros ')' variaveis_locais bloco ';' 
+		|  tipo TK_IDENTIFIER '(' ')' variaveis_locais bloco ';' ;
+
+
 variaveis_locais: declaracao_variavel ';' variaveis_locais 
 		| ;
 
@@ -91,12 +94,11 @@ controle_fluxo: KW_IF '('expressao')' comando
 	 | KW_IF '('expressao')' comando KW_ELSE comando
 	 | KW_IF '('expressao')' comando KW_LOOP ;
 
-parametros: parametro resto_parametros ;
+parametros: tipo TK_IDENTIFIER resto_parametros ;
 resto_parametros: ',' parametros
 	 | ;
 
-parametro: tipo TK_IDENTIFIER ;
-	 | ;
+
 
 lista_output: expressao resto_output ;
 resto_output: ',' lista_output
