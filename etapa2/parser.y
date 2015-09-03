@@ -44,10 +44,8 @@
 
 
 %%
-program: declaracao_funcoes  
-	| ;
 
-declaracao_funcoes: declaracao_funcao ';' declaracao_funcoes
+program: declaracao_funcao ';' program
 	|declaracao_variaveis_globais
 	| ;
 
