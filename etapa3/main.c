@@ -6,21 +6,29 @@
 
 int main(int argc, char ** argv){
 
-	if(argc!=2){
+	if(argc!=3){
 		printf("-----------------\n");
-		printf("Usage: etapa2 <arquivo>\n");
+		printf("Usage: etapa3 <input> <output>\n");
 		printf("-----------------\n");
 		exit(1);
 
 	}
 	
-	FILE* file;
+	FILE* input;
+	FILE* output;
 
 	initMe();
 
-	if(!(file=fopen(argv[1], "r"))){
+	if(!(input=fopen(argv[1], "r"))){
 		printf("-----------------\n");
-		printf("Erro ao abrir %s!\n", argv[1]);
+		printf("Erro ao abrir input: %s !\n", argv[1]);
+		printf("-----------------\n");
+	        exit(1);
+	}
+
+	if(!(output=fopen(argv[2], "w"))){
+		printf("-----------------\n");
+		printf("Erro ao abrir output: %s !\n", argv[2]);
 		printf("-----------------\n");
 	        exit(1);
 	}
@@ -28,7 +36,7 @@ int main(int argc, char ** argv){
 	yyin = file;
 	
 	printf("-----------------\n");
-	printf("Iniciando parse!\n");
+	printf("Iniciando!\n");
 
 	yyparse();
 	
