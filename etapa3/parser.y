@@ -34,6 +34,7 @@
 %type<node> parametros_passados
 %type<node> resto_parametros_passados
 %type<node> tamanho
+%type<node> id
 
 
 %token KW_INT        256
@@ -78,11 +79,11 @@ declaracao_variaveis_globais: declaracao_variavel ';' declaracao_variaveis_globa
 	| declaracao_vetor ';' declaracao_variaveis_globais			   {$$ = ast_node_new(GLOBAL_VEC, 0); ast_node_add_son($$, $1); ast_node_add_son($$, $3);}
 	|									   {$$ = 0;}
 	;
-declaracao_variavel: tipo TK_IDENTIFIER ':' literal				   {$$ = ast_node_new(VARDEC, $2); ast_node_add_son($$, $1); ast_node_add_son($$, $4);}
+declaracao_variavel: tipo id ':' literal				  	   {$$ = ast_node_new(VARDEC, 0); ast_node_add_son($$, $1); ast_node_add_son($$, $2); ast_node_add_son($$, $4);}
 			;
-declaracao_vetor: tipo TK_IDENTIFIER '[' tamanho ']' 			 	   {$$ = ast_node_new(VECDEC_NOINIT, $2); ast_node_add_son($$, $1); ast_node_add_son($$, $4);}
-		| tipo TK_IDENTIFIER '[' tamanho ']' ':' inicializacao_vetor   	   {$$ = ast_node_new(VECDEC_INIT, $2); ast_node_add_son($$, $1); ast_node_add_son($$, $4); ast_node_add_son($$, $7);}
-		;
+declaracao_vetor: tipo id '[' tamanho ']' 			 	  	   {$$ = ast_node_new(VECDEC_NOINIT, 0); ast_node_add_son($$, $1); ast_node_add_son($$, $2); ast_node_add_son($$, $4);}
+		| tipo id '[' tamanho ']' ':' inicializacao_vetor   	  	   {$$ = ast_node_new(VECDEC_INIT, 0); ast_node_add_son($$, $1); ast_node_add_son($$, $2); ast_node_add_son($$, $4); ast_node_add_son($$, $7);}
+		;	
 
 tamanho: LIT_INTEGER								   {$$ = ast_node_new(SYMBOL, $1);}	
 	;
@@ -91,8 +92,8 @@ inicializacao_vetor: literal inicializacao_vetor 				   {$$ = ast_node_new(VECIN
 	        |								   {$$ = 0;}
 		;
 
-declaracao_funcao: tipo TK_IDENTIFIER '(' parametros ')' variaveis_locais comando  {$$ = ast_node_new(FUNDEC_PARAMS, $2); ast_node_add_son($$, $1); ast_node_add_son($$, $4); ast_node_add_son($$, $6); 																					       ast_node_add_son($$, $7);}
-		|  tipo TK_IDENTIFIER '(' ')' variaveis_locais comando 	   	   {$$ = ast_node_new(FUNDEC_NOPARAMS, $2); ast_node_add_son($$, $1); ast_node_add_son($$, $5); ast_node_add_son($$, $6);}
+declaracao_funcao: tipo id '(' parametros ')' variaveis_locais comando		   {$$ = ast_node_new(FUNDEC_PARAMS, 0); ast_node_add_son($$, $1); ast_node_add_son($$, $2); ast_node_add_son($$, $4); ast_node_add_son($$, $6); 																					       ast_node_add_son($$, $7);}
+		|  tipo id '(' ')' variaveis_locais comando 	   	  	   {$$ = ast_node_new(FUNDEC_NOPARAMS, 0); ast_node_add_son($$, $1); ast_node_add_son($$, $2); ast_node_add_son($$, $5); ast_node_add_son($$, $6);}
 		;
 
 variaveis_locais: declaracao_variavel ';' variaveis_locais 			   {$$ = ast_node_new(LOCAL_VAR,0); ast_node_add_son($$, $1); ast_node_add_son($$, $3);}		  
@@ -123,11 +124,11 @@ resto_comandos: ';' lista_comandos						   {$$ = $2;}
 	| 									   {$$ = 0;}
 	;
 
-comando: TK_IDENTIFIER ':''=' expressao						   {$$ = ast_node_new(ATTR, $1); ast_node_add_son($$, $4);}					
-	 | expressao '='':' TK_IDENTIFIER 					   {$$ = ast_node_new(ATTR_REV,$4); ast_node_add_son($$, $1);}
-	 | TK_IDENTIFIER '['expressao']' ':''=' expressao			   {$$ = ast_node_new(VEC_ATTR, $1); ast_node_add_son($$, $3); ast_node_add_son($$, $7);}
-	 | expressao '='':' TK_IDENTIFIER '['expressao']' 			   {$$ = ast_node_new(VEC_ATTR_REV, $4); ast_node_add_son($$, $6); ast_node_add_son($$, $1);}
-	 | KW_INPUT TK_IDENTIFIER						   {$$ = ast_node_new(INPUT, $2);}
+comando: id ':''=' expressao						   	   {$$ = ast_node_new(ATTR, 0); ast_node_add_son($$, $1); ast_node_add_son($$, $4);}					
+	 | expressao '='':' id 					   		   {$$ = ast_node_new(ATTR_REV,0); ast_node_add_son($$, $1); ast_node_add_son($$, $4);}
+	 | id '['expressao']' ':''=' expressao			   		   {$$ = ast_node_new(VEC_ATTR, 0); ast_node_add_son($$, $1); ast_node_add_son($$, $3); ast_node_add_son($$, $7);}
+	 | expressao '='':' id '['expressao']' 					   {$$ = ast_node_new(VEC_ATTR_REV, 0); ast_node_add_son($$, $1); ast_node_add_son($$, $4); ast_node_add_son($$, $6);}
+	 | KW_INPUT id								   {$$ = ast_node_new(INPUT, 0); ast_node_add_son($$,$2);}
 	 | KW_OUTPUT lista_output						   {$$ = ast_node_new(OUTPUT, 0); ast_node_add_son($$, $2);}
 	 | KW_RETURN expressao							   {$$ = ast_node_new(RETURN, 0); ast_node_add_son($$, $2);}
 	 | controle_fluxo							   {$$ = $1;}
@@ -139,7 +140,7 @@ controle_fluxo: KW_IF '('expressao')' comando					   {$$ = ast_node_new(IF, 0); 
 	 | KW_IF '('expressao')' comando KW_ELSE comando			   {$$ = ast_node_new(IF_ELSE, 0); ast_node_add_son($$,$3); ast_node_add_son($$, $5); ast_node_add_son($$, $7);} 
 	 | KW_IF '('expressao')' comando KW_LOOP 				   {$$ = ast_node_new(IF_LOOP, 0); ast_node_add_son($$, $3); ast_node_add_son($$,$5);}
 	 ;
-parametros: tipo TK_IDENTIFIER resto_parametros 				   {$$ = ast_node_new(FUNC_DEC_PARAMS, $2); ast_node_add_son($$, $1); ast_node_add_son($$, $3);}
+parametros: tipo id resto_parametros 				  	           {$$ = ast_node_new(FUNC_DEC_PARAMS, 0); ast_node_add_son($$, $1); ast_node_add_son($$, $2); ast_node_add_son($$, $3);}
 	;
 		
 resto_parametros: ',' parametros						   {$$ = $2;}
@@ -153,8 +154,8 @@ resto_output: ',' lista_output							   {$$ = $2;}
 	 | 									   {$$ = 0;}
 	 ;
 
-expressao: TK_IDENTIFIER							   {$$ = ast_node_new(SYMBOL, $1);}
-	 | TK_IDENTIFIER '['expressao']'					   {$$ = ast_node_new(VECTOR, $1); ast_node_add_son($$, $3);}
+expressao: id							  		   {$$ = ast_node_new(SYMBOL, 0); ast_node_add_son($$, $1);}
+	 | id '['expressao']'							   {$$ = ast_node_new(VECTOR, 0); ast_node_add_son($$, $1); ast_node_add_son($$, $3);}
 	 | literal								   {$$ = $1;}
 	 | expressao '+' expressao						   {$$ = ast_node_new(ADD, 0); ast_node_add_son($$, $1); ast_node_add_son($$, $3);}
 	 | expressao '-' expressao						   {$$ = ast_node_new(SUB, 0); ast_node_add_son($$, $1); ast_node_add_son($$, $3);}
@@ -169,7 +170,7 @@ expressao: TK_IDENTIFIER							   {$$ = ast_node_new(SYMBOL, $1);}
 	 | expressao '<' expressao						   {$$ = ast_node_new(LESS, 0); ast_node_add_son($$, $1); ast_node_add_son($$, $3);}
 	 | expressao '>' expressao 						   {$$ = ast_node_new(GREATER, 0); ast_node_add_son($$, $1); ast_node_add_son($$, $3);}
 	 | '(' expressao ')'							   {$$ = ast_node_new(EXP, 0); ast_node_add_son($$, $2);}
-	 | TK_IDENTIFIER '(' parametros_passados ')' 				   {$$ = ast_node_new(FUNC_CALL, $1); ast_node_add_son($$, $3);}
+	 | id '(' parametros_passados ')' 				 	   {$$ = ast_node_new(FUNC_CALL, 0); ast_node_add_son($$, $1); ast_node_add_son($$, $3);}
 	 ;
 
 parametros_passados: expressao resto_parametros_passados 			   {$$ = ast_node_new(FUNC_CALL_PARAMS, 0); ast_node_add_son($$, $1); ast_node_add_son($$, $2);}
@@ -179,7 +180,8 @@ resto_parametros_passados: ',' parametros_passados				   {$$ = $2;}
 		| 								   {$$ = 0;}
 	   	;
 
-
+id: TK_IDENTIFIER								   {$$ = ast_node_new(SYMBOL, $1);}
+	;
 %%
 
 
