@@ -186,7 +186,7 @@ void generate_code(FILE       *output,
 			fprintf (output, ")\n");
 			generate_code (output, ast_son_get(aux, 1)); // comando
 			fprintf (output, "else\n");
-			generate_code (output, ast_son_get(aux, 1)); // comando
+			generate_code (output, ast_son_get(aux, 2)); // comando
 			break;
 
 		case IF_LOOP: // 27
