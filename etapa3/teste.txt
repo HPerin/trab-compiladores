@@ -1,7 +1,7 @@
 int main(int a, char b, bool d)
 int j:1;
   {
-  output "Digite um numero: ";
+  output "Digite um numero: ";;;;;;;;;;;;;;;;
   if (i<10 || j>=20 && ant(b))
     {
     a := incn(derp('a', "bfsdf", 2),1);
@@ -15,7 +15,7 @@ int incn (int x, int n)
   {
 	if(2+3){
   return a[5]+1*(2*a);}
-	else return b ;
+	else return b;
 
 	a =: vet[2];
 	vet[a+2] := 43;
