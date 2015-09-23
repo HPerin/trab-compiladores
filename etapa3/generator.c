@@ -5,34 +5,34 @@ void generate_code(FILE       *output,
 	ast_node_t * aux, * son;
 
 	aux = node;
-	while(aux != NULL) {
+	if(aux != NULL) {
 		switch(aux->type) {
 
-		case FUNDEC:
+		case FUNDEC: // 1
 			//printf("/*FUNDEC*/");
 			generate_code(output, ast_son_get(aux, 0)); // declaracao_funcao
 			fprintf (output, ";\n");
 			break;
 
-		case GLOBAL_VAR:
+		case GLOBAL_VAR: // 2
 			break;
 
-		case GLOBAL_VEC:
+		case GLOBAL_VEC: // 3
 			break;
 
-		case VARDEC:
+		case VARDEC: // 4
 			break;
 
-		case VECDEC_NOINIT:
+		case VECDEC_NOINIT: // 5
 			break;
 
-		case VECDEC_INIT:
+		case VECDEC_INIT: // 6
 			break;
 
-		case VECINIT:
+		case VECINIT: // 7
 			break;
 
-		case FUNDEC_PARAMS:
+		case FUNDEC_PARAMS: // 8
 			//printf("/*FUNDEC_PARAMS*/");
 			generate_code (output, ast_son_get(aux, 0));
 			generate_code (output, ast_son_get(aux, 1));
@@ -41,7 +41,11 @@ void generate_code(FILE       *output,
 			fprintf (output, " )");
 			break;
 
-		case FUNDEC_NOPARAMS:
+		case FUNDEC_NOPARAMS: // 9
+			generate_code (output, ast_son_get(aux, 0));
+			generate_code (output, ast_son_get(aux, 1));
+			fprintf (output, "( ");
+			fprintf (output, " )");
 			break;
 
 		case LOCAL_VAR:
@@ -165,7 +169,5 @@ void generate_code(FILE       *output,
 		default:
 			break;
 		}
-
-		aux = aux->next;
 	}
 }
