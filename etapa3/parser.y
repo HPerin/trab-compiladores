@@ -71,7 +71,7 @@
 %%
 
 program: declaracao_funcao ';' program						   {$$ = ast_node_new(FUNDEC, 0); ast_node_add_son($$, $1); ast_node_add_son($$, $3);}
-	|declaracao_variaveis_globais						   {$$ = $1;}
+	|declaracao_variaveis_globais						   {$$ = $1; ast_print($$);}
 	|									   {$$ = 0;}
 	;
 declaracao_variaveis_globais: declaracao_variavel ';' declaracao_variaveis_globais {$$ = ast_node_new(GLOBAL_VAR, 0); ast_node_add_son($$, $1); ast_node_add_son($$, $3);}

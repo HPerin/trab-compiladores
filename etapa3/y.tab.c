@@ -1397,7 +1397,7 @@ yyreduce:
 
   case 3:
 #line 74 "parser.y" /* yacc.c:1646  */
-    {(yyval.node) = (yyvsp[0].node);}
+    {(yyval.node) = (yyvsp[0].node); ast_print((yyval.node));}
 #line 1402 "y.tab.c" /* yacc.c:1646  */
     break;
 

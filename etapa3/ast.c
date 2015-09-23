@@ -28,6 +28,9 @@ ast_node_t *ast_node_new(int type, hash_node_t *hash_node) {
 void ast_node_add_son(ast_node_t *ast_node, ast_node_t *son) {
     ast_node_t * aux;
 
+    if (son == NULL)
+        return;
+
     if (ast_node->son == NULL) {
         ast_node->son = son;
         ast_node->son->next = NULL;
