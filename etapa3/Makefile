@@ -1,4 +1,4 @@
-all:	etapa2
+all:	etapa3
 
 etapa3: lex.yy.o main.o hash.o y.tab.o ast.o
 	gcc -o etapa3 lex.yy.o main.o hash.o y.tab.o ast.o
