@@ -125,8 +125,12 @@ void generate_code(FILE       *output,
 
 		case CMDLIST: // 17
 			generate_code (output, ast_son_get(aux, 0)); // comando
-			fprintf (output, ";\n");
-			generate_code (output, ast_son_get(aux, 1)); // lista_comandos
+			if (ast_son_get(aux, 0)) {
+				if (ast_son_get(aux, 0)->type != CMDLIST) {
+					fprintf (output, ";\n");
+					generate_code (output, ast_son_get(aux, 1)); // lista_comandos
+				}
+			}
 			break;
 
 		case ATTR: // 18
