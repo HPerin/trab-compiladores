@@ -1,7 +1,7 @@
 all:	etapa3
 
-etapa3: lex.yy.o main.o hash.o y.tab.o ast.o
-	gcc -o etapa3 lex.yy.o main.o hash.o y.tab.o ast.o
+etapa3: lex.yy.o main.o hash.o y.tab.o ast.o generator.o
+	gcc -o etapa3 lex.yy.o main.o hash.o y.tab.o ast.o generator.o
 
 main.o: main.c lex.yy.c
 	gcc -c main.c
@@ -11,6 +11,9 @@ hash.o: hash.c
 
 ast.o: ast.c
 	gcc -c ast.c
+
+generator.o: generator.c
+	gcc -c generator.c
 
 lex.yy.o: lex.yy.c
 	gcc -c lex.yy.c

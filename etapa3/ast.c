@@ -79,3 +79,14 @@ void ast_print_level(ast_node_t *ast_node, int level) {
 void ast_print(ast_node_t * ast_node) {
     ast_print_level(ast_node, 0);
 }
+
+ast_node_t * ast_son_get(ast_node_t * ast_node, int index) {
+    ast_node_t * son = ast_node->son;
+
+    while(index > 0 && ast_node != NULL) {
+        son = son->next;
+      	index--;
+    }
+
+    return son;
+}

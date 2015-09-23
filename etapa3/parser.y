@@ -12,6 +12,7 @@
 %token<symbol> LIT_CHAR      6
 %token<symbol> LIT_STRING    7
 
+%type<node> start
 %type<node> program
 %type<node> declaracao_variaveis_globais
 %type<node> declaracao_variavel
@@ -71,8 +72,11 @@
 
 %%
 
+start: program									   {$$ = $1; ast_print($$); generate_code(stdout, $$);}
+	;
+
 program: declaracao_funcao ';' program						   {$$ = ast_node_new(FUNDEC, 0); ast_node_add_son($$, $1); ast_node_add_son($$, $3);}
-	|declaracao_variaveis_globais						   {$$ = $1; ast_print($$);}
+	|declaracao_variaveis_globais						   {$$ = $1;}
 	|									   {$$ = 0;}
 	;
 declaracao_variaveis_globais: declaracao_variavel ';' declaracao_variaveis_globais {$$ = ast_node_new(GLOBAL_VAR, 0); ast_node_add_son($$, $1); ast_node_add_son($$, $3);}
