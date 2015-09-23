@@ -13,6 +13,12 @@ ast_node_t *ast_node_new(int type, hash_node_t *hash_node) {
     ast_node->hash_node = hash_node;
     ast_node->type = type;
 
+    printf("ast included: %d", type);
+    if(hash_node) {
+        printf(" / %s", hash_node->data);
+    }
+    printf("\n");
+
     ast_node->son = NULL;
     ast_node->next = NULL;
 
