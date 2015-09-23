@@ -3,7 +3,6 @@
 #include "ast.h"
 #include "y.tab.h"
 
-
 int main(int argc, char ** argv){
 
 	if(argc!=3){
@@ -34,6 +33,7 @@ int main(int argc, char ** argv){
 	}
 	
 	yyin = input;
+  	setoutput(output);
 	
 	printf("-----------------\n");
 	printf("Iniciando!\n");

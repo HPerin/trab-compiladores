@@ -37,8 +37,8 @@ int running = 1;
 "!="                                        { return OPERATOR_NE; }
 "&&"                                        { return OPERATOR_AND; }
 "||"                                        { return OPERATOR_OR; }
-"FALSE"                                     { return LIT_FALSE; }
-"TRUE"                                      { return LIT_TRUE; }
+"FALSE"                                     { hash_map_insert(hash_map, LIT_FALSE, "FALSE"); yylval.symbol = hash_map_search(hash_map, "FALSE"); return LIT_FALSE; }
+"TRUE"                                      { hash_map_insert(hash_map, LIT_TRUE, "TRUE"); yylval.symbol = hash_map_search(hash_map, "TRUE"); return LIT_TRUE; }
 '[a-zA-Z]'                                  { hash_map_insert(hash_map, LIT_CHAR, yytext); yylval.symbol = hash_map_search(hash_map, yytext); return LIT_CHAR; }
 \"[^\"]*\"                                  { hash_map_insert(hash_map, LIT_STRING, yytext); yylval.symbol = hash_map_search(hash_map, yytext); return LIT_STRING; }
 [0-9]+					    { hash_map_insert(hash_map, LIT_INTEGER, yytext); yylval.symbol = hash_map_search(hash_map, yytext); return LIT_INTEGER; }

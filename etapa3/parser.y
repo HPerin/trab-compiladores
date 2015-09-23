@@ -2,6 +2,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "ast.h"
+
+FILE * output = NULL;
 %}
 
 %token<symbol> UNDEFINED     1
@@ -72,7 +74,7 @@
 
 %%
 
-start: program									   {$$ = $1; ast_print($$); generate_code(stdout, $$);}
+start: program									   {$$ = $1; ast_print($$); if (output) generate_code(output, $$);}
 	;
 
 program: declaracao_funcao ';' program						   {$$ = ast_node_new(FUNDEC, 0); ast_node_add_son($$, $1); ast_node_add_son($$, $3);}
@@ -147,18 +149,18 @@ controle_fluxo: KW_IF '('expressao')' comando					   {$$ = ast_node_new(IF, 0); 
 parametros: tipo id resto_parametros 				  	           {$$ = ast_node_new(FUNC_DEC_PARAMS, 0); ast_node_add_son($$, $1); ast_node_add_son($$, $2); ast_node_add_son($$, $3);}
 	;
 		
-resto_parametros: ',' parametros						   {$$ = $2;}
+resto_parametros: ',' parametros						   {$$ = ast_node_new(FUNC_DEC_PARAMS_REST, 0); ast_node_add_son($$, $2);}
 	 | 									   {$$ = 0;}
 	 ;
 
 
 lista_output: expressao resto_output 						   {$$ = ast_node_new(OUTPUT_LIST, 0); ast_node_add_son($$, $1); ast_node_add_son($$, $2);}
 	;
-resto_output: ',' lista_output							   {$$ = $2;}
+resto_output: ',' lista_output							   {$$ = ast_node_new(OUTPUT_LIST_REST, 0); ast_node_add_son($$, $2);}
 	 | 									   {$$ = 0;}
 	 ;
 
-expressao: id							  		   {$$ = ast_node_new(SYMBOL, 0); ast_node_add_son($$, $1);}
+expressao: id							  		   {$$ = ast_node_new(ID_WORD, 0); ast_node_add_son($$, $1);}
 	 | id '['expressao']'							   {$$ = ast_node_new(VECTOR, 0); ast_node_add_son($$, $1); ast_node_add_son($$, $3);}
 	 | literal								   {$$ = $1;}
 	 | expressao '+' expressao						   {$$ = ast_node_new(ADD, 0); ast_node_add_son($$, $1); ast_node_add_son($$, $3);}
@@ -180,7 +182,7 @@ expressao: id							  		   {$$ = ast_node_new(SYMBOL, 0); ast_node_add_son($$, $
 parametros_passados: expressao resto_parametros_passados 			   {$$ = ast_node_new(FUNC_CALL_PARAMS, 0); ast_node_add_son($$, $1); ast_node_add_son($$, $2);}
 		| 								   {$$ = 0;}
 	        ;
-resto_parametros_passados: ',' parametros_passados				   {$$ = $2;}
+resto_parametros_passados: ',' parametros_passados				   {$$ = ast_node_new(FUNC_CALL_PARAMS_REST, 0); ast_node_add_son($$, $2);}
 		| 								   {$$ = 0;}
 	   	;
 
@@ -188,6 +190,9 @@ id: TK_IDENTIFIER								   {$$ = ast_node_new(SYMBOL, $1);}
 	;
 %%
 
+int setoutput(FILE * new_output) {
+	output = new_output;
+}
 
 int yyerror(char * str){
 
