@@ -84,8 +84,8 @@ declaracao_variavel: tipo TK_IDENTIFIER ':' literal				   {$$ = ast_node_new(VAR
 declaracao_vetor: tipo TK_IDENTIFIER '[' LIT_INTEGER ']' 			   {$$ = ast_node_new(VECDEC_NOINIT, $2); ast_node_add_son($$, $1); ast_node_add_son($$, $4);}
 		| tipo TK_IDENTIFIER '[' LIT_INTEGER ']' ':' inicializacao_vetor   {$$ = ast_node_new(VECDEC_INIT, $2); ast_node_add_son($$, $1); ast_node_add_son($$, $4); ast_node_add_son($$, $7);}
 		;
-inicializacao_vetor: literal inicializacao_vetor ;				   {$$ = ast_node_new(VECINIT, 0); ast_node_add_son($$, $1); ast_node_add_son($$, $2);
-	        | ;								   {$$ = 0);
+inicializacao_vetor: literal inicializacao_vetor ;				   {$$ = ast_node_new(VECINIT, 0); ast_node_add_son($$, $1); ast_node_add_son($$, $2);}
+	        | ;								   {$$ = 0;}
 
 declaracao_funcao: tipo TK_IDENTIFIER '(' parametros ')' variaveis_locais comando  {$$ = ast_node_new(FUNDEC_PARAMS, $2); ast_node_add_son($$, $1); ast_node_add_son($$, $4); ast_node_add_son($$, $6); 																					       ast_node_add_son($$, $7);}
 		|  tipo TK_IDENTIFIER '(' ')' variaveis_locais comando 	   	   {$$ = ast_node_new(FUNDEC_NOPARAMS, $2); ast_node_add_son($$, $1); ast_node_add_son($$, $5); ast_node_add_son($$, $6);}
@@ -101,11 +101,11 @@ tipo: KW_INT									   {$$=ast_node_new(INT, 0);}
       | KW_BOOL									   {$$=ast_node_new(BOOL, 0);}
       ;
 
-literal: LIT_INTEGER								   {$$ = ast_node_new(SYMBOL, 0); ast_node_add_son($$, $1);}
-	| LIT_CHAR 								   {$$ = ast_node_new(SYMBOL, 0); ast_node_add_son($$, $1);}
-	| LIT_STRING 							   	   {$$ = ast_node_new(SYMBOL, 0); ast_node_add_son($$, $1);}
-	| LIT_TRUE 								   {$$ = ast_node_new(SYMBOL, 0); ast_node_add_son($$, $1);}
-	| LIT_FALSE								   {$$ = ast_node_new(SYMBOL, 0); ast_node_add_son($$, $1);}
+literal: LIT_INTEGER								   {$$ = ast_node_new(SYMBOL, $1);}
+	| LIT_CHAR 								   {$$ = ast_node_new(SYMBOL, $1);}
+	| LIT_STRING 							   	   {$$ = ast_node_new(SYMBOL, $1);}
+	| LIT_TRUE 								   {$$ = ast_node_new(SYMBOL, $1);}
+	| LIT_FALSE								   {$$ = ast_node_new(SYMBOL, $1);}
 	;
 
 bloco: '{' lista_comandos '}' ;							   {$$ = ast_node_new(BLOCK, 0); ast_node_add_son($$, $2);}
