@@ -76,13 +76,17 @@ program: declaracao_funcao ';' program						   {$$ = ast_node_new(FUNDEC, 0); as
 	;
 declaracao_variaveis_globais: declaracao_variavel ';' declaracao_variaveis_globais {$$ = ast_node_new(GLOBAL_VAR, 0); ast_node_add_son($$, $1); ast_node_add_son($$, $3);}
 	| declaracao_vetor ';' declaracao_variaveis_globais			   {$$ = ast_node_new(GLOBAL_VEC, 0); ast_node_add_son($$, $1); ast_node_add_son($$, $3);}
-	|
+	|									   {$$ = 0;}
 	;
 declaracao_variavel: tipo TK_IDENTIFIER ':' literal				   {$$ = ast_node_new(VARDEC, $2); ast_node_add_son($$, $1); ast_node_add_son($$, $4);}
 			;
-declaracao_vetor: tipo TK_IDENTIFIER '[' LIT_INTEGER ']' 			   {$$ = ast_node_new(VECDEC_NOINIT, $2); ast_node_add_son($$, $1); ast_node_add_son($$, $4);}
-		| tipo TK_IDENTIFIER '[' LIT_INTEGER ']' ':' inicializacao_vetor   {$$ = ast_node_new(VECDEC_INIT, $2); ast_node_add_son($$, $1); ast_node_add_son($$, $4); ast_node_add_son($$, $7);}
+declaracao_vetor: tipo TK_IDENTIFIER '[' tamanho ']' 			 	   {$$ = ast_node_new(VECDEC_NOINIT, $2); ast_node_add_son($$, $1); ast_node_add_son($$, $4);}
+		| tipo TK_IDENTIFIER '[' tamanho ']' ':' inicializacao_vetor   	   {$$ = ast_node_new(VECDEC_INIT, $2); ast_node_add_son($$, $1); ast_node_add_son($$, $4); ast_node_add_son($$, $7);}
 		;
+
+tamanho: LIT_INTEGER								   {$$ = ast_node_new(SYMBOL, $1);}	
+	;
+
 inicializacao_vetor: literal inicializacao_vetor 				   {$$ = ast_node_new(VECINIT, 0); ast_node_add_son($$, $1); ast_node_add_son($$, $2);}
 	        |								   {$$ = 0;}
 		;
