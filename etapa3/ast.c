@@ -41,9 +41,13 @@ void ast_print_node(ast_node_t * ast_node, int level) {
     for(i = 0; i < level; i++)
         printf(" ");
 
+    printf("ITEM(");
+
     if (ast_node->hash_node)
         if (ast_node->hash_node->data)
-            printf("%s\n", ast_node->hash_node->data);
+            printf("%s", ast_node->hash_node->data);
+
+    printf(")\n");
 }
 
 void ast_print_level(ast_node_t *ast_node, int level) {

@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include "lex.yy.h"
-#include "hash.h"
+#include "ast.h"
 #include "y.tab.h"
 
 
@@ -33,7 +33,7 @@ int main(int argc, char ** argv){
 	        exit(1);
 	}
 	
-	yyin = file;
+	yyin = input;
 	
 	printf("-----------------\n");
 	printf("Iniciando!\n");
