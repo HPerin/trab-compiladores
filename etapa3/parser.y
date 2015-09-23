@@ -111,7 +111,7 @@ literal: LIT_INTEGER								   {$$ = ast_node_new(SYMBOL, 0); ast_node_add_son($
 bloco: '{' lista_comandos '}' ;							   {$$ = ast_node_new(BLOCK, 0); ast_node_add_son($$, $2);}
 
 lista_comandos: comando resto_comandos ;					   {$$ = ast_node_new(CMDLIST, 0); ast_node_add_son($$, $1); ast_node_add_son($$, $2);}
-	 | 
+	 | 									   {$$ = 0;}
 	 ;
 
 resto_comandos: ';' lista_comandos						   {$$ = $2;}
@@ -165,7 +165,7 @@ expressao: TK_IDENTIFIER							   {$$ = ast_node_new(SYMBOL, $1);}
 	 | TK_IDENTIFIER '(' parametros_passados ')' 				   {$$ = ast_node_new(FUNC_CALL, $1); ast_node_add_son($$, $3);}
 	 ;
 
-parametros_passados: expressao resto_parametros_passados ;			   {$$ = ast_node+new(FUNC_CALL_PARAMS, 0); ast_node_add_son($$, $1); ast_node_add_son($$, $2);
+parametros_passados: expressao resto_parametros_passados ;			   {$$ = ast_node_new(FUNC_CALL_PARAMS, 0); ast_node_add_son($$, $1); ast_node_add_son($$, $2);
 		| 								   {$$ = 0;}
 	        ;
 resto_parametros_passados: ',' parametros_passados				   {$$ = $2;}
