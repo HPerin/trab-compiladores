@@ -198,7 +198,7 @@ void generate_code(FILE       *output,
 			generate_code (output, ast_son_get(aux, 0)); // expressao
 			fprintf (output, ")\n");
 			generate_code (output, ast_son_get(aux, 1)); // comando
-			fprintf (output, "loop");
+			fprintf (output, " loop");
 			break;
 
 		case FUNC_DEC_PARAMS: // 28
