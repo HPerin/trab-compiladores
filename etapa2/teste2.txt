@@ -12,9 +12,7 @@ int j : 0;
 	output "Incrementando algumas vezes fica: ", a, "\n";
 };
 
-int incn (int x, int n) {
-	return x + n;
-};
+
 
 int a : 0;
 real v[10]: 0 0 0 0 0 0 0 0 0 0; 

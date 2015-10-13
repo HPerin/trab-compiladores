@@ -1,8 +1,8 @@
-int main()
+int main(int a, char b, bool d)
 int j:1;
   {
-  output "Digite um numero: ";
-  if (i<10)
+  output "Digite um numero: ";;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+  if (i<10 || j>=20 && ant(b))
     {
     a := incn(derp('a', "bfsdf", 2),1);
     (i[i[b]]) + 1 =: i
@@ -13,15 +13,17 @@ int j:1;
 
 int incn (int x, int n)
   {
-  return a[5]+1*(2*a);
+	if(2+3){
+  return a[5]+1*(2*a);}
+	else return b;
 
+	a =: vet[2];
+	vet[a+2] := 43;
+	
   };
 
 int a:0;
 real v[10]: 0 0 0 0 0 0 0 0 0 0; 
+int vas[2];
 bool mat[1000];
 bool a:TRUE;
-
-
-
-
