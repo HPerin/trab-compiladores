@@ -7,10 +7,11 @@
 #define TK_IDENTIFIER 2
 
 bool has_semantic_errors = false;
-
+ast_node_t* root = NULL;
 void checkDeclarations(ast_node_t* node) {
 
 	if (node == 0) return;
+	if(root = NULL) root = node;
 
 	if (node->type == FUNDEC_PARAMS || node->type == FUNDEC_NOPARAMS || node->type == VARDEC || node->type == VECDEC_NOINIT || node->type == VECDEC_INIT) {
 		ast_node_t* id_node = ast_son_get(node, 1);
@@ -27,28 +28,35 @@ void checkDeclarations(ast_node_t* node) {
 				default: break;
 			}	
 		}	
-	} /*else {
-		if(node->hash_node)
-			if(node->hash_node->type == TK_IDENTIFIER) {
-				if(node->type == VECTOR)
-					if(!(ast_has(node, VECDEC_NOINIT, node->hash_node->data) || ast_has(node, VECDEC_INIT, node->hash_node->data))) {
-						printf("ERROR: Vector '%s' undeclared.", node->hash_node->data);
-						if(!has_semantic_errors) has_semantic_errors = true;
-					}
-			
-				if(node->type == SYMBOL)
-					if(!(ast_has(node, VARDEC, node->hash_node->data))) {
-						printf("ERROR: Variable '%s' undeclared.", node->hash_node->data);
-						if(!has_semantic_errors) has_semantic_errors = true;
-					}
-				if(node->type == FUNC_CALL)
-					if(!(ast_has(node, FUNDEC_PARAMS, node->hash_node->data) || ast_has(node, FUNDEC_NOPARAMS, node->hash_node->data))) {
-						printf("ERROR: Function '%s' undeclared.", node->hash_node->data);
-						if(!has_semantic_errors) has_semantic_errors = true;
-					}
-			}
-	}*/
+	}
+	/*else { ---------- nao funcionando ainda
+		if(node->type == VECTOR) {
+			ast_node_t* id_node = ast_son_get(node, 0);
+			if(!(ast_has(root, VECDEC_NOINIT, id_node->hash_node->data) || ast_has(root, VECDEC_INIT, id_node->hash_node->data)))
+				printf("ERROR: Vector '%s' undeclared.\n", id_node->hash_node->data);
 
+
+		}
+
+		if(node->type == ID_WORD) {
+			ast_node_t* id_node = ast_son_get(node, 0);
+			if(!ast_has(root, VARDEC, id_node->hash_node->data))
+				printf("ERROR: Variable '%s' undeclared.\n", id_node->hash_node->data);
+
+
+		}
+
+		if(node->type == FUNC_CALL) {
+			ast_node_t* id_node = ast_son_get(node, 0);
+			if(id_node->hash_node->type == TK_IDENTIFIER)
+				printf("ERROR: Function '%s' undeclared.\n", id_node->hash_node->data);
+
+
+		} 		
+	
+
+
+	}*/
 	ast_node_t* aux_son;
 	if (node->son) {
         	aux_son = node->son;
@@ -59,11 +67,13 @@ void checkDeclarations(ast_node_t* node) {
 	}
 }
 
-void semanticAnalysisResult() {
+int hasSemanticErrors() {
 	if(has_semantic_errors) {
-		printf("Failed!\n");
+		/*printf("Failed!\n");
 		printf("-----------------\n");
-		exit(4);
+		exit(4);*/
+		return 1;
 	}
+	return 0;
 }
 

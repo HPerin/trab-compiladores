@@ -107,23 +107,21 @@ void dataTypeSet(hash_node_t * hash_node, int type) {
 }
 
 
-/*int ast_has(ast_node_t* root, int type, char* data) {
+int ast_has(ast_node_t* ast_node, int type, char* data) { // verifica se variavel data do tipo type foi declarada
 
-	if(root == 0) return 0;
-	if(root->hash_node != 0)
-		if(root->hash_node->type = type && !(strcmp(root->hash_node->data, data))) return 1;
+	if(ast_node == 0) return 0;
+	if(ast_node->type == type)
+		if(!(strcmp(ast_son_get(ast_node, 0)->hash_node->data, data))) return 1;
 	
 	ast_node_t* aux_son;
 
-	if (root->son) {
-        	aux_son = root->son;
+	if (ast_node->son) {
+        	aux_son = ast_node->son;
            	 while (aux_son != NULL) {
                		if(ast_has(aux_son, type, data)) return 1;
                 	aux_son = aux_son->next;
 	   	}
 	}
-	
 	return 0;
 
-
-}*/
+}

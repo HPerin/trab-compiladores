@@ -2,4 +2,4 @@
 
 
 void checkDeclarations (ast_node_t* node);
-void semanticAnalysisResult();
+int hasSemanticErrors();

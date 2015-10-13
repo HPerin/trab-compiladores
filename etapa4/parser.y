@@ -76,7 +76,7 @@ FILE * output = NULL;
 
 %%
 
-start: program									   {$$ = $1; checkDeclarations($$); semanticAnalysisResult(); if (output) generate_code(output, $$);}
+start: program									   {$$ = $1; checkDeclarations($$); if (output) generate_code(output, $$);}
 	;
 
 program: declaracao_funcao ';' program						   {$$ = ast_node_new(FUNDEC, 0); ast_node_add_son($$, $1); ast_node_add_son($$, $3);}
@@ -198,7 +198,7 @@ int setoutput(FILE * new_output) {
 
 int yyerror(char * str){
 
-	printf("Erro sintatico na linha %d!\n", getLineNumber());
+	printf("Sintatic error on line %d! Aborting.\n", getLineNumber());
 	printf("-----------------\n");
 	exit(3);
 }

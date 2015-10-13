@@ -2,6 +2,7 @@
 #include "lex.yy.h"
 #include "ast.h"
 #include "y.tab.h"
+#include "semantic.h"
 
 int main(int argc, char ** argv){
 
@@ -39,6 +40,12 @@ int main(int argc, char ** argv){
 	printf("Started!\n");
 
 	yyparse();
+
+	if(hasSemanticErrors()) {
+		printf("Failed! Semantic errors found.\n");
+		printf("-----------------\n");
+		exit(4);
+	}
 	
 	printf("Success!\n");
 	printf("-----------------\n");

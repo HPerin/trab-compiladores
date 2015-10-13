@@ -1,9 +1,8 @@
-int main(int a, int b)
+int main( int a, int b )
 int j:1;
-  {
-  f[3]:=i[1];
-  };
-
+{
+f[3] := i[1];
+};
 int b:3;
 char a:'b';
 char a:'b';
