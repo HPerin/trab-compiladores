@@ -72,7 +72,9 @@ typedef struct s_ast_node {
 ast_node_t * ast_node_new(int type, hash_node_t * hash_node);
 void ast_node_add_son(ast_node_t * ast_node, ast_node_t * son);
 void ast_print(ast_node_t * ast_node);
-void dataTypeSet(hash_node_t * hash_node, int type);
 ast_node_t * ast_son_get(ast_node_t * ast_node, int index);
+
+void dataTypeSet(hash_node_t * hash_node, int type);
+//int ast_has(ast_node_t* root, int type, char* data);
 
 #endif //AST_TREE_AST_H

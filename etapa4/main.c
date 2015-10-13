@@ -20,29 +20,28 @@ int main(int argc, char ** argv){
 
 	if(!(input=fopen(argv[1], "r"))){
 		printf("-----------------\n");
-		printf("Erro ao abrir input: %s !\n", argv[1]);
+		printf("Error opening input file: %s !\n", argv[1]);
 		printf("-----------------\n");
-	        exit(1);
+	        exit(2);
 	}
 
 	if(!(output=fopen(argv[2], "w"))){
 		printf("-----------------\n");
-		printf("Erro ao abrir output: %s !\n", argv[2]);
+		printf("Erro opening output file: %s !\n", argv[2]);
 		printf("-----------------\n");
-	        exit(1);
+	        exit(2);
 	}
 	
 	yyin = input;
   	setoutput(output);
 	
 	printf("-----------------\n");
-	printf("Iniciando!\n");
+	printf("Started!\n");
 
 	yyparse();
 	
-	printf("Sucesso!\n");
+	printf("Success!\n");
 	printf("-----------------\n");
-
 	exit(0);
 	
 

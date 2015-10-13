@@ -76,7 +76,7 @@ FILE * output = NULL;
 
 %%
 
-start: program									   {$$ = $1; checkDeclarations($$); ast_print($$); if (output) generate_code(output, $$);}
+start: program									   {$$ = $1; checkDeclarations($$); semanticAnalysisResult(); if (output) generate_code(output, $$);}
 	;
 
 program: declaracao_funcao ';' program						   {$$ = ast_node_new(FUNDEC, 0); ast_node_add_son($$, $1); ast_node_add_son($$, $3);}
@@ -202,5 +202,6 @@ int yyerror(char * str){
 	printf("-----------------\n");
 	exit(3);
 }
+
 
 

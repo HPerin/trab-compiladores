@@ -1,11 +1,11 @@
-int main(int a, char b)
+int main(int a, int b)
 int j:1;
   {
   ;
   };
 
-
-int a:0;
-int a:2;
-char b:'c';
-//bool d:TRUE;
+int b:3;
+char a:'b';
+char a:'b';
+int a:7;
+bool d:TRUE;

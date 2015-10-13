@@ -13,11 +13,11 @@ ast_node_t *ast_node_new(int type, hash_node_t *hash_node) {
     ast_node->hash_node = hash_node;
     ast_node->type = type;
 
-    printf("ast included: %d", type);
-    if(hash_node) {
-        printf(" / %s", hash_node->data);
-    }
-    printf("\n");
+   // printf("ast included: %d", type);
+   // if(hash_node) {
+    //    printf(" / %s", hash_node->data);
+   // }
+   // printf("\n");
 
     ast_node->son = NULL;
     ast_node->next = NULL;
@@ -105,3 +105,25 @@ void dataTypeSet(hash_node_t * hash_node, int type) {
 		default: hash_node->dataType = DATATYPE_UNDEFINED; break;
 	}
 }
+
+
+/*int ast_has(ast_node_t* root, int type, char* data) {
+
+	if(root == 0) return 0;
+	if(root->hash_node != 0)
+		if(root->hash_node->type = type && !(strcmp(root->hash_node->data, data))) return 1;
+	
+	ast_node_t* aux_son;
+
+	if (root->son) {
+        	aux_son = root->son;
+           	 while (aux_son != NULL) {
+               		if(ast_has(aux_son, type, data)) return 1;
+                	aux_son = aux_son->next;
+	   	}
+	}
+	
+	return 0;
+
+
+}*/

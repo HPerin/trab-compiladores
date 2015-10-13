@@ -56,7 +56,6 @@ int running = 1;
 
 int yywrap() {
     running = 0;
-    hash_map_print(hash_map);
     return 1;
 }
 
