@@ -1,21 +1,7 @@
-int main( int y, int w )
-real h:1;
-int j:1;
-int k:2;
+int main(  )
+int i:1;
 {
-c := 2;
+i := i + 1;
+v[(1 + 2) + i] := i + 2;
 };
-int boar(  )
-{
-};
-int b:3;
-int a:23;
-int c:0;
-real d:232;
-real e:10;
-int f[10];
-int fl[10];
-real g:4;
-int i:4;
-bool ba:TRUE;
-bool bb:FALSE;
+int v[10];

@@ -113,7 +113,7 @@ int getExpType(ast_node_t * node) {
 		case AND:
 		case OR:
 		case LESS:
-		case GREATER: 
+		case GREATER:
 			op1 = getExpType (ast_son_get (node, 0));
 			op2 = getExpType (ast_son_get (node, 1));
 			return combineTypes (op1, op2);
