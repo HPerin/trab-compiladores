@@ -111,7 +111,7 @@ int ast_has(ast_node_t* ast_node, int type, char* data) { // verifica se variave
 
 	if(ast_node == 0) return 0;
 	if(ast_node->type == type)
-		if(!(strcmp(ast_son_get(ast_node, 0)->hash_node->data, data))) return 1;
+		if(!(strcmp(ast_son_get(ast_node, 1)->hash_node->data, data))) return 1;
 	
 	ast_node_t* aux_son;
 

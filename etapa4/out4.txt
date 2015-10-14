@@ -1,11 +1,21 @@
-int main( int a, int b )
+int main( int y, int w )
+real h:1;
 int j:1;
+int k:2;
 {
-f[3] := i[1];
+c := 2;
+};
+int boar(  )
+{
 };
 int b:3;
-char a:'b';
-char a:'b';
-int a:7;
-bool d:TRUE;
-int i[10];
+int a:23;
+int c:0;
+real d:232;
+real e:10;
+int f[10];
+int fl[10];
+real g:4;
+int i:4;
+bool ba:TRUE;
+bool bb:FALSE;
