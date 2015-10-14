@@ -7,7 +7,7 @@ int k:2;
   // y:=w;
    c=:d;
    input e;
-   f[5]:= fl[10];
+   f[d+e]:= fl[10];
    return f[5];
    if(g) h:=i else j:=k;*/
    c:=2;
