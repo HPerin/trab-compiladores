@@ -119,7 +119,7 @@ int getExpType(ast_node_t * node) {
 			op2 = getExpType (ast_son_get (node, 1));
 			return combineTypes (op1, op2);
 		case EXP:
-			return ast_son_get(node, 0)->hash_node->dataType;
+			return getExpType (ast_son_get (node, 0));
 		case FUNC_CALL:
 			if (node->hash_node->type != SYMBOL_FUNCTION) has_semantic_errors = true;
 			return DATATYPE_UNDEFINED; // TODO
