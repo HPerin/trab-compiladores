@@ -122,6 +122,7 @@ int getExpType(ast_node_t * node) {
 		case FUNC_CALL:
 			if (node->hash_node->type != SYMBOL_FUNCTION) has_semantic_errors = true;
 			return DATATYPE_UNDEFINED; // TODO
+		case SYMBOL: return node->hash_node->dataType;
 	}
 }
 
