@@ -91,6 +91,7 @@ int combineTypes(int type1, int type2) {
 }
 
 int getExpType(ast_node_t * node) {
+	ast_node_t *son0, *son1;
 	int op1, op2;
 	switch(node->type) {
 		case ID_WORD:
@@ -182,7 +183,6 @@ void checkDeclarations(ast_node_t* node) {
 		ast_node_t* id_node = ast_son_get(node, 0);
 		ast_node_t * exp_node = ast_son_get(node, 1);
 		int expType = getExpType(exp_node);
-		printf("DEBUG: dataType exp: %d\n", expType); //----------------------------------------
 		int dataType = combineTypes(id_node->hash_node->dataType, expType);
 
 		if (dataType == DATATYPE_UNDEFINED) {
@@ -211,6 +211,24 @@ void checkDeclarations(ast_node_t* node) {
 			has_semantic_errors = true;
 		}
 	}
+
+	if(node->type == VEC_ATTR) { // id '['expressao']' ':''=' expressao
+		ast_node_t* index_node = ast_son_get(node, 1);
+		int indexType = getExpType(index_node);
+		if((indexType != DATATYPE_INT && indexType != DATATYPE_CHAR)) {
+			printf("Invlid vector index.\n");
+			has_semantic_errors = true;
+		}
+	}
+
+	if(node->type == VEC_ATTR_REV) { //expressao '='':' id '['expressao']' 
+		ast_node_t* index_node = ast_son_get(node, 2);
+		int indexType = getExpType(index_node);
+		if((indexType != DATATYPE_INT && indexType != DATATYPE_CHAR)) {
+			printf("Invlid vector index.\n");
+			has_semantic_errors = true;
+		}
+	}	
 
 	if(node->type == INPUT) {
 		ast_node_t* id_node = ast_son_get(node, 0);

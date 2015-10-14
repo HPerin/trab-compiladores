@@ -1,0 +1,8 @@
+int main(  )
+{
+f[a + b] := a;
+a =: f[a + b];
+};
+int f[5];
+real a:0;
+real b:3;
