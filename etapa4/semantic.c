@@ -8,6 +8,109 @@
 
 bool has_semantic_errors = false;
 ast_node_t* root = NULL;
+
+int combineTypes(int type1, int type2) {
+	switch(type1) {
+		case DATATYPE_INT:
+			switch(type2) {
+				case DATATYPE_INT:
+					return DATATYPE_INT;
+				case DATATYPE_CHAR:
+					return DATATYPE_INT;
+				case DATATYPE_REAL:
+					return DATATYPE_REAL;
+				case DATATYPE_BOOL:
+					return DATATYPE_UNDEFINED;
+					//return DATATYPE_INT;
+				case DATATYPE_UNDEFINED:
+					return DATATYPE_UNDEFINED;
+			}
+			return DATATYPE_UNDEFINED;
+		case DATATYPE_CHAR:
+			switch(type2) {
+				case DATATYPE_INT:
+					return DATATYPE_INT;
+				case DATATYPE_CHAR:
+					return DATATYPE_CHAR;
+				case DATATYPE_REAL:
+					return DATATYPE_REAL;
+				case DATATYPE_BOOL:
+					return DATATYPE_UNDEFINED;
+					//return DATATYPE_CHAR;
+				case DATATYPE_UNDEFINED:
+					return DATATYPE_UNDEFINED;
+			}
+			return DATATYPE_UNDEFINED;
+		case DATATYPE_REAL:
+			switch(type2) {
+				case DATATYPE_INT:
+					return DATATYPE_REAL;
+				case DATATYPE_CHAR:
+					return DATATYPE_REAL;
+				case DATATYPE_REAL:
+					return DATATYPE_REAL;
+				case DATATYPE_BOOL:
+					return DATATYPE_UNDEFINED;
+					//return DATATYPE_REAL;
+				case DATATYPE_UNDEFINED:
+					return DATATYPE_UNDEFINED;
+			}
+			return DATATYPE_UNDEFINED;
+		case DATATYPE_BOOL:
+			switch(type2) {
+				case DATATYPE_INT:
+					return DATATYPE_UNDEFINED;
+					//return DATATYPE_INT;
+				case DATATYPE_CHAR:
+					return DATATYPE_UNDEFINED;
+					//return DATATYPE_CHAR;
+				case DATATYPE_REAL:
+					return DATATYPE_UNDEFINED;
+					//return DATATYPE_REAL;
+				case DATATYPE_BOOL:
+					return DATATYPE_BOOL;
+				case DATATYPE_UNDEFINED:
+					return DATATYPE_UNDEFINED;
+			}
+		 	return DATATYPE_UNDEFINED;
+		case DATATYPE_UNDEFINED:
+			return DATATYPE_UNDEFINED;
+	}
+}
+
+int getExpType(ast_node_t * node) {
+	switch(node->type) {
+		case ID_WORD:
+			return ast_son_get(node, 0)->hash_node->dataType;
+		case VECTOR:
+			if (node->hash_node->type != SYMBOL_VECTOR) has_semantic_errors = true;
+			int op1 = ast_son_get(node, 0)->hash_node->dataType;
+			int op2 = getExpType (ast_son_get (node, 1));
+			if (op2 != DATATYPE_INT) has_semantic_errors = true;
+			return op1;
+		case ADD:
+		case SUB:
+		case MUL:
+		case DIV:
+		case LE:
+		case GE:
+		case EQ:
+		case NE:
+		case AND:
+		case OR:
+		case LESS:
+		case GREATER:
+			int op1 = getExpType (ast_son_get (node, 0));
+			int op2 = getExpType (ast_son_get (node, 1));
+			return combineTypes (op1, op2);
+		case EXP:
+			return ast_son_get(node, 0)->hash_node->dataType;
+		case FUNC_CALL:
+			if (node->hash_node->type != SYMBOL_FUNCTION) has_semantic_errors = true;
+			return DATATYPE_UNDEFINED; // TODO
+	}
+}
+
 void checkDeclarations(ast_node_t* node) {
 
 	if (node == 0) return;
@@ -28,6 +131,12 @@ void checkDeclarations(ast_node_t* node) {
 				default: break;
 			}	
 		}	
+	} else if (node->type == ATTR) {
+		ast_node_t * id = ast_son_get(aux, 0);
+		ast_node_t * exp = ast_son_get(aux, 1);
+		int dataType = getExpType(exp);
+		if (dataType == DATATYPE_UNDEFINED) has_semantic_errors = true;
+
 	}
 	/*else { ---------- nao funcionando ainda
 		if(node->type == VECTOR) {
