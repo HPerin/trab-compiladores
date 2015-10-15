@@ -79,9 +79,12 @@ int combineTypes(int type1, int type2) {
 }
 
 int getFuncType(ast_node_t * node, ast_node_t * func_id) {
+  	printf("+call -nodetype: %d\n", node->type);
+
   	if ((node->type == FUNDEC_PARAMS || node->type == FUNDEC_NOPARAMS) &&
 	  	!strcmp(ast_son_get(node, 1)->hash_node->data, func_id->hash_node->data)) {
 		int func_type = ast_son_get(node, 0)->type;
+		printf("func_type: %d\n", func_type);
 	  	switch(func_type) {
 			case INT:
 				return DATATYPE_INT;
@@ -103,6 +106,8 @@ int getFuncType(ast_node_t * node, ast_node_t * func_id) {
                 	aux_son = aux_son->next;
 	   	}
 	}
+
+	return -1;
 }
 
 int getExpType(ast_node_t * node) {
@@ -137,6 +142,7 @@ int getExpType(ast_node_t * node) {
 			return getExpType (ast_son_get (node, 0));
 		case FUNC_CALL:
 			if (ast_son_get(node, 0)->hash_node->type != SYMBOL_FUNCTION) has_semantic_errors = true;
+			printf("get_func_type: %d\n", getFuncType (root, ast_son_get (node, 0)));
 			return getFuncType (root, ast_son_get(node, 0));
 		case SYMBOL: return node->hash_node->dataType;
 	}
