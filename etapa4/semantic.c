@@ -79,8 +79,6 @@ int combineTypes(int type1, int type2) {
 }
 
 int getFuncType(ast_node_t * node, ast_node_t * func_id) {
-  	printf("+call -nodetype: %d\n", node->type);
-
   	if ((node->type == FUNDEC_PARAMS || node->type == FUNDEC_NOPARAMS) &&
 	  	!strcmp(ast_son_get(node, 1)->hash_node->data, func_id->hash_node->data)) {
 		int func_type = ast_son_get(node, 0)->type;
@@ -102,7 +100,8 @@ int getFuncType(ast_node_t * node, ast_node_t * func_id) {
 	if (node->son) {
         	aux_son = node->son;
            	 while (aux_son != NULL) {
-               		return getFuncType (aux_son, func_id);
+               		int result = getFuncType (aux_son, func_id);
+		   	if (result != -1) return result;
                 	aux_son = aux_son->next;
 	   	}
 	}
