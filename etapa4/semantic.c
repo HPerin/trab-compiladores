@@ -9,18 +9,6 @@
 bool has_semantic_errors = false;
 ast_node_t* root = NULL;
 
-
-/*PROBLEMA:
-
-1)  int add(int a, int b)
-	{
-	return a+b;
-	}
-
-vai dar undeclared a, undeclared b
-
-
-*/
 int combineTypes(int type1, int type2) {
 	switch(type1) {
 		case DATATYPE_INT:
@@ -127,11 +115,11 @@ int getExpType(ast_node_t * node) {
 	}
 }
 
-void checkDeclarations(ast_node_t* node) {
+void checkDeclarations(ast_node_t* node, bool first_run) {
 
 	if (node == 0) return;
 	if(root == NULL) root = node;
-
+	if(first_run) 
 	if (node->type == FUNDEC_PARAMS || node->type == FUNDEC_NOPARAMS || node->type == VARDEC || node->type == VECDEC_NOINIT || node->type == VECDEC_INIT ||node->type == FUNC_DEC_PARAMS) {
 		ast_node_t* id_node = ast_son_get(node, 1);
 		if(id_node->hash_node->type != TK_IDENTIFIER) {
@@ -142,38 +130,55 @@ void checkDeclarations(ast_node_t* node) {
 				case FUNDEC_PARAMS:
 				case FUNDEC_NOPARAMS: id_node->hash_node->type = SYMBOL_FUNCTION; break;
 				case FUNC_DEC_PARAMS:
-				case VARDEC: id_node->hash_node->type = SYMBOL_VARIABLE; break;
+				case VARDEC:id_node->hash_node->type = SYMBOL_VARIABLE; break;
 				case VECDEC_NOINIT:
 				case VECDEC_INIT: id_node->hash_node->type = SYMBOL_VECTOR; break;
 				default: break;
 			}	
 		}	
 	}
-	//else {
+	if(!first_run) {
 	if(node->type == VECTOR) {
 		ast_node_t* id_node = ast_son_get(node, 0);
+		printf("vector_type:%d\n", id_node->hash_node->type);
 		if(id_node->hash_node->dataType == DATATYPE_UNDEFINED) {
 			printf("ERROR: Vector '%s' undeclared.\n", id_node->hash_node->data);
 			has_semantic_errors = true;
 		}
+		else if(id_node->hash_node->type !=  SYMBOL_VECTOR) {
+			printf("ERROR: wrong usage of '%s'.\n", id_node->hash_node->data);
+			has_semantic_errors = true;
+			}
+		
+
 	}
 
 	if(node->type == ID_WORD) { 
 		ast_node_t* id_node = ast_son_get(node, 0);
+		printf("id_word_type:%d\n", id_node->hash_node->type);
 		if(id_node->hash_node->dataType == DATATYPE_UNDEFINED) {
 			printf("ERROR: Variable '%s' undeclared.\n", id_node->hash_node->data); 
 			has_semantic_errors = true;
 		}
+		
+        	else if(id_node->hash_node->type !=  SYMBOL_VARIABLE) {
+			printf("ERROR: wrong usage of '%s'.\n", id_node->hash_node->data);
+			has_semantic_errors = true;
+			}
 	}
 
 	if(node->type == FUNC_CALL) {
 		ast_node_t* id_node = ast_son_get(node, 0);
+		printf("func_call_type:%d\n", id_node->hash_node->type);
 		if(id_node->hash_node->dataType == DATATYPE_UNDEFINED) {
 			printf("ERROR: Function '%s' undeclared.\n", id_node->hash_node->data);
 			has_semantic_errors = true;
 		}
 
-		//else 
+        	else if(id_node->hash_node->type !=  SYMBOL_FUNCTION) {
+			printf("ERROR: wrong usage of '%s'.\n", id_node->hash_node->data);
+			has_semantic_errors = true;
+			}		 
 	} 
 
 	if(node->type == ATTR) {
@@ -212,20 +217,40 @@ void checkDeclarations(ast_node_t* node) {
 	}
 
 	if(node->type == VEC_ATTR) { // id '['expressao']' ':''=' expressao
+		ast_node_t* id_node = ast_son_get(node, 0);
 		ast_node_t* index_node = ast_son_get(node, 1);
+		ast_node_t* exp_node = ast_son_get(node, 2);
 		int indexType = getExpType(index_node);
+		int expType = getExpType(exp_node);
+		int dataType = combineTypes(id_node->hash_node->dataType, expType);
 		if((indexType != DATATYPE_INT && indexType != DATATYPE_CHAR)) {
 			printf("Invlid vector index.\n");
 			has_semantic_errors = true;
 		}
+
+		else if (dataType == DATATYPE_UNDEFINED) {
+			printf("ERROR: Attribution with wrong datatypes.\n");
+			has_semantic_errors = true;
+
+		}
 	}
 
 	if(node->type == VEC_ATTR_REV) { //expressao '='':' id '['expressao']' 
+		ast_node_t* id_node = ast_son_get(node,1);
 		ast_node_t* index_node = ast_son_get(node, 2);
+		ast_node_t* exp_node = ast_son_get(node, 0);
 		int indexType = getExpType(index_node);
+		int expType = getExpType(exp_node);
+		int dataType = combineTypes(id_node->hash_node->dataType, expType);
 		if((indexType != DATATYPE_INT && indexType != DATATYPE_CHAR)) {
 			printf("Invlid vector index.\n");
 			has_semantic_errors = true;
+		}
+
+		else if (dataType == DATATYPE_UNDEFINED) {
+			printf("ERROR: Reverse attribution with wrong datatypes.\n");
+			has_semantic_errors = true;
+
 		}
 	}	
 
@@ -235,17 +260,18 @@ void checkDeclarations(ast_node_t* node) {
 			printf("ERROR: Variable '%s' undeclared.\n", id_node->hash_node->data); 
 			has_semantic_errors = true;
 		}
-	}		
+	}	
+      } 	
       
 	ast_node_t* aux_son;
 	if (node->son) {
         	aux_son = node->son;
            	 while (aux_son != NULL) {
-               		checkDeclarations(aux_son);
+               		checkDeclarations(aux_son, first_run);
                 	aux_son = aux_son->next;
 	   	}
 	}
-}    // }
+}    
 
 int hasSemanticErrors() {
 	if(has_semantic_errors) {

@@ -1,0 +1,5 @@
+int main(  )
+{
+return notvetor[5];
+};
+int notvetor[10] : 10 ;
