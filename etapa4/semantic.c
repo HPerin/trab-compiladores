@@ -82,7 +82,6 @@ int getFuncType(ast_node_t * node, ast_node_t * func_id) {
   	if ((node->type == FUNDEC_PARAMS || node->type == FUNDEC_NOPARAMS) &&
 	  	!strcmp(ast_son_get(node, 1)->hash_node->data, func_id->hash_node->data)) {
 		int func_type = ast_son_get(node, 0)->type;
-		printf("func_type: %d\n", func_type);
 	  	switch(func_type) {
 			case INT:
 				return DATATYPE_INT;
@@ -367,7 +366,7 @@ void checkDeclarations(ast_node_t* node, bool first_run) {
 
 	if (node->type == FUNC_CALL) {
 		if (!isFuncCallValid (node, root)) {
-			printf("Invalid function call!\n");
+			printf("ERROR: invalid function call.\n");
 			has_semantic_errors = true;
 		}
 	}	

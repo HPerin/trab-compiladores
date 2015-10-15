@@ -2,9 +2,10 @@ int main(  )
 int i:0;
 {
 i := incn (1, 2);
+output i;
 };
-int incn( int x, int n )
+int incn( real x, int n )
 {
-return x;
+return x + 1;
 };
 int v[10];
