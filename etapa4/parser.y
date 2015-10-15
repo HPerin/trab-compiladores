@@ -148,7 +148,7 @@ controle_fluxo: KW_IF '('expressao')' comando					   {$$ = ast_node_new(IF, 0); 
 	 | KW_IF '('expressao')' comando KW_ELSE comando			   {$$ = ast_node_new(IF_ELSE, 0); ast_node_add_son($$,$3); ast_node_add_son($$, $5); ast_node_add_son($$, $7);} 
 	 | KW_IF '('expressao')' comando KW_LOOP 				   {$$ = ast_node_new(IF_LOOP, 0); ast_node_add_son($$, $3); ast_node_add_son($$,$5);}
 	 ;
-parametros: tipo id resto_parametros 				  	           {$$ = ast_node_new(FUNC_DEC_PARAMS, 0); ast_node_add_son($$, $1); ast_node_add_son($$, $2); ast_node_add_son($$, $3);}
+parametros: tipo id resto_parametros 				  	           {$$ = ast_node_new(FUNC_DEC_PARAMS, 0); ast_node_add_son($$, $1); ast_node_add_son($$, $2); ast_node_add_son($$, $3); dataTypeSet($2->hash_node, $1->type);}
 	;
 		
 resto_parametros: ',' parametros						   {$$ = ast_node_new(FUNC_DEC_PARAMS_REST, 0); ast_node_add_son($$, $2);}

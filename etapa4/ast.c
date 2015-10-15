@@ -107,7 +107,7 @@ void dataTypeSet(hash_node_t * hash_node, int type) {
 }
 
 
-int ast_has(ast_node_t* ast_node, int type, char* data) { // verifica se variavel data do tipo type foi declarada
+/*int ast_has(ast_node_t* ast_node, int type, char* data) { // verifica se variavel data do tipo type foi declarada
 
 	if(ast_node == 0) return 0;
 	if(ast_node->type == type)
@@ -124,4 +124,6 @@ int ast_has(ast_node_t* ast_node, int type, char* data) { // verifica se variave
 	}
 	return 0;
 
-}
+}*/
+
+
