@@ -1,6 +1,13 @@
 int main()
 {
- return notvetor;
-};
+ input notvetor;
+ // vetor:=a;
+  //a:=vetor;
+//  a:=notvetor[19];
+ // notvetor[19]:=a;
+  a:=main();
 
+};
+int a:0;
 int notvetor:10;
+int vetor[10];
