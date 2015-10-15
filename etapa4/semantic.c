@@ -141,35 +141,40 @@ int getExpType(ast_node_t * node) {
 			return getExpType (ast_son_get (node, 0));
 		case FUNC_CALL:
 			if (ast_son_get(node, 0)->hash_node->type != SYMBOL_FUNCTION) has_semantic_errors = true;
-			printf("get_func_type: %d\n", getFuncType (root, ast_son_get (node, 0)));
 			return getFuncType (root, ast_son_get(node, 0));
 		case SYMBOL: return node->hash_node->dataType;
 	}
 }
 
 int isFuncCallValid(ast_node_t *node, ast_node_t *root) {
-  	ast_node_t * aux = root;
+  	ast_node_t * aux;
 
-  	if (root->type == FUNDEC && !strcmp(node->hash_node->data, node->hash_node->data)) {
+  	if (root->type == FUNDEC) {
 		ast_node_t *son = ast_son_get(root, 0);
+	  	ast_node_t * id_dec = ast_son_get(son, 1);
+	  	ast_node_t * id_call = ast_son_get(node, 0);
+	  	if (!strcmp(id_call->hash_node->data, id_dec->hash_node->data)) {
+
 	  	if (son->type == FUNDEC_PARAMS) {
 			ast_node_t *params_call = ast_son_get(node, 1);
 			if (params_call == NULL) return false;
 			ast_node_t *params_dec = ast_son_get(son, 2);
 
 			while(params_call != NULL && params_dec != NULL) {
-				int tipo = ast_son_get(son, 0)->type;
+				int tipo = ast_son_get(params_dec, 0)->type;
 
 				switch(tipo) {
-					case INT: tipo = DATATYPE_INT;
-					case CHAR: tipo = DATATYPE_CHAR;
-					case REAL: tipo = DATATYPE_REAL;
-					case BOOL: tipo = DATATYPE_BOOL;
-					default: tipo = DATATYPE_UNDEFINED;
+					case INT: tipo = DATATYPE_INT; break;
+					case CHAR: tipo = DATATYPE_CHAR; break;
+					case REAL: tipo = DATATYPE_REAL; break;
+					case BOOL: tipo = DATATYPE_BOOL; break;
+					default: tipo = DATATYPE_UNDEFINED; break;
 				}
 
 				int expType = getExpType (ast_son_get(params_call, 0));
-				if (tipo != expType) return false;
+				if (combineTypes (tipo, expType) == DATATYPE_UNDEFINED)
+					return false;
+
 
 				params_call = ast_son_get (params_call, 1);
 				params_dec = ast_son_get (params_dec, 2);
@@ -184,6 +189,8 @@ int isFuncCallValid(ast_node_t *node, ast_node_t *root) {
 			if (ast_son_get(node, 1) == NULL) return true;
 			else return false;
 		}
+
+		}
 	}
 
 
@@ -191,10 +198,12 @@ int isFuncCallValid(ast_node_t *node, ast_node_t *root) {
 	if (root->son) {
         	aux_son = root->son;
            	 while (aux_son != NULL) {
-               		return isFuncCallValid(node, aux_son);
+               		if (isFuncCallValid(node, aux_son)) return true;
                 	aux_son = aux_son->next;
 	   	}
 	}
+
+	return false;
 }
 
 void checkDeclarations(ast_node_t* node, bool first_run) {
@@ -352,6 +361,13 @@ void checkDeclarations(ast_node_t* node, bool first_run) {
 		ast_node_t* id_node = ast_son_get(node, 0);
 		if(id_node->hash_node->dataType == DATATYPE_UNDEFINED) {
 			printf("ERROR: Variable '%s' undeclared.\n", id_node->hash_node->data); 
+			has_semantic_errors = true;
+		}
+	}
+
+	if (node->type == FUNC_CALL) {
+		if (!isFuncCallValid (node, root)) {
+			printf("Invalid function call!\n");
 			has_semantic_errors = true;
 		}
 	}	

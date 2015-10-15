@@ -1,8 +1,6 @@
 int main(  )
-int i:1;
+int i:0;
 {
-i := i + 1;
-v[(1 + 2) + i] := i + 2;
 i := incn (1, 2);
 };
 int incn( int x, int n )
