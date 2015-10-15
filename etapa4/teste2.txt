@@ -1,0 +1,9 @@
+int main()
+int i:0;
+  {
+  i := incn(1, 2);
+  output i;
+  };
+
+int incn (real x, int n) { return x+1; };
+ int v[10];
