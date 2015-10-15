@@ -1,5 +1,8 @@
 int main(  )
 {
+i := i + 1;
+v[(1 + 2) + i] := i + 2;
+i := incn (1, 2);
 i[3] := TRUE;
 };
 int incn( int x, int n )
@@ -10,4 +13,4 @@ int v[10];
 int a:'a';
 bool c:TRUE;
 char d:'a';
-bool i[3] : TRUE TRUE 2 TRUE ;
+int i[3] : TRUE TRUE TRUE TRUE ;
