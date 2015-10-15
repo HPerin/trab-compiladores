@@ -132,7 +132,7 @@ void checkDeclarations(ast_node_t* node) {
 	if (node == 0) return;
 	if(root == NULL) root = node;
 
-	if (node->type == FUNDEC_PARAMS || node->type == FUNDEC_NOPARAMS || node->type == VARDEC || node->type == VECDEC_NOINIT || node->type == VECDEC_INIT) {
+	if (node->type == FUNDEC_PARAMS || node->type == FUNDEC_NOPARAMS || node->type == VARDEC || node->type == VECDEC_NOINIT || node->type == VECDEC_INIT ||node->type == FUNC_DEC_PARAMS) {
 		ast_node_t* id_node = ast_son_get(node, 1);
 		if(id_node->hash_node->type != TK_IDENTIFIER) {
 			printf("ERROR: '%s' previously declared.\n", id_node->hash_node->data);
@@ -141,6 +141,7 @@ void checkDeclarations(ast_node_t* node) {
 			switch(node->type) {
 				case FUNDEC_PARAMS:
 				case FUNDEC_NOPARAMS: id_node->hash_node->type = SYMBOL_FUNCTION; break;
+				case FUNC_DEC_PARAMS:
 				case VARDEC: id_node->hash_node->type = SYMBOL_VARIABLE; break;
 				case VECDEC_NOINIT:
 				case VECDEC_INIT: id_node->hash_node->type = SYMBOL_VECTOR; break;
@@ -152,13 +153,7 @@ void checkDeclarations(ast_node_t* node) {
 	//else {
 	if(node->type == VECTOR) {
 		ast_node_t* id_node = ast_son_get(node, 0);
-		ast_node_t* exp_node = ast_son_get(node, 1);
-		
-		/*if(getExpType(exp_node) != DATATYPE_INT) {
-			printf("ERROR: Vector '%s' with dataType != int.\n", id_node->hash_node->data);
-			has_semantic_errors = true;
-		}*/
-		if(!(ast_has(root, VECDEC_NOINIT, id_node->hash_node->data) || ast_has(root, VECDEC_INIT, id_node->hash_node->data))) {
+		if(id_node->hash_node->dataType == DATATYPE_UNDEFINED) {
 			printf("ERROR: Vector '%s' undeclared.\n", id_node->hash_node->data);
 			has_semantic_errors = true;
 		}
@@ -166,7 +161,7 @@ void checkDeclarations(ast_node_t* node) {
 
 	if(node->type == ID_WORD) { 
 		ast_node_t* id_node = ast_son_get(node, 0);
-		if(!ast_has(root, VARDEC, id_node->hash_node->data)) {
+		if(id_node->hash_node->dataType == DATATYPE_UNDEFINED) {
 			printf("ERROR: Variable '%s' undeclared.\n", id_node->hash_node->data); 
 			has_semantic_errors = true;
 		}
@@ -174,10 +169,12 @@ void checkDeclarations(ast_node_t* node) {
 
 	if(node->type == FUNC_CALL) {
 		ast_node_t* id_node = ast_son_get(node, 0);
-		if(!(ast_has(root, FUNDEC_PARAMS, id_node->hash_node->data) || ast_has(root, FUNDEC_NOPARAMS, id_node->hash_node->data))) {
+		if(id_node->hash_node->dataType == DATATYPE_UNDEFINED) {
 			printf("ERROR: Function '%s' undeclared.\n", id_node->hash_node->data);
 			has_semantic_errors = true;
 		}
+
+		//else 
 	} 
 
 	if(node->type == ATTR) {
@@ -186,31 +183,33 @@ void checkDeclarations(ast_node_t* node) {
 		int expType = getExpType(exp_node);
 		int dataType = combineTypes(id_node->hash_node->dataType, expType);
 
-		if (dataType == DATATYPE_UNDEFINED) {
-			printf("ERROR: Attribution with wrong datatypes.\n");
-			has_semantic_errors = true;
-		}
-
-		if(!ast_has(root, VARDEC, id_node->hash_node->data)) {
+		if(id_node->hash_node->dataType == DATATYPE_UNDEFINED) {
 			printf("ERROR: Variable '%s' undeclared.\n", id_node->hash_node->data); 
 			has_semantic_errors = true;
 		}
+
+		else if (dataType == DATATYPE_UNDEFINED) {
+				printf("ERROR: Attribution with wrong datatypes.\n");
+				has_semantic_errors = true;
+			}
 	}
-	
+		
 
 	if(node->type == ATTR_REV) {
 		ast_node_t* id_node = ast_son_get(node, 1);
 		ast_node_t * exp_node = ast_son_get(node, 0);
 		int expType = getExpType(exp_node);
 		int dataType = combineTypes(id_node->hash_node->dataType, expType);
-		if (dataType == DATATYPE_UNDEFINED) {
-			printf("ERROR: Reverse attribution with wrong datatypes.\n");
-			has_semantic_errors = true;
-		}
-		if(!ast_has(root, VARDEC, id_node->hash_node->data)) {
+
+		
+		if(id_node->hash_node->dataType == DATATYPE_UNDEFINED) {
 			printf("ERROR: Variable '%s' undeclared.\n", id_node->hash_node->data); 
 			has_semantic_errors = true;
 		}
+		else if (dataType == DATATYPE_UNDEFINED) {
+		     		printf("ERROR: Reverse attribution with wrong datatypes.\n");
+				has_semantic_errors = true;
+			}
 	}
 
 	if(node->type == VEC_ATTR) { // id '['expressao']' ':''=' expressao
@@ -233,7 +232,7 @@ void checkDeclarations(ast_node_t* node) {
 
 	if(node->type == INPUT) {
 		ast_node_t* id_node = ast_son_get(node, 0);
-		if(!ast_has(root, VARDEC, id_node->hash_node->data)) {
+		if(id_node->hash_node->dataType == DATATYPE_UNDEFINED) {
 			printf("ERROR: Variable '%s' undeclared.\n", id_node->hash_node->data); 
 			has_semantic_errors = true;
 		}
