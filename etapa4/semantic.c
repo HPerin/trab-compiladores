@@ -279,4 +279,3 @@ int hasSemanticErrors() {
 	}
 	return 0;
 }
-
