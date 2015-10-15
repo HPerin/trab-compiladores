@@ -1,16 +1,7 @@
 int main(  )
 {
-i := i + 1;
-v[(1 + 2) + i] := i + 2;
-i := incn (1, 2);
-i[3] := TRUE;
+a := v[r + a];
 };
-int incn( int x, int n )
-{
-return x;
-};
-int v[10];
-int a:'a';
-bool c:TRUE;
-char d:'a';
-int i[3] : TRUE TRUE TRUE TRUE ;
+int v[10] : 0 ;
+int a:0;
+real r:0;

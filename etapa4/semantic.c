@@ -130,12 +130,11 @@ int getExpType(ast_node_t * node) {
 		case EQ:
 		case NE:
 		case AND:
-		case OR:
+		case OR: op1 = getExpType (ast_son_get (node, 0));
+			     op2 = getExpType (ast_son_get (node, 1));
+			     return combineTypes (op1, op2);
 		case LESS:
-		case GREATER:
-			op1 = getExpType (ast_son_get (node, 0));
-			op2 = getExpType (ast_son_get (node, 1));
-			return combineTypes (op1, op2);
+		case GREATER: return DATATYPE_BOOL;
 		case EXP:
 			return getExpType (ast_son_get (node, 0));
 		case FUNC_CALL:
@@ -183,7 +182,7 @@ int isFuncCallValid(ast_node_t *node, ast_node_t *root) {
 				params_call = ast_son_get (params_call, 0);
 				if (params_call == NULL) return false;
 				params_dec = ast_son_get (params_dec, 0);
-			}
+			} 
 		} else if (son->type == FUNDEC_NOPARAMS) {
 			if (ast_son_get(node, 1) == NULL) return true;
 			else return false;
@@ -245,6 +244,8 @@ void checkDeclarations(ast_node_t* node, bool first_run) {
 	if(!first_run) {
 	if(node->type == VECTOR) {
 		ast_node_t* id_node = ast_son_get(node, 0);
+		ast_node_t* index_node = ast_son_get(node,1);
+		int indexType = getExpType(index_node);
 		if(id_node->hash_node->dataType == DATATYPE_UNDEFINED) {
 			printf("ERROR: Vector '%s' undeclared.\n", id_node->hash_node->data);
 			has_semantic_errors = true;
@@ -253,8 +254,11 @@ void checkDeclarations(ast_node_t* node, bool first_run) {
 			printf("ERROR: Wrong usage of '%s'.\n", id_node->hash_node->data);
 			has_semantic_errors = true;
 			}
-		
-
+			
+		if ((indexType != DATATYPE_INT && indexType != DATATYPE_CHAR)) {
+			printf("Invlid vector index.\n");
+			has_semantic_errors = true;
+			}
 	}
 
 	if(node->type == ID_WORD) { 
