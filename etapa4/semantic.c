@@ -85,8 +85,8 @@ int getExpType(ast_node_t * node) {
 		case ID_WORD:
 			return ast_son_get(node, 0)->hash_node->dataType;
 		case VECTOR:
-			if (node->hash_node->type != SYMBOL_VECTOR) has_semantic_errors = true;
-			/*op1 = ast_son_get(node, 0)->hash_node->dataType;
+			/*if (node->hash_node->type != SYMBOL_VECTOR) has_semantic_errors = true; --
+			op1 = ast_son_get(node, 0)->hash_node->dataType;
 			op2 = getExpType (ast_son_get (node, 1));
 			if (op2 != DATATYPE_INT) has_semantic_errors = true;
 			return op1;*/
@@ -140,7 +140,6 @@ void checkDeclarations(ast_node_t* node, bool first_run) {
 	if(!first_run) {
 	if(node->type == VECTOR) {
 		ast_node_t* id_node = ast_son_get(node, 0);
-		printf("vector_type:%d\n", id_node->hash_node->type);
 		if(id_node->hash_node->dataType == DATATYPE_UNDEFINED) {
 			printf("ERROR: Vector '%s' undeclared.\n", id_node->hash_node->data);
 			has_semantic_errors = true;
@@ -155,7 +154,6 @@ void checkDeclarations(ast_node_t* node, bool first_run) {
 
 	if(node->type == ID_WORD) { 
 		ast_node_t* id_node = ast_son_get(node, 0);
-		printf("id_word_type:%d\n", id_node->hash_node->type);
 		if(id_node->hash_node->dataType == DATATYPE_UNDEFINED) {
 			printf("ERROR: Variable '%s' undeclared.\n", id_node->hash_node->data); 
 			has_semantic_errors = true;
@@ -169,7 +167,6 @@ void checkDeclarations(ast_node_t* node, bool first_run) {
 
 	if(node->type == FUNC_CALL) {
 		ast_node_t* id_node = ast_son_get(node, 0);
-		printf("func_call_type:%d\n", id_node->hash_node->type);
 		if(id_node->hash_node->dataType == DATATYPE_UNDEFINED) {
 			printf("ERROR: Function '%s' undeclared.\n", id_node->hash_node->data);
 			has_semantic_errors = true;
@@ -196,8 +193,13 @@ void checkDeclarations(ast_node_t* node, bool first_run) {
 				printf("ERROR: Attribution with wrong datatypes.\n");
 				has_semantic_errors = true;
 			}
+
+        	        if(id_node->hash_node->type !=  SYMBOL_VARIABLE) {
+			printf("ERROR: wrong usage of '%s'.\n", id_node->hash_node->data);
+			has_semantic_errors = true;
+			}
 	}
-		
+	
 
 	if(node->type == ATTR_REV) {
 		ast_node_t* id_node = ast_son_get(node, 1);
@@ -214,9 +216,14 @@ void checkDeclarations(ast_node_t* node, bool first_run) {
 		     		printf("ERROR: Reverse attribution with wrong datatypes.\n");
 				has_semantic_errors = true;
 			}
+
+        	        if(id_node->hash_node->type !=  SYMBOL_VARIABLE) {
+			printf("ERROR: wrong usage of '%s'.\n", id_node->hash_node->data);
+			has_semantic_errors = true;
+			}
 	}
 
-	if(node->type == VEC_ATTR) { // id '['expressao']' ':''=' expressao
+	if(node->type == VEC_ATTR) { 
 		ast_node_t* id_node = ast_son_get(node, 0);
 		ast_node_t* index_node = ast_son_get(node, 1);
 		ast_node_t* exp_node = ast_son_get(node, 2);
@@ -231,8 +238,13 @@ void checkDeclarations(ast_node_t* node, bool first_run) {
 		else if (dataType == DATATYPE_UNDEFINED) {
 			printf("ERROR: Attribution with wrong datatypes.\n");
 			has_semantic_errors = true;
-
 		}
+
+        	        if(id_node->hash_node->type !=  SYMBOL_VECTOR) {
+			printf("ERROR: wrong usage of '%s'.\n", id_node->hash_node->data);
+			has_semantic_errors = true;
+			}
+		
 	}
 
 	if(node->type == VEC_ATTR_REV) { //expressao '='':' id '['expressao']' 
