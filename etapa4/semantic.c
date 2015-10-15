@@ -229,9 +229,10 @@ void checkDeclarations(ast_node_t* node, bool first_run) {
 						 	has_semantic_errors = true;
 						} break;
 				case VECDEC_NOINIT: id_node->hash_node->type = SYMBOL_VECTOR; break;
-				case VECDEC_INIT:   exp_node = ast_son_get(node, 3); 
+				case VECDEC_INIT:   exp_node = ast_son_get(node, 3);
 						    while(exp_node != NULL) {
-							if(combineTypes(id_node->hash_node->dataType, getExpType(exp_node)) == DATATYPE_UNDEFINED) {
+							if(combineTypes(id_node->hash_node->dataType, ast_son_get(exp_node,0)->hash_node->dataType) == DATATYPE_UNDEFINED) {
+								printf("%d\n", getExpType(exp_node));
 								printf("ERROR: Invalid initialization of '%s'.\n", id_node->hash_node->data);
 								has_semantic_errors = true; break;
 							}

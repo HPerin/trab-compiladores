@@ -10,4 +10,4 @@ int v[10];
 int a:'a';
 bool c:TRUE;
 char d:'a';
-bool i[3] : TRUE TRUE TRUE ;
+bool i[3] : TRUE TRUE 2 TRUE ;
