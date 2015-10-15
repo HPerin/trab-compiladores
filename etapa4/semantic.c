@@ -216,13 +216,28 @@ void checkDeclarations(ast_node_t* node, bool first_run) {
 			printf("ERROR: '%s' previously declared.\n", id_node->hash_node->data);
 			has_semantic_errors = true;
 		} else {
+			ast_node_t* exp_node;
 			switch(node->type) {
 				case FUNDEC_PARAMS:
 				case FUNDEC_NOPARAMS: id_node->hash_node->type = SYMBOL_FUNCTION; break;
-				case FUNC_DEC_PARAMS:
-				case VARDEC:id_node->hash_node->type = SYMBOL_VARIABLE; break;
-				case VECDEC_NOINIT:
-				case VECDEC_INIT: id_node->hash_node->type = SYMBOL_VECTOR; break;
+				case FUNC_DEC_PARAMS: id_node->hash_node->type = SYMBOL_VARIABLE; break;
+				case VARDEC: 	exp_node = ast_son_get(node, 2);
+						if(combineTypes(id_node->hash_node->dataType, getExpType(exp_node)) !=DATATYPE_UNDEFINED)
+					     	id_node->hash_node->type = SYMBOL_VARIABLE;
+					    else {
+						 printf("ERROR: Invalid initialization of '%s'.\n", id_node->hash_node->data);
+						 has_semantic_errors = true;
+						 } break;
+				case VECDEC_NOINIT: id_node->hash_node->type = SYMBOL_VECTOR; break;
+				case VECDEC_INIT:   exp_node = ast_son_get(node, 3); 
+						    while(exp_node != NULL) {
+							if(combineTypes(id_node->hash_node->dataType, getExpType(exp_node)) == DATATYPE_UNDEFINED) {
+								printf("ERROR: Invalid initialization of '%s'.\n", id_node->hash_node->data);
+								has_semantic_errors = true; break;
+							}
+						   exp_node = ast_son_get(exp_node, 1);
+						    }
+						   id_node->hash_node->type = SYMBOL_VECTOR; break;					 				      			      
 				default: break;
 			}	
 		}	
@@ -235,7 +250,7 @@ void checkDeclarations(ast_node_t* node, bool first_run) {
 			has_semantic_errors = true;
 		}
 		else if(id_node->hash_node->type !=  SYMBOL_VECTOR) {
-			printf("ERROR: wrong usage of '%s'.\n", id_node->hash_node->data);
+			printf("ERROR: Wrong usage of '%s'.\n", id_node->hash_node->data);
 			has_semantic_errors = true;
 			}
 		
@@ -250,7 +265,7 @@ void checkDeclarations(ast_node_t* node, bool first_run) {
 		}
 		
         	else if(id_node->hash_node->type !=  SYMBOL_VARIABLE) {
-			printf("ERROR: wrong usage of '%s'.\n", id_node->hash_node->data);
+			printf("ERROR: Wrong usage of '%s'.\n", id_node->hash_node->data);
 			has_semantic_errors = true;
 			}
 	}
@@ -263,7 +278,7 @@ void checkDeclarations(ast_node_t* node, bool first_run) {
 		}
 
         	else if(id_node->hash_node->type !=  SYMBOL_FUNCTION) {
-			printf("ERROR: wrong usage of '%s'.\n", id_node->hash_node->data);
+			printf("ERROR: Wrong usage of '%s'.\n", id_node->hash_node->data);
 			has_semantic_errors = true;
 			}		 
 	} 
@@ -285,7 +300,7 @@ void checkDeclarations(ast_node_t* node, bool first_run) {
 			}
 
         	        if(id_node->hash_node->type !=  SYMBOL_VARIABLE) {
-			printf("ERROR: wrong usage of '%s'.\n", id_node->hash_node->data);
+			printf("ERROR: Wrong usage of '%s'.\n", id_node->hash_node->data);
 			has_semantic_errors = true;
 			}
 	}
@@ -308,7 +323,7 @@ void checkDeclarations(ast_node_t* node, bool first_run) {
 			}
 
         	        if(id_node->hash_node->type !=  SYMBOL_VARIABLE) {
-			printf("ERROR: wrong usage of '%s'.\n", id_node->hash_node->data);
+			printf("ERROR: Wrong usage of '%s'.\n", id_node->hash_node->data);
 			has_semantic_errors = true;
 			}
 	}
@@ -331,7 +346,7 @@ void checkDeclarations(ast_node_t* node, bool first_run) {
 		}
 
         	        if(id_node->hash_node->type !=  SYMBOL_VECTOR) {
-			printf("ERROR: wrong usage of '%s'.\n", id_node->hash_node->data);
+			printf("ERROR: Wrong usage of '%s'.\n", id_node->hash_node->data);
 			has_semantic_errors = true;
 			}
 		

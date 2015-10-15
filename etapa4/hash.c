@@ -43,6 +43,8 @@ void hash_map_insert(hash_map_t * hash_map, int type, const char *data) {
     hash_node->type = type;
 
    if(type == 3) hash_node->dataType = DATATYPE_INT;
+   else if(type == 6) hash_node->dataType = DATATYPE_CHAR;
+   else if(type == 4 || type == 5) hash_node->dataType = DATATYPE_BOOL;
     strcpy(hash_node->data, data);
     hash_node->next = NULL;
 

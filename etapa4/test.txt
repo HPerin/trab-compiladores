@@ -1,13 +1,17 @@
 int main()
 {
- input notvetor;
- // vetor:=a;
-  //a:=vetor;
-//  a:=notvetor[19];
- // notvetor[19]:=a;
-  a:=main();
-
+//i:=i+1;
+//v[(1+2)+i] := i+2;
+//i:= incn(1,2);
+i[3]:=TRUE;
 };
-int a:0;
-int notvetor:10;
-int vetor[10];
+
+int incn(int x, int n)
+{
+	return x;
+};
+int v[10];
+int a:'a';
+bool c: TRUE;
+char d: 'a';
+bool i[3]: TRUE TRUE TRUE;

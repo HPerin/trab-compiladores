@@ -1,0 +1,13 @@
+int main(  )
+{
+i[3] := TRUE;
+};
+int incn( int x, int n )
+{
+return x;
+};
+int v[10];
+int a:'a';
+bool c:TRUE;
+char d:'a';
+bool i[3] : TRUE TRUE TRUE ;
