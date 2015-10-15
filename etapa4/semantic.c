@@ -148,6 +148,7 @@ void checkDeclarations(ast_node_t* node) {
 			}	
 		}	
 	}
+
 	//else {
 	if(node->type == VECTOR) {
 		ast_node_t* id_node = ast_son_get(node, 0);
