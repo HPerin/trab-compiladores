@@ -369,6 +369,12 @@ void checkDeclarations(ast_node_t* node, bool first_run) {
 			has_semantic_errors = true;
 
 		}
+		
+        	else if(id_node->hash_node->type !=  SYMBOL_VECTOR) {
+			printf("ERROR: Wrong usage of '%s'.\n", id_node->hash_node->data);
+			has_semantic_errors = true;
+			}
+	
 	}	
 
 	if(node->type == INPUT) {
@@ -377,6 +383,12 @@ void checkDeclarations(ast_node_t* node, bool first_run) {
 			printf("ERROR: Variable '%s' undeclared.\n", id_node->hash_node->data); 
 			has_semantic_errors = true;
 		}
+		
+        	else if(id_node->hash_node->type !=  SYMBOL_VARIABLE) {
+			printf("ERROR: Wrong usage of '%s'.\n", id_node->hash_node->data);
+			has_semantic_errors = true;
+			}
+	
 	}
 
 	if (node->type == FUNC_CALL) {
