@@ -220,72 +220,84 @@ tac_node_t* tacGenerate(ast_node_t * node) {
 			break;
 
 		case ADD: // 31
+			return tacOperation(TAC_ADD, ast_son_get(aux, 0), ast_son_get(aux, 1));
 			//generate_code (output, ast_son_get(aux, 0)); // expressao
 			//fprintf (output, " + ");
 			//generate_code (output, ast_son_get(aux, 1)); // expressao
 			break;
 
 		case SUB: // 32
+			return tacOperation(TAC_SUB, ast_son_get(aux, 0), ast_son_get(aux, 1));
 			//generate_code (output, ast_son_get(aux, 0)); // expressao
 			//fprintf (output, " - ");
 			//generate_code (output, ast_son_get(aux, 1)); // expressao
 			break;
 
 		case MUL: // 33
+			return tacOperation(TAC_MUL, ast_son_get(aux, 0), ast_son_get(aux, 1));
 			//generate_code (output, ast_son_get(aux, 0)); // expressao
 			//fprintf (output, " * ");
 			//generate_code (output, ast_son_get(aux, 1)); // expressao
 			break;
 
 		case DIV: // 34
+			return tacOPeration(TAC_DIV, ast_son_get(aux, 0), ast_son_get(aux, 1));
 			//generate_code (output, ast_son_get(aux, 0)); // expressao
 			//fprintf (output, " / ");
 			//generate_code (output, ast_son_get(aux, 1)); // expressao
 			break;
 
 		case LE: // 35
+			return tacOperation(TAC_LE, ast_son_get(aux, 0), ast_son_get(aux, 1));
 			//generate_code (output, ast_son_get(aux, 0)); // expressao
 			//fprintf (output, " <= ");
 			//generate_code (output, ast_son_get(aux, 1)); // expressao
 			break;
 
 		case GE: // 36
+			return tacOperation(TAC_GE, ast_son_get(aux, 0), ast_son_get(aux, 1));
 			//generate_code (output, ast_son_get(aux, 0)); // expressao
 			//fprintf (output, " >= ");
 			//generate_code (output, ast_son_get(aux, 1)); // expressao
 			break;
 
 		case EQ: // 37
+			return tacOperation(TAC_EQ, ast_son_get(aux, 0), ast_son_get(aux, 1));
 			//generate_code (output, ast_son_get(aux, 0)); // expressao
 			//fprintf (output, " == ");
 			//generate_code (output, ast_son_get(aux, 1)); // expressao
 			break;
 
 		case NE: // 38
+			return tacOperation(TAC_NE, ast_son_get(aux, 0), ast_son_get(aux, 1));
 			//generate_code (output, ast_son_get(aux, 0)); // expressao
 			//fprintf (output, " != ");
 			//generate_code (output, ast_son_get(aux, 1)); // expressao
 			break;
 
 		case AND: // 39
+			return tacOperation(TAC_AND, ast_son_get(aux, 0), ast_son_get(aux, 1));
 			//generate_code (output, ast_son_get(aux, 0)); // expressao
 			//fprintf (output, " && ");
 			//generate_code (output, ast_son_get(aux, 1)); // expressao
 			break;
 
 		case OR: // 40
+			return tacOperation(TAC_OR, ast_son_get(aux, 0), ast_son_get(aux, 1));
 			//generate_code (output, ast_son_get(aux, 0)); // expressao
 			//fprintf (output, " || ");
 			//generate_code (output, ast_son_get(aux, 1)); // expressao
 			break;
 
 		case LESS: // 41
+			return tacOperation(TAC_LESS, ast_son_get(aux, 0), ast_son_get(aux, 1));
 			//generate_code (output, ast_son_get(aux, 0)); // expressao
 			//fprintf (output, " < ");
 			//generate_code (output, ast_son_get(aux, 1)); // expressao
 			break;
 
 		case GREATER: // 42
+			return tacOperation(TAC_GREATER, ast_son_get(aux, 0), ast_son_get(aux, 1));
 			//generate_code (output, ast_son_get(aux, 0)); // expressao
 			//fprintf (output, " > ");
 			//generate_code (output, ast_son_get(aux, 1)); // expressao
@@ -382,3 +394,7 @@ void tacPrintSingle(tac_node_t* TAC){
 		//printf("\n");
 }
 
+tac_node_t* tacOperation(int type, tac_node_t* TAC1, tac_node_t* TAC2){
+
+	return tacJoin(tacJoin(TAC1, TAC2), tacCreate(type, hash_map_maketemp(hash_map), TAC1 ? TAC1->res : 0, TAC2 ? TAC2->res : 0));
+}
