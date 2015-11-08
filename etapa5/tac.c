@@ -13,33 +13,50 @@ tac_node_t* tacGenerateInit(ast_node_t * node, hash_map_t * hash_map) {
 
 tac_node_t* tacGenerate(ast_node_t * node) {
     tac_node_t * tac_aux1;
-    tac_node_t * tac_aux2
+    tac_node_t * tac_aux2;
 
+    ast_node_t * aux = node; // TODO: Arrumar todos aux pra node. Ou deixar assim mesmo.
     if (node) {
 		switch(aux->type) {
 
 		case FUNDEC: // 1
-            return tacJoin(tacGenerate(ast_son_get(aux, 0)), tacGenerate(ast_son_get(aux, 1)));
+            return tacJoin(
+                    tacGenerate(
+                        ast_son_get(aux, 0)),
+                    tacGenerate(
+                        ast_son_get(aux, 1)));
             //generate_code(output, ast_son_get(aux, 0)); // declaracao_funcao
 			//fprintf (output, ";\n");
 			//generate_code(output, ast_son_get(aux, 1)); // program
 			break;
 
 		case GLOBAL_VAR: // 2
-            return tacJoin(tacGenerate(ast_son_get(aux, 0)), tacGenerate(ast_son_get(aux, 1)));
+            return tacJoin(
+                    tacGenerate(
+                        ast_son_get(aux, 0)),
+                    tacGenerate(
+                        ast_son_get(aux, 1)));
 			//generate_code(output, ast_son_get(aux, 0)); // declaracao_variavel
 			//generate_code(output, ast_son_get(aux, 1)); // declaracao_variaveis_globais
 			break;
 
 		case GLOBAL_VEC: // 3
-            return tacJoin(tacGenerate(ast_son_get(aux, 0)), tacGenerate(ast_son_get(aux, 1)));
+            return tacJoin(
+                    tacGenerate(
+                        ast_son_get(aux, 0)),
+                    tacGenerate(
+                        ast_son_get(aux, 1)));
 			//generate_code(output, ast_son_get(aux, 0)); // declaracao_vetor
 			//fprintf (output, ";\n");
 			//generate_code(output, ast_son_get(aux, 1)); // declaracao_variaveis_globais
 			break;
 
 		case VARDEC: // 4
-            return tacCreate(TAC_MOVE, ast_son_get(aux, 1)->hash_node, ast_son_get(aux, 2)->hash_node, 0);
+            return tacCreate(
+                    TAC_MOVE,
+                    ast_son_get(aux, 1)->hash_node,
+                    ast_son_get(aux, 2)->hash_node,
+                    0);
 			//generate_code(output, ast_son_get(aux, 0)); // tipo
 			//fprintf(output, " ");
 			//generate_code(output, ast_son_get(aux, 1)); // id
@@ -58,7 +75,11 @@ tac_node_t* tacGenerate(ast_node_t * node) {
 			break;
 
 		case VECDEC_INIT: // 6
-            return tacCreate(TAC_MOVE, ast_son_get(aux, 1)->hash_node, 0, 0); // TODO
+            return tacCreate(
+                    TAC_MOVE,
+                    ast_son_get(aux, 1)->hash_node,
+                    0,
+                    0); // TODO
 			//generate_code(output, ast_son_get(aux, 0)); // tipo
 			//fprintf (output, " ");
 			//generate_code(output, ast_son_get(aux, 1)); // id
@@ -75,6 +96,14 @@ tac_node_t* tacGenerate(ast_node_t * node) {
 			break;
 
 		case FUNDEC_PARAMS: // 8
+            return tacJoin(
+                    tacCreate(TAC_LABEL,
+                        ast_son_get(aux, 1)->hash_node,
+                        0,
+                        0),
+                    tacJoin(
+                        tacGenerate(ast_son_get(aux, 3)),
+                        tacGenerate(ast_son_get(aux, 4)));
 			//generate_code (output, ast_son_get(aux, 0)); // tipo
 			//fprintf(outpu), " ");
 			//generate_code (output, ast_son_get(aux, 1)); // id
@@ -96,7 +125,9 @@ tac_node_t* tacGenerate(ast_node_t * node) {
 			break;
 
 		case LOCAL_VAR: // 10
-            return tacJoin(ast_son_get(aux, 0), ast_son_get(aux, 1));
+            return tacJoin(
+                    ast_son_get(aux, 0),
+                    ast_son_get(aux, 1));
 			//generate_code (output, ast_son_get(aux, 0)); // declaracao_variavel
 			//generate_code (output, ast_son_get(aux, 1)); // variaveis_locais
 			break;
@@ -137,14 +168,19 @@ tac_node_t* tacGenerate(ast_node_t * node) {
 			break;
 
 		case BLOCK: // 16
-            return tacGenerate(ast_son_get(aux, 0));
+            return tacGenerate(
+                    ast_son_get(aux, 0));
 			//fprintf (output, "{\n");
 			//generate_code (output, ast_son_get(aux, 0)); // lista_comandos
 			//fprintf (output, "}");
 			break;
 
 		case CMDLIST: // 17
-            return tacJoin(tacGenerate(ast_son_get(aux, 0)), tacGenerate(ast_son_get(aux, 1)));
+            return tacJoin(
+                    tacGenerate(
+                        ast_son_get(aux, 0)),
+                    tacGenerate(
+                        ast_son_get(aux, 1)));
 			//generate_code (output, ast_son_get(aux, 0)); // comando
 			//if (ast_son_get(aux, 0)) {
 			//	if (ast_son_get(aux, 0)->type != CMDLIST) {
@@ -156,8 +192,13 @@ tac_node_t* tacGenerate(ast_node_t * node) {
 
 		case ATTR: // 18
             return tacJoin(
-                    tacCreate(TAC_MOVE, ast_son_get(aux, 0)->hash_node, hash_map_maketemp(hash), 0),
-                    tacGenerate(ast_son_get(aux, 1)));
+                    tacCreate(
+                        TAC_MOVE,
+                        ast_son_get(aux, 0)->hash_node,
+                        hash_map_maketemp(hash),
+                        0),
+                    tacGenerate(
+                        ast_son_get(aux, 1)));
 			//generate_code (output, ast_son_get(aux, 0)); // id
 			//fprintf (output, " := ");
 			//generate_code (output, ast_son_get(aux, 1)); // expressao
@@ -165,8 +206,13 @@ tac_node_t* tacGenerate(ast_node_t * node) {
 
 		case ATTR_REV: // 19
             return tacJoin(
-                    tacCreate(TAC_MOVE, ast_son_get(aux, 1)->hash_node, hash_map_maketemp(hash), 0)
-                    tacGenerate(ast_son_get(aux, 0)));
+                    tacCreate(
+                        TAC_MOVE,
+                        ast_son_get(aux, 1)->hash_node,
+                        hash_map_maketemp(hash),
+                        0)
+                    tacGenerate(
+                        ast_son_get(aux, 0)));
 			//generate_code (output, ast_son_get(aux, 0)); // expressao
 			//fprintf (output, " =: ");
 			//generate_code (output, ast_son_get(aux, 1)); // id
@@ -174,8 +220,12 @@ tac_node_t* tacGenerate(ast_node_t * node) {
 
 		case VEC_ATTR: // 20
             return tacJoin(
-                    tacCreate(TAC_VECMOVE, ast_son_get(aux, 0)->hash_node, ast_son_get(aux, 1)->hash_node, hash_map_maketemp(hash)),
-                    tacGenerate(ast_son_get(aux, )))
+                    tacCreate(TAC_VECMOVE,
+                        ast_son_get(aux, 0)->hash_node,
+                        ast_son_get(aux, 1)->hash_node,
+                        hash_map_maketemp(hash)),
+                    tacGenerate(
+                        ast_son_get(aux, 2)));
 			//generate_code (output, ast_son_get(aux, 0)); // id
 			//fprintf (output, "[");
 			//generate_code (output, ast_son_get(aux, 1)); // expressao
@@ -330,13 +380,22 @@ tac_node_t* tacGenerate(ast_node_t * node) {
 		case GREATER: // 42
             tac_aux1 = tacGenerate(ast_son_get(aux, 0));
             tac_aux2 = tacGenerate(ast_son_get(aux, 1));
-            return tacJoin(tacJoin(tac_aux1, tac_aux2), tacCreate(GREATER, hash_map_maketemp(hash), tac_aux1->res, tac_aux2->res);
+            return tacJoin(
+                    tacJoin(
+                        tac_aux1,
+                        tac_aux2),
+                    tacCreate(
+                        GREATER,
+                        hash_map_maketemp(hash),
+                        tac_aux1->res,
+                        tac_aux2->res);
 			//generate_code (output, ast_son_get(aux, 0)); // expressao
 			//fprintf (output, " > ");
 			//generate_code (output, ast_son_get(aux, 1)); // expressao
 			break;
 
 		case EXP: // 43
+            return tacGenerate(ast_son_get(aux, 0));
 			//fprintf(output, "(");
 			//generate_code (output, ast_son_get(aux, 0)); // expressao
 			//fprintf (output, ")");
