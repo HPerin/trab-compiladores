@@ -12,8 +12,7 @@
 #define SYMBOL_FUNCTION 8
 #define SYMBOL_VARIABLE 9
 #define SYMBOL_VECTOR 10
-#define SYMBOL_TEMP 11
-#define SYNBOL_LABEL 12
+#define SYNBOL_LABEL 11
 
 //datatypes
 

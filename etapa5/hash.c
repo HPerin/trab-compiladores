@@ -14,7 +14,7 @@ hash_node_t * hash_map_maketemp(hash_map_t * hash_map) {
 
     char temp_name[128];
     sprintf(temp_name, "_temp_n%d", temp_num++);
-    hash_map_insert(hash_map, SYMBOL_TEMP, temp_name);
+    hash_map_insert(hash_map, SYMBOL_VARIABLE, temp_name);
 
     return hash_map_search(hash_map, temp_name);
 }
