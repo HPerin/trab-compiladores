@@ -11,7 +11,15 @@ enum {
     TAC_DIV,
     TAC_LABEL,
     TAC_JMP,
-    TAC_RET
+    TAC_RET,
+    TAC_EQ,
+    TAC_NE,
+    TAC_LE,
+    TAC_GE,
+    TAC_LESS,
+    TAC_GREATER,
+    TAC_AND,
+    TAC_OR
 };
 
 typedef struct tac_node
