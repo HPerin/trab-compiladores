@@ -9,6 +9,26 @@
 
 #define HASH_MAP_INITIAL_SIZE 997
 
+hash_node_t * hash_map_maketemp(hash_map_t * hash_map) {
+    static int temp_num = 1000;
+
+    char temp_name[128];
+    sprintf(temp_name, "_temp_n%d", temp_num++);
+    hash_map_insert(hash_map, SYMBOL_TEMP, temp_name);
+
+    return hash_map_search(hash_map, temp_name);
+}
+
+hash_node_t * hash_map_makelabel(hash_map_t * hash_map) {
+    static int label_num = 1000000;
+
+    char label_name[128];
+    sprintf(label_name, "_label_n%d", label_num++);
+    hash_map_insert(hash_map, SYMBOL_LABEL, label_name);
+
+    return hash_map_search(hash_map, label_name);
+}
+
 int get_hash(const char * data) {
     int i;
     int hash = 1;
@@ -22,7 +42,7 @@ int get_hash(const char * data) {
 hash_map_t *hash_map_new() {
     hash_map_t * hash_map;
 
-    hash_map = malloc(sizeof(hash_map));
+    hash_map = malloc(sizeo)(hash_map);
     hash_map->nodes = calloc(HASH_MAP_INITIAL_SIZE, sizeof(hash_node_t*));
     hash_map->size = 0;
 

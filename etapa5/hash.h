@@ -12,7 +12,8 @@
 #define SYMBOL_FUNCTION 8
 #define SYMBOL_VARIABLE 9
 #define SYMBOL_VECTOR 10
-
+#define SYMBOL_TEMP 11
+#define SYNBOL_LABEL 12
 
 //datatypes
 
@@ -37,6 +38,9 @@ typedef struct hash_map {
     hash_node_t ** nodes;
     int size;
 } hash_map_t;
+
+hash_node_t * hash_map_maketemp(hash_map_t * hash_map);
+hash_node_t * hash_map_makelabel(hash_map_t * hash_map);
 
 hash_map_t * hash_map_new();
 void hash_map_insert(hash_map_t * hash_map, int type, const char *data);
