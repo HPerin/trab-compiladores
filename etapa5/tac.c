@@ -32,3 +32,23 @@ tac_node_t* tacJoin(tac_node_t* TAC1, tac_node_t* TAC2){
 	return TAC2;
 }
 
+void tacPrintSingle(tac_node_t* TAC){
+
+	if(TAC!=0)
+		{
+		switch(TAC->type)
+			{
+
+
+
+			}
+		if(TAC->res)
+			//printf();
+		if(TAC->op1)
+			//printf();
+		if(TAC->op2)
+			//printf();
+		
+		//printf("\n");			
+}
+

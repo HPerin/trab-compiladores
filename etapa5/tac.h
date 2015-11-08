@@ -15,3 +15,5 @@ typedef struct tac_node
 
 tac_node_t* tacCreate(int type, hash_node_t *res, hash_node_t *op1, hash_node_t* op2);
 tac_node_t* tacJoin(tac_node_t* TAC1, tac_node_t* TAC2);
+
+void tacPrintSingle(tac_node_t* TAC);
