@@ -191,41 +191,48 @@ tac_node_t* tacGenerate(ast_node_t * node) {
 			break;
 
 		case ATTR: // 18
+            tac_aux1 = tacGenerate(ast_son_get(aux, 0));
+
             return tacJoin(
+                    tac_aux1,
                     tacCreate(
                         TAC_MOVE,
                         ast_son_get(aux, 0)->hash_node,
-                        hash_map_maketemp(hash),
-                        0),
-                    tacGenerate(
-                        ast_son_get(aux, 1)));
+                        tac_aux1->res,
+                        0));
 			//generate_code (output, ast_son_get(aux, 0)); // id
 			//fprintf (output, " := ");
 			//generate_code (output, ast_son_get(aux, 1)); // expressao
 			break;
 
 		case ATTR_REV: // 19
+            tac_aux1 = tacGenerate(ast_son_get(aux, 0));
+
             return tacJoin(
+                    tac_aux1,
                     tacCreate(
                         TAC_MOVE,
                         ast_son_get(aux, 1)->hash_node,
-                        hash_map_maketemp(hash),
-                        0)
-                    tacGenerate(
-                        ast_son_get(aux, 0)));
+                        tac_aux1->res,
+                        0);
 			//generate_code (output, ast_son_get(aux, 0)); // expressao
 			//fprintf (output, " =: ");
 			//generate_code (output, ast_son_get(aux, 1)); // id
 			break;
 
 		case VEC_ATTR: // 20
+            tac_aux1 = tacGenerate(ast_son_get(aux, 1));
+            tac_aux2 = tacGenerate(ast_son_get(aux, 2));
+
             return tacJoin(
-                    tacCreate(TAC_VECMOVE,
+                    tacJoin(
+                        tac_aux1,
+                        tac_aux2),
+                    tacCreate(
+                        TAC_VECMOVE,
                         ast_son_get(aux, 0)->hash_node,
-                        ast_son_get(aux, 1)->hash_node,
-                        hash_map_maketemp(hash)),
-                    tacGenerate(
-                        ast_son_get(aux, 2)));
+                        tac_aux1->res
+                        tac_aux2->res);
 			//generate_code (output, ast_son_get(aux, 0)); // id
 			//fprintf (output, "[");
 			//generate_code (output, ast_son_get(aux, 1)); // expressao
