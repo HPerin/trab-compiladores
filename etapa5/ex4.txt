@@ -1,0 +1,35 @@
+int main(int x, int y)
+real h:1;
+int j:1;
+int k:2;
+  {;
+  x:=y;
+  a:=b;
+   input e;
+   f[2+5-2-2-2-2]:= fl[10];
+   return f[5];
+   if(g) h:=i else j:=k;
+   if(f[3]<5) { ;;;;; };
+   c:=3;
+   ba:=bb;
+   output boar();
+   e:=l;
+
+  };
+
+int boar(int r, char rr){;};
+
+
+int b:3;
+int a:23;
+real c:0;
+real d:232;
+real e:10;
+int f[10];
+int fl[10];
+real g:4;
+int i:4;
+char l:'a';
+bool ba:TRUE;
+bool bb:FALSE;
+
