@@ -231,7 +231,7 @@ tac_node_t* tacGenerate(ast_node_t * node) {
                     tacCreate(
                         TAC_VECMOVE,
                         ast_son_get(aux, 0)->hash_node,
-                        tac_aux1->res
+                        tac_aux1->res,
                         tac_aux2->res);
 			//generate_code (output, ast_son_get(aux, 0)); // id
 			//fprintf (output, "[");
@@ -241,6 +241,18 @@ tac_node_t* tacGenerate(ast_node_t * node) {
 			break;
 
 		case VEC_ATTR_REV: // 21
+            tac_aux1 = tacGenerate(ast_son_get(aux, 0));
+            tac_aux2 = tacGenerate(ast_son_get(aux, 2));
+
+            return tacJoin(
+                tacJoin(
+                    tac_aux1,
+                    tac_aux2),
+                tacCreate(
+                    TAC_VECMOVE,
+                    ast_son_get(aux, 0)->hash_node,
+                    tac_aux1->res,
+                    tac_aux2->res));
 			//generate_code (output, ast_son_get(aux, 0)); // expressao
 			//fprintf (output, " =: ");))
 			//generate_code (output, ast_son_get(aux, 1)); // id
@@ -250,21 +262,37 @@ tac_node_t* tacGenerate(ast_node_t * node) {
 			break;
 
 		case INPUT: // 22
+
+            return tacCreate(TAC_INPUT,
+                    ast_son_get(aux, 0)->hash_node,
+                    0,
+                    0);
 			//fprintf (output, "input ");
 			//generate_code (output, ast_son_get(aux, 0)); // id
 			break;
 
 		case OUTPUT: // 23
+
+            return tacCreate(TAC_OUTPUT,
+                    ast_son_get(aux, 0)->hash_node,
+                    0,
+                    0);
 			//fprintf (output, "output ");
 			//generate_code (output, ast_son_get(aux, 0)); // id
 			break;
 
 		case RETURN: // 24
+
+            return tacCreate(TAC_RETURN,
+                    ast_son_get(aux, 0)->hash_node,
+                    0,
+                    0);
 			//fprintf (output, "return ");
 			//generate_code (output, ast_son_get(aux, 0)); // id
 			break;
 
 		case IF: // 25
+
 			//fprintf (output, "if (");
 			//generate_code (output, ast_son_get(aux, 0)); // expressao
 			//fprintf (output, ")");
