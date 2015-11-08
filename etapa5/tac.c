@@ -4,7 +4,17 @@
 #include "tac.h"
 #include "ast.h"
 
+static hash_map_t * hash = NULL;
+
+tac_node_t* tacGenerateInit(ast_node_t * node, hash_map_t * hash_map) {
+    hash = hash_map;
+    return tacGenerate(node);
+}
+
 tac_node_t* tacGenerate(ast_node_t * node) {
+    tac_node_t * tac_aux1;
+    tac_node_t * tac_aux2
+
     if (node) {
 		switch(aux->type) {
 
@@ -92,22 +102,32 @@ tac_node_t* tacGenerate(ast_node_t * node) {
 			break;
 
 		case INT: // 11
-			//fprintf(output, "int");
+			fprintf(stderr, "---------- ERROR! - %3d ----------\n", aux->type);
+            return 0;
+            //fprintf(output, "int");
 			break;
 
 		case CHAR: // 12
-			//fprintf(output, "char");
+	        fprintf(stderr, "---------- ERROR! - %3d ----------\n", aux->type);
+            return 0;
+            //fprintf(output, "char");
 			break;
 
 		case REAL: // 13
-			//fprintf(output, "real");
+            fprintf(stderr, "---------- ERROR! - %3d ----------\n", aux->type);
+            return 0;
+            //fprintf(output, "real");
 			break;
 
 		case BOOL: // 14
+            fprintf(stderr, "---------- ERROR! - %3d ----------\n", aux->type);
+            return 0;
 			//fprintf(output, "bool");
 			break;
 
 		case SYMBOL: // 15
+            fprintf(stderr, "---------- ERROR! - %3d ----------\n", aux->type);
+            return 0;
 			//if (!aux->hash_node)
 			//	fprintf(output, "[error-node]");
 			//else if (!aux->hash_node->data)
@@ -117,12 +137,14 @@ tac_node_t* tacGenerate(ast_node_t * node) {
 			break;
 
 		case BLOCK: // 16
+            return tacGenerate(ast_son_get(aux, 0));
 			//fprintf (output, "{\n");
 			//generate_code (output, ast_son_get(aux, 0)); // lista_comandos
 			//fprintf (output, "}");
 			break;
 
 		case CMDLIST: // 17
+            return tacJoin(tacGenerate(ast_son_get(aux, 0)), tacGenerate(ast_son_get(aux, 1)));
 			//generate_code (output, ast_son_get(aux, 0)); // comando
 			//if (ast_son_get(aux, 0)) {
 			//	if (ast_son_get(aux, 0)->type != CMDLIST) {
@@ -133,18 +155,27 @@ tac_node_t* tacGenerate(ast_node_t * node) {
 			break;
 
 		case ATTR: // 18
+            return tacJoin(
+                    tacCreate(TAC_MOVE, ast_son_get(aux, 0)->hash_node, hash_map_maketemp(hash), 0),
+                    tacGenerate(ast_son_get(aux, 1)));
 			//generate_code (output, ast_son_get(aux, 0)); // id
 			//fprintf (output, " := ");
 			//generate_code (output, ast_son_get(aux, 1)); // expressao
 			break;
 
 		case ATTR_REV: // 19
+            return tacJoin(
+                    tacCreate(TAC_MOVE, ast_son_get(aux, 1)->hash_node, hash_map_maketemp(hash), 0)
+                    tacGenerate(ast_son_get(aux, 0)));
 			//generate_code (output, ast_son_get(aux, 0)); // expressao
 			//fprintf (output, " =: ");
 			//generate_code (output, ast_son_get(aux, 1)); // id
 			break;
 
 		case VEC_ATTR: // 20
+            return tacJoin(
+                    tacCreate(TAC_VECMOVE, ast_son_get(aux, 0)->hash_node, ast_son_get(aux, 1)->hash_node, hash_map_maketemp(hash)),
+                    tacGenerate(ast_son_get(aux, )))
 			//generate_code (output, ast_son_get(aux, 0)); // id
 			//fprintf (output, "[");
 			//generate_code (output, ast_son_get(aux, 1)); // expressao
@@ -154,7 +185,7 @@ tac_node_t* tacGenerate(ast_node_t * node) {
 
 		case VEC_ATTR_REV: // 21
 			//generate_code (output, ast_son_get(aux, 0)); // expressao
-			//fprintf (output, " =: ");
+			//fprintf (output, " =: ");))
 			//generate_code (output, ast_son_get(aux, 1)); // id
 			//fprintf (output, "[");
 			//generate_code (output, ast_son_get(aux, 2)); // expressao
@@ -297,7 +328,9 @@ tac_node_t* tacGenerate(ast_node_t * node) {
 			break;
 
 		case GREATER: // 42
-			return tacOperation(TAC_GREATER, ast_son_get(aux, 0), ast_son_get(aux, 1));
+            tac_aux1 = tacGenerate(ast_son_get(aux, 0));
+            tac_aux2 = tacGenerate(ast_son_get(aux, 1));
+            return tacJoin(tacJoin(tac_aux1, tac_aux2), tacCreate(GREATER, hash_map_maketemp(hash), tac_aux1->res, tac_aux2->res);
 			//generate_code (output, ast_son_get(aux, 0)); // expressao
 			//fprintf (output, " > ");
 			//generate_code (output, ast_son_get(aux, 1)); // expressao
