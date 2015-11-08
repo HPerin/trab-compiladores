@@ -4,7 +4,7 @@
 #include "tac.h"
 
 
-tac_node_t* tacCreate(int type, hash_node_t *res, hash_note_t *op1, hash_note_t* op2) {
+tac_node_t* tacCreate(int type, hash_node_t *res, hash_node_t *op1, hash_node_t* op2) {
 
 	tac_note_t* newTAC = 0;
 	newTAC = (tac_node_t*) calloc(1,sizeof(tac_node_t*);
