@@ -14,6 +14,9 @@ tac_node_t* tacGenerateInit(ast_node_t * node, hash_map_t * hash_map) {
 tac_node_t* tacGenerate(ast_node_t *aux) {
     tac_node_t * tac_aux1;
     tac_node_t * tac_aux2;
+    hash_node_t * hash_aux1;
+    hash_node_t * hash_aux2;
+    hash_node_t * hash_aux3;
 
     if (aux) {
 		switch(aux->type) {
@@ -291,6 +294,20 @@ tac_node_t* tacGenerate(ast_node_t *aux) {
 			break;
 
 		case IF: // 25
+            hash_aux1 = hash_map_makelabel(hash); // label inicio
+            hash_aux2 = hash_map_makelabel(hash); // label fim
+
+            tac_aux1 = tacGenerate(ast_son_get(aux, 0));
+
+            return tacJoin(
+                    tac_aux1,
+                    tacJoin(
+                        tacJoin(
+                            tacCreate(TAC_IF, tac_aux1->res, hash_aux1, hash_aux2),
+                            tacCreate(TAC_LABEL, hash_aux1, 0, 0)),
+                        tacJoin(
+                            tacGenerate(ast_son_get(aux, 1)),
+                            tacCreate(TAC_LABEL, hash_aux2, 0, 0))));
 
 			//fprintf (output, "if (");
 			//generate_code (output, ast_son_get(aux, 0)); // expressao
@@ -299,6 +316,23 @@ tac_node_t* tacGenerate(ast_node_t *aux) {
 			break;
 
 		case IF_ELSE: // 26
+            hash_aux1 = hash_map_makelabel(hash); // if
+            hash_aux2 = hash_map_makelabel(hash); // else
+
+            tac_aux1 = tacGenerate(ast_son_get(aux, 0));
+
+            return tacJoin(
+                    tac_aux1,
+                    tacJoin(
+                        tacJoin(
+                            tacCreate(TAC_IF, tac_aux1->res, hash_aux1, hash_aux2),
+                            tacCreate(TAC_LABEL, hash_aux1, 0, 0)),
+                        tacJoin(
+                            tacGenerate(ast_son_get(aux, 1)),
+                            tacJoin(
+                                tacCreate(TAC_LABEL, hash_aux2, 0, 0),
+                                tacGenerate(ast_son_get(aux, 2))))));
+
 			//fprintf (output, "if (");
 			//generate_code (output, ast_son_get(aux, 0)); // expressao
 			//fprintf (output, ")\n");
@@ -308,6 +342,26 @@ tac_node_t* tacGenerate(ast_node_t *aux) {
 			break;
 
 		case IF_LOOP: // 27
+            hash_aux1 = hash_map_makelabel(hash); // if
+            hash_aux2 = hash_map_makelabel(hash); // inicio
+            hash_aux3 = hash_map_makelabel(hash); // fim
+
+            tac_aux1 = tacGenerate(ast_son_get(aux, 0));
+
+            return tacJoin(
+                    tacCreate(TAC_LABEL, hash_aux1, 0, 0),
+                    tacJoin(
+                        tac_aux1,
+                        tacJoin(
+                            tacCreate(TAC_IF, tac_aux1->res, hash_aux2, hash_aux3),
+                            tacJoin(
+                                tacCreate(TAC_LABEL, hash_aux2, 0, 0),
+                                tacJoin(
+                                    tacGenerate(ast_son_get(aux, 1)),
+                                    tacJoin(
+                                        tacCreate(TAC_JMP, hash_aux1, 0, 0),
+                                        tacCreate(TAC_LABEL, hash_aux3, 0, 0)))))));
+
 			//fprintf (output, "if (");
 			//generate_code (output, ast_son_get(aux, 0)); // expressao
 			//fprintf (output, ")\n");
@@ -450,6 +504,7 @@ tac_node_t* tacGenerate(ast_node_t *aux) {
 			break;
 
 		case FUNC_CALL: // 44
+
 			//generate_code (output, ast_son_get(aux, 0)); // id
 			//fprintf (output, " (");
 			//generate_code (output, ast_son_get(aux, 1)); // parametros_passados
