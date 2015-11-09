@@ -42,7 +42,7 @@ int get_hash(const char * data) {
 hash_map_t *hash_map_new() {
     hash_map_t * hash_map;
 
-    hash_map = malloc(sizeof(hash_map));
+    hash_map = malloc(sizeof(hash_map_t));
     hash_map->nodes = calloc(HASH_MAP_INITIAL_SIZE, sizeof(hash_node_t*));
     hash_map->size = 0;
 
