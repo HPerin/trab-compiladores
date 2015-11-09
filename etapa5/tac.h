@@ -7,6 +7,7 @@ enum {
     TAC_SYMBOL,
     TAC_MOVE,
     TAC_ADD,
+    TAC_SUB,
     TAC_MUL,
     TAC_DIV,
     TAC_LABEL,
@@ -19,7 +20,16 @@ enum {
     TAC_LESS,
     TAC_GREATER,
     TAC_AND,
-    TAC_OR
+    TAC_OR,
+    TAC_VARDEC,
+    TAC_VECDEC,
+    TAC_VECMOVE,
+    TAC_INPUT,
+    TAC_OUTPUT,
+    TAC_RETURN,
+    TAC_IF,
+    TAC_CALL,
+    TAC_PUSH
 };
 
 typedef struct tac_node

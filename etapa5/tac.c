@@ -59,12 +59,12 @@ tac_node_t* tacGenerate(ast_node_t *aux) {
                         TAC_VARDEC,
                         ast_son_get(aux, 1)->hash_node,
                         0,
-                        0)
+                        0),
                     tacCreate(
                         TAC_MOVE,
                         ast_son_get(aux, 1)->hash_node,
                         ast_son_get(aux, 2)->hash_node,
-                        0);
+                        0));
 			//generate_code(output, ast_son_get(aux, 0)); // tipo
 			//fprintf(output, " ");
 			//generate_code(output, ast_son_get(aux, 1)); // id
@@ -124,7 +124,7 @@ tac_node_t* tacGenerate(ast_node_t *aux) {
                         tacGenerate(ast_son_get(aux, 3)),
                         tacJoin(
                             tacGenerate(ast_son_get(aux, 4)),
-                            tacCreate(TAC_RET, 0, 0, 0));
+                            tacCreate(TAC_RET, 0, 0, 0))));
 			//generate_code (output, ast_son_get(aux, 0)); // tipo
 			//fprintf(outpu), " ");
 			//generate_code (output, ast_son_get(aux, 1)); // id
@@ -158,7 +158,7 @@ tac_node_t* tacGenerate(ast_node_t *aux) {
 		case LOCAL_VAR: // 10
             return tacJoin(
                     tacGenerate(ast_son_get(aux, 0)),
-                    tacGenerate(ast_son_get(aux, 1));
+                    tacGenerate(ast_son_get(aux, 1)));
 			//generate_code (output, ast_son_get(aux, 0)); // declaracao_variavel
 			//generate_code (output, ast_son_get(aux, 1)); // variaveis_locais
 			break;
@@ -245,7 +245,7 @@ tac_node_t* tacGenerate(ast_node_t *aux) {
                         TAC_MOVE,
                         ast_son_get(aux, 1)->hash_node,
                         tac_aux1->res,
-                        0);
+                        0));
 			//generate_code (output, ast_son_get(aux, 0)); // expressao
 			//fprintf (output, " =: ");
 			//generate_code (output, ast_son_get(aux, 1)); // id
@@ -263,7 +263,7 @@ tac_node_t* tacGenerate(ast_node_t *aux) {
                         TAC_VECMOVE,
                         ast_son_get(aux, 0)->hash_node,
                         tac_aux1->res,
-                        tac_aux2->res);
+                        tac_aux2->res));
 			//generate_code (output, ast_son_get(aux, 0)); // id
 			//fprintf (output, "[");
 			//generate_code (output, ast_son_get(aux, 1)); // expressao
@@ -539,7 +539,7 @@ tac_node_t* tacGenerate(ast_node_t *aux) {
                     tacGenerate(ast_son_get(aux, 1)),
                     tacJoin(
                         tacCreate(TAC_CALL, ast_son_get(aux, 0)->hash_node, hash_aux1, 0),
-                        tacCreate(TAC_LABEL, hash_aux1, 0, 0));
+                        tacCreate(TAC_LABEL, hash_aux1, 0, 0)));
 
 			//generate_code (output, ast_son_get(aux, 0)); // id
 			//fprintf (output, " (");
@@ -590,8 +590,8 @@ tac_node_t* tacGenerate(ast_node_t *aux) {
 
 tac_node_t* tacCreate(int type, hash_node_t *res, hash_node_t *op1, hash_node_t* op2) {
 
-	tac_note_t* newTAC = 0;
-	newTAC = (tac_node_t*) calloc(1,sizeof(tac_node_t*);
+	tac_node_t* newTAC = 0;
+	newTAC = (tac_node_t*) calloc(1,sizeof(tac_node_t*));
 
 	newTAC->type = type;
 	newTAC->op1 = op1;
@@ -648,9 +648,11 @@ void tacPrintSingle(tac_node_t* TAC){
 		if(TAC->op2)
 			printf("op2(%s)", TAC->op2->data);
 		printf("\n");
+		}
 }
 
 tac_node_t* tacOperation(int type, tac_node_t* TAC1, tac_node_t* TAC2){
 
 	return tacJoin(tacJoin(TAC1, TAC2), tacCreate(type, hash_map_maketemp(hash), TAC1 ? TAC1->res : 0, TAC2 ? TAC2->res : 0));
 }
+
