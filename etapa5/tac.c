@@ -504,7 +504,10 @@ tac_node_t* tacGenerate(ast_node_t *aux) {
 			break;
 
 		case FUNC_CALL: // 44
-
+			tac_aux1 = tacGenerate(ast_son_get(aux, 0));
+		
+			return tacJoin(tac_aux1, tacCreate(TAC_FUNCALL, hash_map_maketemp(hash), ast_son_get(aux, 0)->data, tac_aux1->res)); 
+			
 			//generate_code (output, ast_son_get(aux, 0)); // id
 			//fprintf (output, " (");
 			//generate_code (output, ast_son_get(aux, 1)); // parametros_passados
@@ -605,5 +608,5 @@ void tacPrintSingle(tac_node_t* TAC){
 
 tac_node_t* tacOperation(int type, tac_node_t* TAC1, tac_node_t* TAC2){
 
-	return tacJoin(tacJoin(TAC1, TAC2), tacCreate(type, hash_map_maketemp(hash_map), TAC1 ? TAC1->res : 0, TAC2 ? TAC2->res : 0));
+	return tacJoin(tacJoin(TAC1, TAC2), tacCreate(type, hash_map_maketemp(hash), TAC1 ? TAC1->res : 0, TAC2 ? TAC2->res : 0));
 }
