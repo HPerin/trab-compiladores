@@ -307,7 +307,7 @@ tac_node_t* tacGenerate(ast_node_t *aux) {
             return tacCreate(TAC_OUTPUT,
                     ast_son_get(aux, 0)->hash_node,
                     0,
-                    0);
+                    0); // TODO
 			//fprintf (output, "output ");
 			//generate_code (output, ast_son_get(aux, 0)); // id
 			break;
@@ -536,6 +536,8 @@ tac_node_t* tacGenerate(ast_node_t *aux) {
 			hash_aux1 = hash_map_maketemp(hash);
 
 			return tacJoin(
+                    tacGenerate(ast_son_get(aux, 1)),
+                    tacJoin(
                         tacCreate(TAC_CALL, ast_son_get(aux, 0)->hash_node, hash_aux1, 0),
                         tacCreate(TAC_LABEL, hash_aux1, 0, 0));
 
@@ -546,25 +548,36 @@ tac_node_t* tacGenerate(ast_node_t *aux) {
 			break;
 
 		case FUNC_CALL_PARAMS: // 45
+            tac_aux1 = tacGenerate(ast_son_get(aux, 0));
+
+            return tacJoin(
+                    tacJoin(
+                        tac_aux1,
+                        tacCreate(TAC_PUSH, tac_aux1->res, 0, 0)),
+                    tacGenerate(ast_son_get(aux, 1)));
 			//generate_code (output, ast_son_get(aux, 0)); // expressao
 			//generate_code (output, ast_son_get(aux, 1)); // resto_parametros_passados
 			break;
 
 		case ID_WORD: // 46
+            return tacGenerate(ast_son_get(aux, 0));
 			//generate_code (output, ast_son_get (aux, 0));
 			break;
 
 		case FUNC_CALL_PARAMS_REST: // 47
+            return tacGenerate(ast_son_get(aux, 0));
 			//fprintf(output, ", ");
 			//generate_code (output, ast_son_get (aux, 0));
 			break;
 
 		case OUTPUT_LIST_REST:
+            return tacGenerate(ast_son_get(aux, 0));
 			//fprintf(output, ",");
 			//generate_code (output, ast_son_get (aux, 0));
 			break;
 
 		case FUNC_DEC_PARAMS_REST:
+            return tacGenerate(ast_son_get(aux, 0));
 			//fprintf(output, ", ");
 			//generate_code(output, ast_son_get(aux, 0));
             break;
