@@ -591,7 +591,7 @@ tac_node_t* tacGenerate(ast_node_t *aux) {
 tac_node_t* tacCreate(int type, hash_node_t *res, hash_node_t *op1, hash_node_t* op2) {
 
 	tac_node_t* newTAC = 0;
-	newTAC = (tac_node_t*) calloc(1,sizeof(tac_node_t*));
+	newTAC = (tac_node_t*) calloc(1,sizeof(tac_node_t));
 
 	newTAC->type = type;
 	newTAC->op1 = op1;
