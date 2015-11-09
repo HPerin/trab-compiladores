@@ -27,7 +27,7 @@ lex.yy.o: lex.yy.c
 	gcc $(FLAGS) -c lex.yy.c
 
 lex.yy.c: scanner.l y.tab.o
-	lex --header-file=lex.yy.h scanner.l
+		lex --header-file=lex.yy.h scanner.l
 
 y.tab.o: y.tab.c
 	gcc $(FLAGS) -c y.tab.c
