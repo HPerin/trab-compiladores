@@ -128,8 +128,8 @@ tac_node_t* tacGenerate(ast_node_t *aux) {
 
 		case LOCAL_VAR: // 10
             return tacJoin(
-                    ast_son_get(aux, 0),
-                    ast_son_get(aux, 1));
+                    tacGenerate(ast_son_get(aux, 0)),
+                    tacGenerate(ast_son_get(aux, 1));
 			//generate_code (output, ast_son_get(aux, 0)); // declaracao_variavel
 			//generate_code (output, ast_son_get(aux, 1)); // variaveis_locais
 			break;
