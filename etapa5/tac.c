@@ -504,7 +504,7 @@ tac_node_t* tacGenerate(ast_node_t *aux) {
 			break;
 
 		case FUNC_CALL: // 44
-			tac_aux1 = taGenerate(ast_son_get(aux,0));
+			tac_aux1 = tacGenerate(ast_son_get(aux,0));
 			hash_aux1 = hash_map_maketemp(hash);
 			
 			return tacJoin(tacJoin(tac_aux1, tacCreate(TAC_LABEL, hash_aux1, 0, 0)), tacCreate(TAC_CALL, hash_aux1, ast_son_get(aux, 0)->data, tac_aux1->data));
