@@ -3,10 +3,6 @@
 #include "ast.h"
 #include "y.tab.h"
 
-
-
-hash_map_t * hash_map;
-
 int current_line = 1;
 int running = 1;
 

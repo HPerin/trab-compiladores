@@ -22,10 +22,6 @@
 #define DATATYPE_REAL        3
 #define DATATYPE_BOOL        4
 
-
-
-
-
 typedef struct hash_node {
     char * data;
     int type;
@@ -37,6 +33,8 @@ typedef struct hash_map {
     hash_node_t ** nodes;
     int size;
 } hash_map_t;
+
+hash_map_t * hash_map;
 
 hash_node_t * hash_map_maketemp(hash_map_t * hash_map);
 hash_node_t * hash_map_makelabel(hash_map_t * hash_map);

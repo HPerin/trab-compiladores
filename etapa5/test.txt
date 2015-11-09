@@ -1,6 +1,6 @@
 int main()
 {
-a:=v[r+a];
+a:=v[1];
 };
 int v[10]:0;
 int a:0;
