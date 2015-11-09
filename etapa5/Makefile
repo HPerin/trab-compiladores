@@ -1,9 +1,9 @@
 FLAGS = -g
 
-all:	etapa4
+all:	etapa5
 
-etapa4: lex.yy.o main.o hash.o y.tab.o ast.o generator.o semantic.o
-	gcc $(FLAGS) -o etapa4 lex.yy.o main.o hash.o y.tab.o ast.o generator.o semantic.o
+etapa5: lex.yy.o main.o hash.o y.tab.o ast.o generator.o semantic.o tac.o
+	gcc $(FLAGS) -o etapa5 lex.yy.o main.o hash.o y.tab.o ast.o generator.o semantic.o tac.o
 
 main.o: main.c lex.yy.c
 	gcc $(FLAGS) -c main.c
@@ -20,6 +20,9 @@ generator.o: generator.c
 semantic.o: semantic.c
 	gcc $(FLAGS) -c semantic.c
 
+tac.o: tac.c
+	gcc $(FLAGS) -c tac.c
+
 lex.yy.o: lex.yy.c
 	gcc $(FLAGS) -c lex.yy.c
 
@@ -33,5 +36,5 @@ y.tab.c: parser.y
 	yacc -d parser.y
 
 clean:
-	rm -f lex.yy.c lex.yy.h y.tab.c y.tab.h *.o etapa4
+	rm -f lex.yy.c lex.yy.h y.tab.c y.tab.h *.o etapa5
 
