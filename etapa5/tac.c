@@ -224,6 +224,8 @@ tac_node_t* tacGenerate(ast_node_t *aux) {
 		case ATTR: // 18
             tac_aux1 = tacGenerate(ast_son_get(aux, 1));
 
+            if (!tac_aux1) return NULL;
+
             return tacJoin(
                     tac_aux1,
                     tacCreate(
