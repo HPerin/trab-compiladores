@@ -507,7 +507,7 @@ tac_node_t* tacGenerate(ast_node_t *aux) {
 			tac_aux1 = taGenerate(ast_son_get(aux,0));
 			hash_aux1 = hash_map_maketemp(hash);
 			
-			return tacJoin(tacJoin(tac_aux1, tacCreate(TAC_TEMP, hash_aux1, 0, 0)), tacCreate(TAC_CALL, hash_aux1, ast_son_get(aux, 0)->data, tac_aux1->data));
+			return tacJoin(tacJoin(tac_aux1, tacCreate(TAC_LABEL, hash_aux1, 0, 0)), tacCreate(TAC_CALL, hash_aux1, ast_son_get(aux, 0)->data, tac_aux1->data));
 			
 			//generate_code (output, ast_son_get(aux, 0)); // id
 			//fprintf (output, " (");
