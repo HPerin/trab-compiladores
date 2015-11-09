@@ -586,6 +586,8 @@ tac_node_t* tacGenerate(ast_node_t *aux) {
 			break;
         }
     }
+
+    return NULL;
 }
 
 tac_node_t* tacCreate(int type, hash_node_t *res, hash_node_t *op1, hash_node_t* op2) {
@@ -594,6 +596,7 @@ tac_node_t* tacCreate(int type, hash_node_t *res, hash_node_t *op1, hash_node_t*
 	newTAC = (tac_node_t*) calloc(1,sizeof(tac_node_t));
 
 	newTAC->type = type;
+    newTAC->res = res;
 	newTAC->op1 = op1;
 	newTAC->op2 = op2;
 	newTAC->prev = 0;
