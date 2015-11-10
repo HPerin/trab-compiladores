@@ -336,11 +336,14 @@ tac_node_t* tacGenerate(ast_node_t *aux) {
 			break;
 
 		case RETURN: // 24
+            tac_aux1 = tacGenerate(ast_son_get(aux, 0));
 
-            return tacCreate(TAC_RETURN,
-                    ast_son_get(aux, 0)->hash_node,
-                    0,
-                    0);
+            return tacJoin(
+                    tac_aux1,
+                    tacCreate(TAC_RETURN,
+                        tac_aux1->res,
+                        0,
+                        0));
 			//fprintf (output, "return ");
 			//generate_code (output, ast_son_get(aux, 0)); // id
 			break;

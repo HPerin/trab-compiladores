@@ -2,6 +2,7 @@ int main()
 {
 a:=v[1];
 output a, r;
+return a;
 };
 int v[10]:0 0 0 0 0;
 int a:0;
