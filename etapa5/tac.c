@@ -232,7 +232,7 @@ tac_node_t* tacGenerate(ast_node_t *aux) {
 			break;
 
 		case SYMBOL: // 15
-            return tacCreate(TAC_MOVE, hash_map_maketemp(hash), aux->hash_node, 0);
+            return tacCreate(TAC_SYMBOL, aux->hash_node, 0, 0);
 			//if (!aux->hash_node)
 			//	fprintf(output, "[error-node]");
 			//else if (!aux->hash_node->data)
@@ -444,7 +444,7 @@ tac_node_t* tacGenerate(ast_node_t *aux) {
 		case FUNC_DEC_PARAMS: // 28
 
             return tacJoin(
-                    tacCreate(TAC_POP, ast_son_get(aux, 1)->hash_node, 0, 0),
+                    tacCreate(TAC_POPARG, ast_son_get(aux, 1)->hash_node, 0, 0),
                     tacGenerate(ast_son_get(aux, 2)));
 			//generate_code (output, ast_son_get(aux, 0)); // tipo
 			//fprintf(output, " ");
@@ -602,7 +602,7 @@ tac_node_t* tacGenerate(ast_node_t *aux) {
                         tacJoin(
                             tacCreate(TAC_CALL, ast_son_get(aux, 0)->hash_node, hash_aux1, 0),
                             tacCreate(TAC_LABEL, hash_aux1, 0, 0)),
-                        tacCreate(TAC_POP, hash_aux2, 0, 0)));
+                        tacCreate(TAC_POPARG, hash_aux2, 0, 0)));
 
 			//generate_code (output, ast_son_get(aux, 0)); // id
 			//fprintf (output, " (");
@@ -616,14 +616,14 @@ tac_node_t* tacGenerate(ast_node_t *aux) {
             return tacJoin(
                     tacJoin(
                         tac_aux1,
-                        tacCreate(TAC_PUSH, tac_aux1->res, 0, 0)),
+                            tacCreate(TAC_PUSHARG, tac_aux1->res, 0, 0)),
                     tacGenerate(ast_son_get(aux, 1)));
 			//generate_code (output, ast_son_get(aux, 0)); // expressao
 			//generate_code (output, ast_son_get(aux, 1)); // resto_parametros_passados
 			break;
 
 		case ID_WORD: // 46
-            return tacCreate(TAC_MOVE, hash_map_maketemp(hash), ast_son_get(aux, 0)->hash_node, 0);
+            return tacCreate(TAC_SYMBOL, ast_son_get(aux, 0)->hash_node, 0, 0);
 			//generate_code (output, ast_son_get (aux, 0));
 			break;
 
@@ -711,11 +711,11 @@ void tacPrintSingle(tac_node_t* TAC){
 			case TAC_FROMVECMOVE: printf("TAC_FROMVECMOVE "); break;
 			case TAC_INPUT: printf("TAC_INPUT "); break;
 			case TAC_OUTPUT: printf("TAC_OUTPUT "); break;
-			case TAC_RETURN: printf("TAC_RETURN/TAC_PUSH "); break;
+			case TAC_RETURN: printf("TAC_RETURN "); break;
 			case TAC_IF: printf("TAC_IF "); break;
 			case TAC_CALL: printf("TAC_CALL "); break;
-			case TAC_PUSH: printf("TAC_PUSH "); break;
-            case TAC_POP: printf("TAC_POP "); break;
+            case TAC_PUSHARG: printf("TAC_PUSHARG "); break;
+            case TAC_POPARG: printf("TAC_POPARG "); break;
             default: printf("TAC_%d ", TAC->type); break;
 			}
 		if(TAC->res)
