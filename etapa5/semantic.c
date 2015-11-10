@@ -256,7 +256,7 @@ void checkDeclarations(ast_node_t* node, bool first_run) {
 			}
 			
 		if ((indexType != DATATYPE_INT && indexType != DATATYPE_CHAR)) {
-			printf("Invlid vector index.\n");
+			printf("ERRO: Invalid vector index.\n");
 			has_semantic_errors = true;
 			}
 	}
