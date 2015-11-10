@@ -20,6 +20,7 @@ tac_node_t* tacGenerate(ast_node_t *aux) {
     hash_node_t * hash_aux1;
     hash_node_t * hash_aux2;
     hash_node_t * hash_aux3;
+    char * buffer;
 
     if (aux) {
 		switch(aux->type) {
@@ -121,12 +122,12 @@ tac_node_t* tacGenerate(ast_node_t *aux) {
 		case VECINIT: // 7
             tac_aux1 = tacGenerate(ast_son_get(aux, 0));
 
-            char * os = calloc(64, sizeof(char));
-            sprintf(os, "%d", vector_init_index++);
-            hash_map_insert(hash, SYMBOL_VARIABLE, os);
-            hash_aux1 = hash_map_search(hash, os);
+            buffer = calloc(64, sizeof(char));
+            sprintf(buffer, "%d", vector_init_index++);
+            hash_map_insert(hash, SYMBOL_VARIABLE, buffer);
+            hash_aux1 = hash_map_search(hash, buffer);
             hash_aux1->dataType = DATATYPE_INT;
-            free(os);
+            free(buffer);
 
             return tacJoin(
                     tac_aux1,
@@ -140,6 +141,14 @@ tac_node_t* tacGenerate(ast_node_t *aux) {
 			break;
 
 		case FUNDEC_PARAMS: // 8
+
+            buffer = calloc(64, sizeof(char));
+            sprintf(buffer, "%d", 0);
+            hash_map_insert(hash, SYMBOL_VARIABLE, buffer);
+            hash_aux1 = hash_map_search(hash, buffer);
+            hash_aux1->dataType = DATATYPE_INT;
+            free(buffer);
+
             return tacJoin(
                     tacCreate(TAC_LABEL,
                         ast_son_get(aux, 1)->hash_node,
@@ -151,7 +160,7 @@ tac_node_t* tacGenerate(ast_node_t *aux) {
                             tacGenerate(ast_son_get(aux, 3)),
                             tacJoin(
                                 tacGenerate(ast_son_get(aux, 4)),
-                                tacCreate(TAC_RET, 0, 0, 0)))));
+                                tacCreate(TAC_RETURN, hash_aux1, 0, 0)))));
 			//generate_code (output, ast_son_get(aux, 0)); // tipo
 			//fprintf(outpu), " ");
 			//generate_code (output, ast_son_get(aux, 1)); // id
@@ -163,6 +172,14 @@ tac_node_t* tacGenerate(ast_node_t *aux) {
 			break;
 
 		case FUNDEC_NOPARAMS: // 9
+
+            buffer = calloc(64, sizeof(char));
+            sprintf(buffer, "%d", 0);
+            hash_map_insert(hash, SYMBOL_VARIABLE, buffer);
+            hash_aux1 = hash_map_search(hash, buffer);
+            hash_aux1->dataType = DATATYPE_INT;
+            free(buffer);
+
             return tacJoin(
                     tacCreate(TAC_LABEL,
                         ast_son_get(aux, 1)->hash_node,
@@ -172,7 +189,7 @@ tac_node_t* tacGenerate(ast_node_t *aux) {
                         tacGenerate(ast_son_get(aux, 2)),
                         tacJoin(
                             tacGenerate(ast_son_get(aux, 3)),
-                            tacCreate(TAC_RET, 0, 0, 0))));
+                            tacCreate(TAC_RETURN, hash_aux1, 0, 0))));
 			//generate_code (output, ast_son_get(aux, 0)); // tipo
 			//fprintf(output, " ");
 			//generate_code (output, ast_son_get(aux, 1)); // id

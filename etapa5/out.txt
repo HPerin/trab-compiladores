@@ -1,9 +1,26 @@
-int main(  )
+int main( int z, char b, bool d )
 {
-a := v[1];
-output a,r;
-return a;
+output "Digite um numero: ";
+if (i < 10 || j >= 20 && 2)
+{
+a := incn (2, 3);
+(v[i]) + 1 =: i;
+}loop;
+output "Incrementado algumas vezes fica ",a,"\n";
 };
-int v[10] : 0 0 0 0 0 ;
-int a:0;
-real r:0;
+int incn( int x, int n )
+{
+if (2 + 3)
+{
+return a + 1 * (2 * j);
+}else
+{
+return mat[a + 2];
+};
+};
+int i:0;
+int j:3;
+real v[10] : 0 0 0 0 0 0 0 0 0 0 ;
+int vas[2];
+bool mat[1000];
+int a:50;
