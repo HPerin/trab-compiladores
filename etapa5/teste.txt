@@ -1,11 +1,10 @@
-int main(int a, char b, bool d)
-int j:1;
+int main(int z, char b, bool d)
   {
   output "Digite um numero: ";;;;;;;;;;;;;;
-  if (i<10 || j>=20 && ant(b))
+  if (i<10 || j>=20 && 2)
     {
-    a := incn(derp('a', "bfsdf", 2),1);
-    (i[i[b]]) + 1 =: i
+    a := incn(2,3);
+    (v[i]) + 1 =: i
 
     } loop;
   output "Incrementado algumas vezes fica ",a,"\n";
@@ -14,21 +13,14 @@ int j:1;
 int incn (int x, int n)
   {
 	if(2+3){
-  return a[5]+1*(2*a);}
-	else {return mat(a+2);};
-
-	a =: vet[2];
-	vet[a+2] := 43;
-	b =: a;
-	a:=b;;;;;;;c:=cda;;;;;;
-	c:=dam(adasdasdasd+boold(2));
-	
+  return a+1*(2*j);}
+	else {return mat[a+2];};
   };
 
-int a:0;
+int i:0;
+int j:3;
 real v[10]: 0 0 0 0 0 0 0 0 0 0; 
 int vas[2];
 bool mat[1000];
-bool a:TRUE;
-char a:'c';
-char v[10]: 'c''c''c''c''c''c';
+int a:50;
+
