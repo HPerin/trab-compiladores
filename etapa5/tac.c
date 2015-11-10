@@ -188,8 +188,7 @@ tac_node_t* tacGenerate(ast_node_t *aux) {
 			break;
 
 		case SYMBOL: // 15
-            fprintf(stderr, "---------- ERROR! - %3d ----------\n", aux->type);
-            return tacCreate(TAC_MOVE, aux->hash_node, aux->hash_node, 0);
+            return tacCreate(TAC_MOVE, hash_map_maketemp(hash), aux->hash_node, 0);
 			//if (!aux->hash_node)
 			//	fprintf(output, "[error-node]");
 			//else if (!aux->hash_node->data)
@@ -568,7 +567,7 @@ tac_node_t* tacGenerate(ast_node_t *aux) {
 			break;
 
 		case ID_WORD: // 46
-            return tacCreate(TAC_MOVE, ast_son_get(aux, 0)->hash_node, ast_son_get(aux, 0)->hash_node, 0);
+            return tacCreate(TAC_MOVE, hash_map_maketemp(hash), ast_son_get(aux, 0)->hash_node, 0);
 			//generate_code (output, ast_son_get (aux, 0));
 			break;
 
