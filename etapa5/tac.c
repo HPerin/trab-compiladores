@@ -74,11 +74,15 @@ tac_node_t* tacGenerate(ast_node_t *aux) {
 			break;
 
 		case VECDEC_NOINIT: // 5
-            return tacCreate(
+            tac_aux1 = tacGenerate(ast_son_get(aux, 2));
+
+            return tacJoin(
+                    tac_aux1,
+                    tacCreate(
                         TAC_VECDEC,
                         ast_son_get(aux, 1)->hash_node,
-                        0,
-                        0);
+                        tac_aux1->res,
+                        0));
 			//generate_code(output, ast_son_get(aux, 0)); // tipo
 			//fprintf (output, " ");
 			//generate_code(output, ast_son_get(aux, 1)); // id
@@ -88,17 +92,18 @@ tac_node_t* tacGenerate(ast_node_t *aux) {
 			break;
 
 		case VECDEC_INIT: // 6
+            tac_aux1 = tacGenerate(ast_son_get(aux, 2));
+
             return tacJoin(
+                tac_aux1,
+                tacJoin(
                     tacCreate(
                         TAC_VECDEC,
                         ast_son_get(aux, 1)->hash_node,
-                        0,
+                        tac_aux1->res,
                         0),
-                    tacCreate(
-                        TAC_MOVE,
-                        ast_son_get(aux, 1)->hash_node,
-                        0,
-                        0)); // TODO
+                    tacGenerate(
+                        ast_son_get(aux, 3)))); // TODO
 			//generate_code(output, ast_son_get(aux, 0)); // tipo
 			//fprintf (output, " ");
 			//generate_code(output, ast_son_get(aux, 1)); // id
@@ -121,10 +126,12 @@ tac_node_t* tacGenerate(ast_node_t *aux) {
                         0,
                         0),
                     tacJoin(
-                        tacGenerate(ast_son_get(aux, 3)),
+                        tacGenerate(ast_son_get(aux, 2)),
                         tacJoin(
-                            tacGenerate(ast_son_get(aux, 4)),
-                            tacCreate(TAC_RET, 0, 0, 0))));
+                            tacGenerate(ast_son_get(aux, 3)),
+                            tacJoin(
+                                tacGenerate(ast_son_get(aux, 4)),
+                                tacCreate(TAC_RET, 0, 0, 0)))));
 			//generate_code (output, ast_son_get(aux, 0)); // tipo
 			//fprintf(outpu), " ");
 			//generate_code (output, ast_son_get(aux, 1)); // id
@@ -397,6 +404,10 @@ tac_node_t* tacGenerate(ast_node_t *aux) {
 			break;
 
 		case FUNC_DEC_PARAMS: // 28
+
+            return tacJoin(
+                    tacCreate(TAC_POP, ast_son_get(aux, 1)->hash_node, 0, 0),
+                    tacGenerate(ast_son_get(aux, 2)));
 			//generate_code (output, ast_son_get(aux, 0)); // tipo
 			//fprintf(output, " ");
 			//generate_code (output, ast_son_get(aux, 1)); // id
@@ -663,6 +674,7 @@ void tacPrintSingle(tac_node_t* TAC){
 			case TAC_IF: printf("TAC_IF "); break;
 			case TAC_CALL: printf("TAC_CALL "); break;
 			case TAC_PUSH: printf("TAC_PUSH "); break;
+            case TAC_POP: printf("TAC_POP "); break;
             default: printf("TAC_%d ", TAC->type); break;
 			}
 		if(TAC->res)
