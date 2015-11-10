@@ -3,6 +3,6 @@ int main()
 a:=v[1];
 output a, r;
 };
-int v[10]:0;
+int v[10]:0 0 0 0 0;
 int a:0;
 real r:0;

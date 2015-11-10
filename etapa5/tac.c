@@ -6,6 +6,9 @@
 
 static hash_map_t * hash = NULL;
 
+static hash_node_t * hash_vector;
+static int vector_init_index;
+
 tac_node_t* tacGenerateInit(ast_node_t * node, hash_map_t * hash_map) {
     hash = hash_map;
     return tacGenerate(node);
@@ -93,6 +96,8 @@ tac_node_t* tacGenerate(ast_node_t *aux) {
 
 		case VECDEC_INIT: // 6
             tac_aux1 = tacGenerate(ast_son_get(aux, 2));
+            hash_vector = ast_son_get(aux, 1)->hash_node;
+            vector_init_index = 0;
 
             return tacJoin(
                 tac_aux1,
@@ -114,6 +119,21 @@ tac_node_t* tacGenerate(ast_node_t *aux) {
 			break;
 
 		case VECINIT: // 7
+            tac_aux1 = tacGenerate(ast_son_get(aux, 0));
+
+            char * os = calloc(64, sizeof(char));
+            sprintf(os, "%d", vector_init_index++);
+            hash_map_insert(hash, SYMBOL_VARIABLE, os);
+            hash_aux1 = hash_map_search(hash, os);
+            hash_aux1->dataType = DATATYPE_INT;
+            free(os);
+
+            return tacJoin(
+                    tac_aux1,
+                    tacJoin(
+                        tacCreate(TAC_TOVECMOVE, hash_vector, hash_aux1, tac_aux1->res),
+                        tacGenerate(ast_son_get(aux, 1))));
+
 			//generate_code(output, ast_son_get(aux, 0)); // literal
 			//fprintf (output, " ");
 			//generate_code(output, ast_son_get(aux, 1)); // inicializacao_vetor
