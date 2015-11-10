@@ -189,7 +189,7 @@ tac_node_t* tacGenerate(ast_node_t *aux) {
 
 		case SYMBOL: // 15
             fprintf(stderr, "---------- ERROR! - %3d ----------\n", aux->type);
-            return 0;
+            return tacCreate(TAC_MOVE, aux->hash_node, aux->hash_node, 0);
 			//if (!aux->hash_node)
 			//	fprintf(output, "[error-node]");
 			//else if (!aux->hash_node->data)
@@ -262,7 +262,7 @@ tac_node_t* tacGenerate(ast_node_t *aux) {
                         tac_aux1,
                         tac_aux2),
                     tacCreate(
-                        TAC_VECMOVE,
+                        TAC_TOVECMOVE,
                         ast_son_get(aux, 0)->hash_node,
                         tac_aux1->res,
                         tac_aux2->res));
@@ -282,10 +282,10 @@ tac_node_t* tacGenerate(ast_node_t *aux) {
                     tac_aux1,
                     tac_aux2),
                 tacCreate(
-                    TAC_VECMOVE,
-                    ast_son_get(aux, 0)->hash_node,
-                    tac_aux1->res,
-                    tac_aux2->res));
+                    TAC_TOVECMOVE,
+                    ast_son_get(aux, 1)->hash_node,
+                    tac_aux2->res,
+                    tac_aux1->res));
 			//generate_code (output, ast_son_get(aux, 0)); // expressao
 			//fprintf (output, " =: ");))
 			//generate_code (output, ast_son_get(aux, 1)); // id
@@ -413,6 +413,12 @@ tac_node_t* tacGenerate(ast_node_t *aux) {
 			break;
 
 		case VECTOR: // 30
+            tac_aux1 = tacGenerate(ast_son_get(aux, 1));
+            hash_aux1 = hash_map_maketemp(hash);
+
+            return tacJoin(
+                    tac_aux1,
+                    tacCreate(TAC_FROMVECMOVE, hash_aux1, ast_son_get(aux, 0)->hash_node, tac_aux1->res));
 			//generate_code (output, ast_son_get(aux, 0)); // id
 			//fprintf (output, "[");
 			//generate_code (output, ast_son_get(aux, 1)); // expressao
@@ -562,7 +568,7 @@ tac_node_t* tacGenerate(ast_node_t *aux) {
 			break;
 
 		case ID_WORD: // 46
-            return tacGenerate(ast_son_get(aux, 0));
+            return tacCreate(TAC_MOVE, ast_son_get(aux, 0)->hash_node, ast_son_get(aux, 0)->hash_node, 0);
 			//generate_code (output, ast_son_get (aux, 0));
 			break;
 
@@ -646,7 +652,8 @@ void tacPrintSingle(tac_node_t* TAC){
 			case TAC_OR: printf("TAC_OR "); break;
 			case TAC_VARDEC: printf("TAC_VARDEC "); break;
 			case TAC_VECDEC: printf("TAC_VECDEC "); break;
-			case TAC_VECMOVE: printf("TAC_VECMOVE "); break;
+            case TAC_TOVECMOVE: printf("TAC_TOVECMOVE"); break;
+			case TAC_FROMVECMOVE: printf("TAC_FROMVECMOVE "); break;
 			case TAC_INPUT: printf("TAC_INPUT "); break;
 			case TAC_OUTPUT: printf("TAC_OUTPUT "); break;
 			case TAC_RETURN: printf("TAC_RETURN "); break;
@@ -670,7 +677,7 @@ tac_node_t* tacOperation(int type, tac_node_t* TAC1, tac_node_t* TAC2){
 }
 
 void tacPrint(tac_node_t* TAC){
-	
+
 	if(TAC){
 		tacPrint(TAC->prev);
 		tacPrintSingle(TAC);
