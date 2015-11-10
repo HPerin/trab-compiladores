@@ -77,7 +77,7 @@ FILE * output = NULL;
 %%
 
 start: program									   {$$ = $1; checkDeclarations($$, true); checkDeclarations($$, false);
-     tacGenerateInit($$, NULL); if (output) generate_code(output, $$);}
+     tacPrint(tacGenerateInit($$, NULL));  if (output) generate_code(output, $$);}
 	;
 
 program: declaracao_funcao ';' program						   {$$ = ast_node_new(FUNDEC, 0); ast_node_add_son($$, $1); ast_node_add_son($$, $3);}

@@ -630,6 +630,7 @@ void tacPrintSingle(tac_node_t* TAC){
 			case TAC_SYMBOL: printf("TAC_SYMBOL "); break;
 			case TAC_MOVE: printf("TAC_MOVE "); break;
 			case TAC_ADD: printf("TAC_ADD "); break;
+			case TAC_SUB: printf("TAC_SUB "); break;
 			case TAC_MUL: printf("TAC_MUL "); break;
 			case TAC_DIV: printf("TAC_DIV "); break;
 			case TAC_LABEL: printf("TAC_LABEL "); break;
@@ -643,8 +644,15 @@ void tacPrintSingle(tac_node_t* TAC){
 			case TAC_GREATER: printf("TAC_GREATER "); break;
 			case TAC_AND: printf("TAC_AND "); break;
 			case TAC_OR: printf("TAC_OR "); break;
-			//case...
-
+			case TAC_VARDEC: printf("TAC_VARDEC "); break;
+			case TAC_VECDEC: printf("TAC_VECDEC "); break;
+			case TAC_VECMOVE: printf("TAC_VECMOVE "); break;
+			case TAC_INPUT: printf("TAC_INPUT "); break;
+			case TAC_OUTPUT: printf("TAC_OUTPUT "); break;
+			case TAC_RETURN: printf("TAC_RETURN "); break;
+			case TAC_IF: printf("TAC_IF "); break;
+			case TAC_CALL: printf("TAC_CALL "); break;
+			case TAC_PUSH: printf("TAC_PUSH "); break;
 			}
 		if(TAC->res)
 			printf("res(%s)", TAC->res->data);
@@ -659,5 +667,13 @@ void tacPrintSingle(tac_node_t* TAC){
 tac_node_t* tacOperation(int type, tac_node_t* TAC1, tac_node_t* TAC2){
 
 	return tacJoin(tacJoin(TAC1, TAC2), tacCreate(type, hash_map_maketemp(hash), TAC1 ? TAC1->res : 0, TAC2 ? TAC2->res : 0));
+}
+
+void tacPrint(tac_node_t* TAC){
+	
+	if(TAC){
+		tacPrint(TAC->prev);
+		tacPrintSingle(TAC);
+	}
 }
 
