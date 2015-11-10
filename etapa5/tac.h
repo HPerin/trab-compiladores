@@ -30,7 +30,8 @@ enum {
     TAC_RETURN,
     TAC_IF,
     TAC_CALL,
-    TAC_PUSH
+    TAC_PUSH,
+    TAC_PRINT
 };
 
 typedef struct tac_node

@@ -305,10 +305,7 @@ tac_node_t* tacGenerate(ast_node_t *aux) {
 
 		case OUTPUT: // 23
 
-            return tacCreate(TAC_OUTPUT,
-                    ast_son_get(aux, 0)->hash_node,
-                    0,
-                    0); // TODO
+            return tacGenerate(ast_son_get(aux, 0));
 			//fprintf (output, "output ");
 			//generate_code (output, ast_son_get(aux, 0)); // id
 			break;
@@ -407,6 +404,13 @@ tac_node_t* tacGenerate(ast_node_t *aux) {
 			break;
 
 		case OUTPUT_LIST: // 29
+            tac_aux1 = tacGenerate(ast_son_get(aux, 0));
+
+            return tacJoin(
+                    tacJoin(
+                        tac_aux1,
+                        tacCreate(TAC_OUTPUT, tac_aux1->res, 0, 0)),
+                    tacGenerate(ast_son_get(aux, 1)));
 			//generate_code (output, ast_son_get(aux, 0)); // expressao
 			//generate_code (output, ast_son_get(aux, 1)); // resto_output
 			break;
@@ -651,7 +655,7 @@ void tacPrintSingle(tac_node_t* TAC){
 			case TAC_OR: printf("TAC_OR "); break;
 			case TAC_VARDEC: printf("TAC_VARDEC "); break;
 			case TAC_VECDEC: printf("TAC_VECDEC "); break;
-            case TAC_TOVECMOVE: printf("TAC_TOVECMOVE"); break;
+            case TAC_TOVECMOVE: printf("TAC_TOVECMOVE "); break;
 			case TAC_FROMVECMOVE: printf("TAC_FROMVECMOVE "); break;
 			case TAC_INPUT: printf("TAC_INPUT "); break;
 			case TAC_OUTPUT: printf("TAC_OUTPUT "); break;
@@ -659,13 +663,14 @@ void tacPrintSingle(tac_node_t* TAC){
 			case TAC_IF: printf("TAC_IF "); break;
 			case TAC_CALL: printf("TAC_CALL "); break;
 			case TAC_PUSH: printf("TAC_PUSH "); break;
+            default: printf("TAC_%d ", TAC->type); break;
 			}
 		if(TAC->res)
-			printf("res(%s)", TAC->res->data);
+			printf(" res(%s)", TAC->res->data);
 		if(TAC->op1)
-			printf("op1(%s)", TAC->op1->data);
+			printf(" op1(%s)", TAC->op1->data);
 		if(TAC->op2)
-			printf("op2(%s)", TAC->op2->data);
+			printf(" op2(%s)", TAC->op2->data);
 		printf("\n");
 		}
 }

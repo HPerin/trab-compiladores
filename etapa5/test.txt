@@ -1,6 +1,7 @@
 int main()
 {
 a:=v[1];
+output a, r;
 };
 int v[10]:0;
 int a:0;
