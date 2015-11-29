@@ -3,6 +3,26 @@
 	.comm j,4
 	MOV j, 3
 	.comm v,40
+	MOV eax, DWORD PTR 0
+	MOV DWORD PTR v+0, eax
+	MOV eax, DWORD PTR 0
+	MOV DWORD PTR v+4, eax
+	MOV eax, DWORD PTR 0
+	MOV DWORD PTR v+8, eax
+	MOV eax, DWORD PTR 0
+	MOV DWORD PTR v+12, eax
+	MOV eax, DWORD PTR 0
+	MOV DWORD PTR v+16, eax
+	MOV eax, DWORD PTR 0
+	MOV DWORD PTR v+20, eax
+	MOV eax, DWORD PTR 0
+	MOV DWORD PTR v+24, eax
+	MOV eax, DWORD PTR 0
+	MOV DWORD PTR v+28, eax
+	MOV eax, DWORD PTR 0
+	MOV DWORD PTR v+32, eax
+	MOV eax, DWORD PTR 0
+	MOV DWORD PTR v+36, eax
 	.comm vas,8
 	.comm mat,4000
 	.comm a,4

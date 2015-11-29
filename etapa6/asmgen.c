@@ -61,8 +61,11 @@ void asmgen_gennode(tac_node_t * node, FILE * out) {
 	fprintf(out, "	.comm %s,%d\n", node->res->data, atoi(node->op1->data) * 4);
     break;
   case TAC_TOVECMOVE:
+	fprintf(out, "	MOV eax, DWORD PTR %s\n", node->op2->data);
+	fprintf(out, "	MOV DWORD PTR %s+%d, eax\n", node->res->data, atoi(node->op1->data)*4);
     break;
   case TAC_FROMVECMOVE:
+	
     break;
   case TAC_INPUT:
     break;
