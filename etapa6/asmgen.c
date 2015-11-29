@@ -20,13 +20,13 @@ void asmgen_gennode(tac_node_t * node, FILE * out) {
   case TAC_SYMBOL:
     break;
  case TAC_MOVE:
-	if (node->op1->type == 3)
+	if (node->op1->type == LIT_INTEGER)
 		fprintf(out, 
 			"\tmov DWORD PTR %s, %d\n"
 					, node->res->data, atoi(node->op1->data));
-	else if (node->op1->type == 9) {
+	else if (node->op1->type == SYMBOL_VARIABLE) {
 		fprintf(out, 
-			"\tmov eax, DWORT PTR %s\n"
+			"\tmov eax, DWORD PTR %s\n"
 			"\tmov DWORD PTR %s, eax\n"
 					, node->op1->data, node->res->data);
 	}
@@ -89,7 +89,7 @@ void asmgen_gennode(tac_node_t * node, FILE * out) {
 	}
     break;
   case TAC_MUL:
-	if (node->op1->type == LIT_INTEGER && node->op2->type == 3) { 
+	if (node->op1->type == LIT_INTEGER && node->op2->type == SYMBOL_VARIABLE) { 
 		fprintf(out,
 			"\tmov DWORD PTR %s, %d\n"  
 					,node->res->data, (atoi(node->op1->data) * atoi(node->op2->data)));
@@ -179,10 +179,10 @@ void asmgen_gennode(tac_node_t * node, FILE * out) {
 	fprintf(out, "	.comm %s,%d\n", node->res->data, atoi(node->op1->data) * 4);
     break;
   case TAC_TOVECMOVE:
-	if (node->op2->type == 3) {
+	if (node->op2->type == LIT_INTEGER) {
 		fprintf(out, "	mov eax, %s\n", node->op2->data);
 		fprintf(out, "	mov DWORD PTR %s+%d, eax\n", node->res->data, atoi(node->op1->data)*4);
-	} else if (node->op2->type == 9) {
+	} else if (node->op2->type == SYMBOL_VARIABLE) {
 		fprintf(out, "	mov eax, DWORD PTR %s\n", node->op2->data);
 		fprintf(out, "	mov DWORD PTR %s+%d, eax\n", node->res->data, atoi(node->op1->data)*4);
 	}
