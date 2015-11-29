@@ -35,14 +35,20 @@
 	mov DWORD PTR a
 incn:
 	.comm _temp_n1007,4
-	and eax, 00h
-	add eax, 5
-	mov DWORD PTR _temp_n1007, eax
+	mov DWORD PTR _temp_n1007, 5
+	mov eax, _temp_n1007
+	test 0, eax
+	jne _label_n1000004
+	je _label_n1000005
 _label_n1000004:
 	.comm _temp_n1010,4
-	MUL _temp_n1010, 2
+	mov eax, DWORD PTR j
+	imul eax, eax, 2
+	mov DWORD PTR _temp_n1010, eax
 	.comm _temp_n1011,4
-	MUL _temp_n1011, 1
+	mov eax, DWORD PTR _temp_n1010
+	imul eax, eax, 1
+	mov DWORD PTR _temp_n1011, eax
 	.comm _temp_n1012,4
 	mov edx, DWORD PTR a
 	mov eax, DWORD PTR _temp_n1011
@@ -60,6 +66,10 @@ _label_n1000000:
 	.comm _temp_n1001,4
 	.comm _temp_n1002,4
 	.comm _temp_n1003,4
+	mov eax, _temp_n1003
+	test 0, eax
+	jne _label_n1000001
+	je _label_n1000002
 _label_n1000001:
 	.comm _temp_n1006,4
 _label_n1000003:
