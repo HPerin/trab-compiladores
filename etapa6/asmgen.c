@@ -55,36 +55,10 @@ void asmgen_gennode(tac_node_t * node, FILE * out) {
   case TAC_OR:
     break;
   case TAC_VARDEC:
-	switch(node->res->dataType) {
-	case DATATYPE_INT:
-		fprintf(out, "	.comm %s,4\n", node->res->data);
-		break;
-	case DATATYPE_CHAR:
-		fprintf(out, "	.comm %s,4\n", node->res->data);
-		break;
-	case DATATYPE_REAL:
-		fprintf(out, "	.comm %s,4\n", node->res->data);
-		break;
-	case DATATYPE_BOOL:
-		fprintf(out, "	.comm %s,4\n", node->res->data);
-		break;
-	}
+	fprintf(out, "	.comm %s,4\n", node->res->data);
     break;
   case TAC_VECDEC:
-	switch(node->res->dataType) {
-	case DATATYPE_INT:
-		fprintf(out, "	.comm %s,%d\n", node->res->data, atoi(node->op1->data) * 4);
-		break;
-	case DATATYPE_CHAR:
-		fprintf(out, "	.comm %s,%d\n", node->res->data, atoi(node->op1->data) * 4);
-		break;
-	case DATATYPE_REAL:
-		fprintf(out, "	.comm %s,%d\n", node->res->data, atoi(node->op1->data) * 4);
-		break;
-	case DATATYPE_BOOL:
-		fprintf(out, "	.comm %s,%d\n", node->res->data, atoi(node->op1->data) * 4);
-		break;
-	}
+	fprintf(out, "	.comm %s,%d\n", node->res->data, atoi(node->op1->data) * 4);
     break;
   case TAC_TOVECMOVE:
     break;
