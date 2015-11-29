@@ -26,8 +26,9 @@ void asmgen_gennode(tac_node_t * node, FILE * out) {
 					, node->res->data, atoi(node->op1->data));
 	else if (node->op1->type == 9) {
 		fprintf(out, 
-			"\tmov DWORD PTR %s, %s\n"
-					, node->res->data, node->op1->data);
+			"\tmov eax, DWORT PTR %s\n"
+			"\tmov DWORD PTR %s, eax\n"
+					, node->op1->data, node->res->data);
 	}
     break;
  case TAC_ADD:
