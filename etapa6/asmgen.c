@@ -16,11 +16,48 @@ void asmgen_gennode(tac_node_t * node, FILE * out) {
   switch(node->type) {
   case TAC_SYMBOL:
     break;
-  case TAC_MOVE:
-	fprintf(out, "	MOV %s, %s\n", node->res->data, node->op1->data);
+ case TAC_MOVE:
+	if (node->op1->type == 3)
+		fprintf(out, 
+			"\tand eax, 00h\n"
+			"\tadd eax, %d\n"
+			"\tmov DWORD PTR %s\n"
+					, atoi(node->op1->data), node->res->data);
+	else if (node->op1->type == 9) {
+		fprintf(out, 
+			"\tmov eax, DWORD PTR %s\n"
+			"\tmov DWORD PTR %s, eax\n"
+					, node->op1->data, node->res->data);
+	}
     break;
   case TAC_ADD:
-	fprintf(out, "	ADD %s, %s\n", node->res->data, node->op1->data);
+	if (node->op1->type == 3 && node->op2->type == 3) { //1+1
+		fprintf(out,
+			"\tand eax, 00h\n"	     // zera eax
+			"\tadd eax, %d\n"            // 1+1 em eax
+			"\tmov DWORD PTR %s, eax\n"  // eax em temp
+					,(atoi(node->op1->data) + atoi(node->op2->data)), node->res->data);
+	} else if(node->op1->type == 3 && node->op2->type == 9) { //1+a
+		fprintf(out, 
+			"\tmov eax, DWORD PTR %s\n" // a no eax
+			"\tadd eax, %d\n" 	    // 1 + a no eax
+			"\tmov DWORD PTR %s, eax\n"   // eax em temp
+					, node->op2->data, atoi(node->op1->data), node->res->data);
+	} else if(node->op1->type == 9 && node->op2->type == 3) {//a+1
+		fprintf(out, 
+			"\tmov eax, DWORD PTR %s\n" 
+			"\tadd eax, %d\n" 	    
+			"\tmov DWORD PTR %s, eax\n"   
+					, node->op1->data, atoi(node->op2->data), node->res->data);
+	}
+	 else if(node->op1->type == 9 && node->op2->type == 9) { //a+b
+		fprintf(out, 
+			"\tmov edx, DWORD PTR %s\n"    		 // a em edx
+			"\tmov eax, DWORD PTR %s\n"  		 // b em eax
+			"\tadd eax, edx\n" 	                 // eax = eax + edx
+			"\tmov DWORD PTR %s, eax\n"              // eax em temp
+					, node->op1->data, node->op2->data, node->res->data);
+	}
     break;
   case TAC_SUB:
 	fprintf(out, "	SUB %s, %s\n", node->res->data, node->op1->data);
