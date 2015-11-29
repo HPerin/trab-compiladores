@@ -1,7 +1,25 @@
+	.comm i,4
+	MOV i, 0
+	.comm j,4
+	MOV j, 3
 	.comm v,40
+	.comm vas,8
+	.comm mat,4000
 	.comm a,4
-	MOV a, 0
-	.comm r,4
-	MOV r, 0
+	MOV a, 50
+incn:
+	ADD _temp_n1007, 2
+_label_n1000004:
+	MUL _temp_n1010, 2
+	MUL _temp_n1011, 1
+	ADD _temp_n1012, a
+_label_n1000005:
+	ADD _temp_n1008, a
 main:
-	MOV a, _temp_n1000
+_label_n1000000:
+_label_n1000001:
+_label_n1000003:
+	MOV a, _temp_n1006
+	ADD _temp_n1005, _temp_n1004
+	MOV i, _temp_n1005
+_label_n1000002:

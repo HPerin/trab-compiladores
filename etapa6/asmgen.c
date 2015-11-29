@@ -23,10 +23,13 @@ void asmgen_gennode(tac_node_t * node, FILE * out) {
 	fprintf(out, "	ADD %s, %s\n", node->res->data, node->op1->data);
     break;
   case TAC_SUB:
+	fprintf(out, "	SUB %s, %s\n", node->res->data, node->op1->data);
     break;
   case TAC_MUL:
+	fprintf(out, "	MUL %s, %s\n", node->res->data, node->op1->data);
     break;
   case TAC_DIV:
+	fprintf(out, "	DIV %s, %s\n", node->res->data, node->op1->data);
     break;
   case TAC_LABEL:
 	fprintf(out, "%s:\n", node->res->data);
