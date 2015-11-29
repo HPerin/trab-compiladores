@@ -20,6 +20,7 @@ void asmgen_gennode(tac_node_t * node, FILE * out) {
 	fprintf(out, "	MOV %s, %s\n", node->res->data, node->op1->data);
     break;
   case TAC_ADD:
+	fprintf(out, "	ADD %s, %s\n", node->res->data, node->op1->data);
     break;
   case TAC_SUB:
     break;
