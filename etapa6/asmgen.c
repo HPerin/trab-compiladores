@@ -98,8 +98,13 @@ void asmgen_gennode(tac_node_t * node, FILE * out) {
 	fprintf(out, "	.comm %s,%d\n", node->res->data, atoi(node->op1->data) * 4);
     break;
   case TAC_TOVECMOVE:
-	fprintf(out, "	MOV eax, DWORD PTR %s\n", node->op2->data);
-	fprintf(out, "	MOV DWORD PTR %s+%d, eax\n", node->res->data, atoi(node->op1->data)*4);
+	if (node->op2->type == 3) {
+		fprintf(out, "	mov eax, %s\n", node->op2->data);
+		fprintf(out, "	mov DWORD PTR %s+%d, eax\n", node->res->data, atoi(node->op1->data)*4);
+	} else if (node->op2->type == 9) {
+		fprintf(out, "	mov eax, DWORD PTR %s\n", node->op2->data);
+		fprintf(out, "	mov DWORD PTR %s+%d, eax\n", node->res->data, atoi(node->op1->data)*4);
+	}
     break;
   case TAC_FROMVECMOVE:
 	

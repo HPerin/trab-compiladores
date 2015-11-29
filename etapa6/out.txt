@@ -1,45 +1,58 @@
 	.comm i,4
-	MOV i, 0
+	and eax, 00h
+	add eax, 0
+	mov DWORD PTR i
 	.comm j,4
-	MOV j, 3
+	and eax, 00h
+	add eax, 3
+	mov DWORD PTR j
 	.comm v,40
-	MOV eax, DWORD PTR 0
-	MOV DWORD PTR v+0, eax
-	MOV eax, DWORD PTR 0
-	MOV DWORD PTR v+4, eax
-	MOV eax, DWORD PTR 0
-	MOV DWORD PTR v+8, eax
-	MOV eax, DWORD PTR 0
-	MOV DWORD PTR v+12, eax
-	MOV eax, DWORD PTR 0
-	MOV DWORD PTR v+16, eax
-	MOV eax, DWORD PTR 0
-	MOV DWORD PTR v+20, eax
-	MOV eax, DWORD PTR 0
-	MOV DWORD PTR v+24, eax
-	MOV eax, DWORD PTR 0
-	MOV DWORD PTR v+28, eax
-	MOV eax, DWORD PTR 0
-	MOV DWORD PTR v+32, eax
-	MOV eax, DWORD PTR 0
-	MOV DWORD PTR v+36, eax
+	mov eax, 0
+	mov DWORD PTR v+0, eax
+	mov eax, 0
+	mov DWORD PTR v+4, eax
+	mov eax, 0
+	mov DWORD PTR v+8, eax
+	mov eax, 0
+	mov DWORD PTR v+12, eax
+	mov eax, 0
+	mov DWORD PTR v+16, eax
+	mov eax, 0
+	mov DWORD PTR v+20, eax
+	mov eax, 0
+	mov DWORD PTR v+24, eax
+	mov eax, 0
+	mov DWORD PTR v+28, eax
+	mov eax, 0
+	mov DWORD PTR v+32, eax
+	mov eax, 0
+	mov DWORD PTR v+36, eax
 	.comm vas,8
 	.comm mat,4000
 	.comm a,4
-	MOV a, 50
+	and eax, 00h
+	add eax, 50
+	mov DWORD PTR a
 incn:
 	.comm _temp_n1007,4
-	ADD _temp_n1007, 2
+	and eax, 00h
+	add eax, 5
+	mov DWORD PTR _temp_n1007, eax
 _label_n1000004:
 	.comm _temp_n1010,4
 	MUL _temp_n1010, 2
 	.comm _temp_n1011,4
 	MUL _temp_n1011, 1
 	.comm _temp_n1012,4
-	ADD _temp_n1012, a
+	mov edx, DWORD PTR a
+	mov eax, DWORD PTR _temp_n1011
+	add eax, edx
+	mov DWORD PTR _temp_n1012, eax
 _label_n1000005:
 	.comm _temp_n1008,4
-	ADD _temp_n1008, a
+	mov eax, DWORD PTR a
+	add eax, 2
+	mov DWORD PTR _temp_n1008, eax
 	.comm _temp_n1009,4
 main:
 _label_n1000000:
@@ -50,9 +63,13 @@ _label_n1000000:
 _label_n1000001:
 	.comm _temp_n1006,4
 _label_n1000003:
-	MOV a, _temp_n1006
+	mov eax, DWORD PTR _temp_n1006
+	mov DWORD PTR a, eax
 	.comm _temp_n1004,4
 	.comm _temp_n1005,4
-	ADD _temp_n1005, _temp_n1004
-	MOV i, _temp_n1005
+	mov eax, DWORD PTR _temp_n1004
+	add eax, 1
+	mov DWORD PTR _temp_n1005, eax
+	mov eax, DWORD PTR _temp_n1005
+	mov DWORD PTR i, eax
 _label_n1000002:
