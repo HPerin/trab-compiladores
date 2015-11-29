@@ -1,12 +1,15 @@
 FLAGS = -g
 
-all:	etapa5
+all:	etapa6
 
-etapa5: lex.yy.o main.o hash.o y.tab.o ast.o generator.o semantic.o tac.o
-	gcc $(FLAGS) -o etapa5 lex.yy.o main.o hash.o y.tab.o ast.o generator.o semantic.o tac.o
+etapa6: lex.yy.o main.o hash.o y.tab.o ast.o generator.o semantic.o tac.o asmgen.o
+	gcc $(FLAGS) -o etapa6 lex.yy.o main.o hash.o y.tab.o ast.o generator.o semantic.o tac.o asmgen.o
 
 main.o: main.c lex.yy.c
 	gcc $(FLAGS) -c main.c
+
+asmgen.o: asmgen.c
+	gcc $(FLAGS) -c asmgen.c
 
 hash.o: hash.c
 	gcc $(FLAGS) -c hash.c
@@ -36,5 +39,5 @@ y.tab.c: parser.y
 	yacc -d parser.y
 
 clean:
-	rm -f lex.yy.c lex.yy.h y.tab.c y.tab.h *.o etapa5
+	rm -f lex.yy.c lex.yy.h y.tab.c y.tab.h *.o etapa6
 

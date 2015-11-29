@@ -20,6 +20,7 @@
 #define ASMGEN_H
 
 #include "tac.h"
+#include "stdio.h"
 
 void asmgen_run(tac_node_t * root, FILE * out);
 

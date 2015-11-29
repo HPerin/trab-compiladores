@@ -1,4 +1,5 @@
-
+#ifndef TAC_H
+#define TAC_H
 
 #include "hash.h"
 #include "ast.h"
@@ -51,3 +52,5 @@ tac_node_t* tacJoin(tac_node_t* TAC1, tac_node_t* TAC2);
 void tacPrintSingle(tac_node_t* TAC);
 void tacPrint(tac_node_t* TAC);
 tac_node_t* tacOperation(int type, tac_node_t* TAC1, tac_node_t* TAC2);
+
+#endif

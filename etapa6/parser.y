@@ -1,6 +1,7 @@
 %{
 #include <stdio.h>
 #include <stdlib.h>
+#include "asmgen.h"
 #include "ast.h"
 #include "tac.h"
 #include "semantic.h"
@@ -78,7 +79,11 @@ FILE * output = NULL;
 %%
 
 start: program									   {$$ = $1; checkDeclarations($$, true); checkDeclarations($$, false);
-     tacPrint(tacGenerateInit($$, hash_map));  if (output) generate_code(output, $$);}
+	tac_node_t * root = tacGenerateInit($$, hash_map);     	
+	tacPrint(root);	
+	if (output) asmgen_run(root, output);  
+	//if (output) generate_code(output, $$);
+	}
 	;
 
 program: declaracao_funcao ';' program						   {$$ = ast_node_new(FUNDEC, 0); ast_node_add_son($$, $1); ast_node_add_son($$, $3);}
