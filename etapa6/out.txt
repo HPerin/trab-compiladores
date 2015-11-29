@@ -1,4 +1,7 @@
-	.comm r,4
-	.comm a,4
 	.comm v,40
+	.comm a,4
+	MOV a, 0
+	.comm r,4
+	MOV r, 0
 main:
+	MOV a, _temp_n1000

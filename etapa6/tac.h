@@ -42,7 +42,10 @@ typedef struct tac_node
 	hash_node_t *op1;
 	hash_node_t *op2;
 	struct tac_node *prev;
+	struct tac_node *next;
 }tac_node_t;
+
+tac_node_t* tacInvert(tac_node_t* node);
 
 tac_node_t* tacGenerateInit(ast_node_t * root, hash_map_t * hash);
 tac_node_t* tacGenerate(ast_node_t * node);

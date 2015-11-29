@@ -81,12 +81,13 @@ FILE * output = NULL;
 start: program									   {$$ = $1; checkDeclarations($$, true); checkDeclarations($$, false);
 	tac_node_t * root = tacGenerateInit($$, hash_map);     	
 	tacPrint(root);	
+	root = tacInvert(root);
 	if (output) asmgen_run(root, output);  
 	//if (output) generate_code(output, $$);
 	}
 	;
 
-program: declaracao_funcao ';' program						   {$$ = ast_node_new(FUNDEC, 0); ast_node_add_son($$, $1); ast_node_add_son($$, $3);}
+program: declaracao_funcao ';' program						   {$$ = ast_node_new(FUNDEC, 0); ast_node_add_son($$, $1); 												ast_node_add_son($$, $3);}
 	|declaracao_variaveis_globais						   {$$ = $1;}
 	|									   {$$ = 0;}
 	;

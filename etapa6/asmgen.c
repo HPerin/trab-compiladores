@@ -6,7 +6,7 @@ void asmgen_run(tac_node_t * root, FILE * out) {
 	tac_node_t * node = root;
 	while(node != NULL) {
 		asmgen_gennode(node, out);
-		node = node->prev;
+		node = node->next;
 	}
 }
 
@@ -17,7 +17,7 @@ void asmgen_gennode(tac_node_t * node, FILE * out) {
   case TAC_SYMBOL:
     break;
   case TAC_MOVE:
-	
+	fprintf(out, "	MOV %s, %s\n", node->res->data, node->op1->data);
     break;
   case TAC_ADD:
     break;
@@ -56,13 +56,13 @@ void asmgen_gennode(tac_node_t * node, FILE * out) {
 		fprintf(out, "	.comm %s,4\n", node->res->data);
 		break;
 	case DATATYPE_CHAR:
-		fprintf(out, "	.comm %s,1\n", node->res->data);
+		fprintf(out, "	.comm %s,4\n", node->res->data);
 		break;
 	case DATATYPE_REAL:
 		fprintf(out, "	.comm %s,4\n", node->res->data);
 		break;
 	case DATATYPE_BOOL:
-		fprintf(out, "	.comm %s,1\n", node->res->data);
+		fprintf(out, "	.comm %s,4\n", node->res->data);
 		break;
 	}
     break;
@@ -72,13 +72,13 @@ void asmgen_gennode(tac_node_t * node, FILE * out) {
 		fprintf(out, "	.comm %s,%d\n", node->res->data, atoi(node->op1->data) * 4);
 		break;
 	case DATATYPE_CHAR:
-		fprintf(out, "	.comm %s,%d\n", node->res->data, atoi(node->op1->data));
+		fprintf(out, "	.comm %s,%d\n", node->res->data, atoi(node->op1->data) * 4);
 		break;
 	case DATATYPE_REAL:
 		fprintf(out, "	.comm %s,%d\n", node->res->data, atoi(node->op1->data) * 4);
 		break;
 	case DATATYPE_BOOL:
-		fprintf(out, "	.comm %s,%d\n", node->res->data, atoi(node->op1->data));
+		fprintf(out, "	.comm %s,%d\n", node->res->data, atoi(node->op1->data) * 4);
 		break;
 	}
     break;

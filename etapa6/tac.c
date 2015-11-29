@@ -9,6 +9,15 @@ static hash_map_t * hash = NULL;
 static hash_node_t * hash_vector;
 static int vector_init_index;
 
+tac_node_t * tacInvert(tac_node_t * node) {
+	tac_node_t * aux = node;
+	while(aux->prev != NULL) {
+		aux->prev->next = aux;
+		aux = aux->prev;
+	}
+	return aux;
+}
+
 tac_node_t* tacGenerateInit(ast_node_t * node, hash_map_t * hash_map) {
     hash = hash_map;
     return tacGenerate(node);
@@ -28,9 +37,9 @@ tac_node_t* tacGenerate(ast_node_t *aux) {
 		case FUNDEC: // 1
             return tacJoin(
                     tacGenerate(
-                        ast_son_get(aux, 0)),
+                        ast_son_get(aux, 1)),
                     tacGenerate(
-                        ast_son_get(aux, 1)));
+                        ast_son_get(aux, 0)));
             //generate_code(output, ast_son_get(aux, 0)); // declaracao_funcao
 			//fprintf (output, ";\n");
 			//generate_code(output, ast_son_get(aux, 1)); // program
@@ -663,6 +672,7 @@ tac_node_t* tacCreate(int type, hash_node_t *res, hash_node_t *op1, hash_node_t*
 	newTAC->op1 = op1;
 	newTAC->op2 = op2;
 	newTAC->prev = 0;
+	newTAC->next = 0;
 
 	return newTAC;
 }
