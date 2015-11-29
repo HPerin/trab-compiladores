@@ -22,15 +22,12 @@ void asmgen_gennode(tac_node_t * node, FILE * out) {
  case TAC_MOVE:
 	if (node->op1->type == 3)
 		fprintf(out, 
-			"\tand eax, 00h\n"
-			"\tadd eax, %d\n"
-			"\tmov DWORD PTR %s\n"
-					, atoi(node->op1->data), node->res->data);
+			"\tmov DWORD PTR %s, %d\n"
+					, node->res->data, atoi(node->op1->data));
 	else if (node->op1->type == 9) {
 		fprintf(out, 
-			"\tmov eax, DWORD PTR %s\n"
-			"\tmov DWORD PTR %s, eax\n"
-					, node->op1->data, node->res->data);
+			"\tmov DWORD PTR %s, %s\n"
+					, node->res->data, node->op1->data);
 	}
     break;
  case TAC_ADD:
