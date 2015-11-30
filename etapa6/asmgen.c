@@ -195,18 +195,25 @@ void asmgen_gennode(tac_node_t * node, FILE * out) {
   case TAC_OUTPUT:
     break;
   case TAC_RETURN:
+        fprintf(out, "	mov eax, %s\n", node->res->data); // TODO
+        fprintf(out, "	pop ebp\n");
     break;
   case TAC_IF:
-	fprintf(out, "	mov eax, %s\n", node->res->data);
+	fprintf(out, "	mov eax, %s\n", node->res->data); // TODO
 	fprintf(out, "	test 0, eax\n");
 	fprintf(out, "	jne %s\n", node->op1->data);
 	fprintf(out, "	je %s\n", node->op2->data);
     break;
   case TAC_CALL:
+        fprintf(out, "	call %s\n", node->res->data);
     break;
   case TAC_PUSHARG:
     break;
   case TAC_POPARG:
+    break;
+  case TAC_FUNDEC:
+	fprintf(out, "	push ebp\n");
+        fprintf(out, "	mov ebp, esp\n");
     break;
   }
 }

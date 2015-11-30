@@ -32,7 +32,8 @@ enum {
     TAC_IF,
     TAC_CALL,
     TAC_PUSHARG,
-    TAC_POPARG
+    TAC_POPARG,
+    TAC_FUNDEC
 };
 
 typedef struct tac_node
