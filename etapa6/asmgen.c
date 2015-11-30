@@ -1,6 +1,7 @@
 #include "asmgen.h"
 
 #define LIT_INTEGER 3
+#define LIT_CHAR 6
 #define SYMBOL_VARIABLE 9
 
 void asmgen_gennode(tac_node_t * node, FILE * out);
@@ -20,10 +21,10 @@ void asmgen_gennode(tac_node_t * node, FILE * out) {
   case TAC_SYMBOL:
     break;
  case TAC_MOVE:
-	if (node->op1->type == LIT_INTEGER)
+	if (node->op1->type == LIT_INTEGER || node->op1->type == LIT_CHAR)
 		fprintf(out, 
-			"\tmov DWORD PTR %s, %d\n"
-					, node->res->data, atoi(node->op1->data));
+			"\tmov DWORD PTR %s, %s\n"
+					, node->res->data, node->op1->data);
 	else if (node->op1->type == SYMBOL_VARIABLE) {
 		fprintf(out, 
 			"\tmov eax, DWORD PTR %s\n"
@@ -33,23 +34,29 @@ void asmgen_gennode(tac_node_t * node, FILE * out) {
     break;
  case TAC_ADD:
 	if (node->op1->type == LIT_INTEGER && node->op2->type == LIT_INTEGER) { //1+1
-			fprintf(out,            
-				"\tmov DWORD PTR %s, %d\n"  //1+1 em temp 
-					,node->res->data, (atoi(node->op1->data) + atoi(node->op2->data)));
-
-	} else if(node->op1->type == LIT_INTEGER && node->op2->type == SYMBOL_VARIABLE) { //1+a
+		fprintf(out,            
+			"\tmov DWORD PTR %s, %d\n"  //1+1 em temp 
+				,node->res->data, (atoi(node->op1->data) + atoi(node->op2->data)));
+	} else if ((node->op1->type == LIT_CHAR && node->op2->type == LIT_CHAR) || (node->op1->type == LIT_CHAR && node->op2->type == LIT_INTEGER) || (node->op1->type == LIT_INTEGER && node->op2->type == LIT_CHAR)) {
+		fprintf(out,
+			"\tmov eax, %s\n"
+			"\tadd eax, %s\n"
+			"\tmov DWORD PTR %s, eax\n"
+				, node->op1->data, node->op2->data, node->res->data);
+				
+	} else if((node->op1->type == LIT_INTEGER || node->op1->type == LIT_CHAR) && node->op2->type == SYMBOL_VARIABLE) { //1+a
 		fprintf(out, 
 			"\tmov eax, DWORD PTR %s\n" // a no eax
-			"\tadd eax, %d\n" 	    // 1 + a no eax
+			"\tadd eax, %s\n" 	    // 1 + a no eax
 			"\tmov DWORD PTR %s, eax\n"   // eax em temp
-					, node->op2->data, atoi(node->op1->data), node->res->data);
+					, node->op2->data, node->op1->data, node->res->data);
 
-	} else if(node->op1->type == SYMBOL_VARIABLE && node->op2->type == LIT_INTEGER) {//a+1
+	} else if(node->op1->type == SYMBOL_VARIABLE && (node->op2->type == LIT_INTEGER || node->op2->type == LIT_CHAR)) {//a+1
 		fprintf(out, 
 			"\tmov eax, DWORD PTR %s\n" 
-			"\tadd eax, %d\n" 	    
+			"\tadd eax, %s\n" 	    
 			"\tmov DWORD PTR %s, eax\n"   
-					, node->op1->data, atoi(node->op2->data), node->res->data);
+					, node->op1->data, node->op2->data, node->res->data);
 	}
 	 else if(node->op1->type == SYMBOL_VARIABLE && node->op2->type == SYMBOL_VARIABLE) { //a+b
 		fprintf(out, 
@@ -66,18 +73,24 @@ void asmgen_gennode(tac_node_t * node, FILE * out) {
 				"\tmov DWORD PTR %s, %d\n"   
 					,node->res->data, (atoi(node->op1->data) - atoi(node->op2->data)));
 
-	} else if(node->op1->type == LIT_INTEGER && node->op2->type == SYMBOL_VARIABLE) {
+	} else if ((node->op1->type == LIT_CHAR && node->op2->type == LIT_CHAR) || (node->op1->type == LIT_CHAR && node->op2->type == LIT_INTEGER) || (node->op1->type == LIT_INTEGER && node->op2->type == LIT_CHAR)) {
+		fprintf(out,
+			"\tmov eax, %s\n"
+			"\tsub eax, %s\n"
+			"\tmov DWORD PTR %s, eax\n"
+				, node->op1->data, node->op2->data, node->res->data);
+	} else if((node->op1->type == LIT_INTEGER || node->op1->type == LIT_CHAR) && node->op2->type == SYMBOL_VARIABLE) {
 		fprintf(out, 
 			"\tmov eax, DWORD PTR %s\n"
-			"\tsub eax, %d\n" 	    
+			"\tsub eax, %s\n" 	    
 			"\tmov DWORD PTR %s, eax\n"
-					, node->op2->data, atoi(node->op1->data), node->res->data);
-	} else if(node->op1->type == SYMBOL_VARIABLE && node->op2->type == LIT_INTEGER) {
+					, node->op2->data, node->op1->data, node->res->data);
+	} else if(node->op1->type == SYMBOL_VARIABLE && (node->op2->type == LIT_INTEGER || node->op2->type == LIT_CHAR)) {
 		fprintf(out, 
 			"\tmov eax, DWORD PTR %s\n" 
-			"\tsub eax, %d\n" 	    
+			"\tsub eax, %s\n" 	    
 			"\tmov DWORD PTR %s, eax\n"   
-					, node->op1->data, atoi(node->op2->data), node->res->data);
+					, node->op1->data, node->op2->data, node->res->data);
 	}
 	 else if(node->op1->type == SYMBOL_VARIABLE && node->op2->type == SYMBOL_VARIABLE) { 
 		fprintf(out, 
@@ -89,23 +102,30 @@ void asmgen_gennode(tac_node_t * node, FILE * out) {
 	}
     break;
   case TAC_MUL:
-	if (node->op1->type == LIT_INTEGER && node->op2->type == SYMBOL_VARIABLE) { 
+	if (node->op1->type == LIT_INTEGER && node->op2->type == LIT_INTEGER) { 
 		fprintf(out,
 			"\tmov DWORD PTR %s, %d\n"  
 					,node->res->data, (atoi(node->op1->data) * atoi(node->op2->data)));
 
-	} else if(node->op1->type == LIT_INTEGER && node->op2->type == SYMBOL_VARIABLE) {
+	} else if ((node->op1->type == LIT_CHAR && node->op2->type == LIT_CHAR) || (node->op1->type == LIT_CHAR && node->op2->type == LIT_INTEGER) || (node->op1->type == LIT_INTEGER && node->op2->type == LIT_CHAR)) {
+		fprintf(out,
+			"\tmov eax, %s\n"
+			"\timul eax, %s\n"
+			"\tmov DWORD PTR %s, eax\n"
+				, node->op1->data, node->op2->data, node->res->data);
+
+	} else if((node->op1->type == LIT_INTEGER || node->op1->type == LIT_CHAR) && node->op2->type == SYMBOL_VARIABLE) {
 		fprintf(out, 
 			"\tmov eax, DWORD PTR %s\n"
-			"\timul eax, eax, %d\n" 	
+			"\timul eax, eax, %s\n" 	
 			"\tmov DWORD PTR %s, eax\n"
-					, node->op2->data, atoi(node->op1->data), node->res->data);
-	} else if(node->op1->type == SYMBOL_VARIABLE && node->op2->type == LIT_INTEGER) {
+					, node->op2->data, node->op1->data, node->res->data);
+	} else if(node->op1->type == SYMBOL_VARIABLE && (node->op2->type == LIT_INTEGER || node->op2->type == LIT_CHAR)) {
 		fprintf(out, 
 			"\tmov eax, DWORD PTR %s\n" 
-			"\timul eax, eax, %d\n" 	    
+			"\timul eax, eax, %s\n" 	    
 			"\tmov DWORD PTR %s, eax\n"   
-					, node->op1->data, atoi(node->op2->data), node->res->data);
+					, node->op1->data, node->op2->data, node->res->data);
 	}
 	 else if(node->op1->type == SYMBOL_VARIABLE && node->op2->type == SYMBOL_VARIABLE) { 
 		fprintf(out, 
@@ -117,27 +137,36 @@ void asmgen_gennode(tac_node_t * node, FILE * out) {
 	}
     break;
   case TAC_DIV:
-	if (node->op1->type == LIT_INTEGER && node->op2->type == 3) { 
+	if (node->op1->type == LIT_INTEGER && node->op2->type == LIT_INTEGER) { 
 		fprintf(out,
 			"\tmov DWORD PTR %s, %d\n"  
 					,node->res->data, (atoi(node->op1->data) / atoi(node->op2->data)));
 
-	} else if(node->op1->type == LIT_INTEGER && node->op2->type == SYMBOL_VARIABLE) {
+	} else if ((node->op1->type == LIT_CHAR && node->op2->type == LIT_CHAR) || (node->op1->type == LIT_CHAR && node->op2->type == LIT_INTEGER) || (node->op1->type == LIT_INTEGER && node->op2->type == LIT_CHAR)) {
+		fprintf(out,
+			"\tmov ecx, %s\n"
+			"\tmov eax, %s\n"
+			"\tcdq\n"
+			"\tidiv ecx\n"
+			"\tmov DWORD PTR %s, eax\n"
+				, node->op1->data, node->op2->data, node->res->data);
+
+	} else if((node->op1->type == LIT_INTEGER || node->op1->type == LIT_CHAR) && node->op2->type == SYMBOL_VARIABLE) {
 		fprintf(out, 
 			"\tmov ecx, DWORD PTR %s\n"
-			"\tmov eax, %d\n" 
+			"\tmov eax, %s\n" 
 			"\tcdq\n" 	
 			"\tidiv ecx\n"
-			"\tmov DWORT PTR %s, eax\n"
-					, node->op2->data, atoi(node->op1->data), node->res->data);
-	} else if(node->op1->type == SYMBOL_VARIABLE && node->op2->type == LIT_INTEGER) {
+			"\tmov DWORD PTR %s, eax\n"
+					, node->op2->data, node->op1->data, node->res->data);
+	} else if(node->op1->type == SYMBOL_VARIABLE && (node->op2->type == LIT_INTEGER || node->op2->type == LIT_CHAR)) {
 		fprintf(out, 
 			"\tmov ecx, DWORD PTR %s\n"
-			"\tmov eax, %d\n" 
+			"\tmov eax, %s\n" 
 			"\tcdq\n" 	
 			"\tidiv ecx\n"
-			"\tmov DWORT PTR %s, eax\n" 
-					, node->op1->data, atoi(node->op2->data), node->res->data);
+			"\tmov DWORD PTR %s, eax\n" 
+					, node->op1->data, node->op2->data, node->res->data);
 	}
 	 else if(node->op1->type == SYMBOL_VARIABLE && node->op2->type == SYMBOL_VARIABLE) { 
 		fprintf(out, 
@@ -161,17 +190,177 @@ void asmgen_gennode(tac_node_t * node, FILE * out) {
   case TAC_NE:
     break;
   case TAC_LE:
+	if(node->op1->type == LIT_INTEGER && node->op2->type == LIT_INTEGER) {
+		if(atoi(node->op1->data) <= atoi(node->op2->data))
+			fprintf(out,
+				"\tmov DWORD PTR %s, 1\n"
+					,node->res->data);
+		else 
+			fprintf(out,
+				"\tmov DWORD PTR %s, 0\n"
+						,node->res->data);
+
+	} else if ((node->op1->type == LIT_CHAR && node->op2->type == LIT_CHAR) || (node->op1->type == LIT_CHAR && node->op2->type == LIT_INTEGER) || (node->op1->type == LIT_INTEGER && node->op2->type == LIT_CHAR)) {
+		fprintf(out,
+			"\tmov eax, %s\n"
+			"\tcmp eax, %s\n"
+			"\tsetle al\n"
+			"\tmov DWORD PTR %s, eax\n"
+				, node->op1->data, node->op2->data, node->res->data);
+	
+	} else if(node->op1->type == SYMBOL_VARIABLE && (node->op2->type == LIT_INTEGER || node->op2->type == LIT_CHAR)) {
+		fprintf(out, 
+				"\tmov eax, DWORD PTR %s\n"
+				"\tcmp eax, %s\n"
+				"\tsetle al\n"
+				"\tmov DWORD PTR %s, al\n"
+						, node->op1->data, node->op2->data, node->res->data);
+	} else if((node->op1->type == LIT_INTEGER || node->op1->type == LIT_CHAR) && node->op2->type == SYMBOL_VARIABLE) {
+		fprintf(out, 
+				"\tmov eax, DWORD PTR %s\n"
+				"\tcmp eax, %s\n"
+				"\tsetge al\n"
+				"\tmov DWORD PTR %s, al\n"
+						, node->op2->data, node->op1->data, node->res->data);
+	}else if(node->op1->type == SYMBOL_VARIABLE && node->op2->type == SYMBOL_VARIABLE) {
+		fprintf(out, 
+				"\tmov edx, DWORD PTR %s\n"
+				"\tmov eax, DWORD PTR %s\n"
+				"\tcmp edx, eax\n"
+				"\tsetle al\n"
+				"\tmov DWORD PTR %s, al\n"
+						, node->op1->data, node->op2->data, node->res->data);
+	}
     break;
   case TAC_GE:
+	if(node->op1->type == LIT_INTEGER && node->op2->type == LIT_INTEGER) {
+		if(atoi(node->op1->data) >= atoi(node->op2->data))
+			fprintf(out,
+				"\tmov DWORD PTR %s, 1\n"
+					,node->res->data);
+		else 
+			fprintf(out,
+				"\tmov DWORD PTR %s, 0\n"
+						,node->res->data);
+	} else if ((node->op1->type == LIT_CHAR && node->op2->type == LIT_CHAR) || (node->op1->type == LIT_CHAR && node->op2->type == LIT_INTEGER) || (node->op1->type == LIT_INTEGER && node->op2->type == LIT_CHAR)) {
+		fprintf(out,
+			"\tmov eax, %s\n"
+			"\tcmp eax, %s\n"
+			"\tsetge al\n"
+			"\tmov DWORD PTR %s, eax\n"
+				, node->op1->data, node->op2->data, node->res->data);
+
+	} else if(node->op1->type == SYMBOL_VARIABLE && (node->op2->type == LIT_INTEGER || node->op2->type == LIT_CHAR)) {
+		fprintf(out, 
+				"\tmov eax, DWORD PTR %s\n"
+				"\tcmp eax, %s\n"
+				"\tsetge al\n"
+				"\tmov DWORD PTR %s, al\n"
+						, node->op1->data, node->op2->data, node->res->data);
+	} else if((node->op1->type == LIT_INTEGER || node->op1->type == LIT_CHAR) && node->op2->type == SYMBOL_VARIABLE) {
+		fprintf(out, 
+				"\tmov eax, DWORD PTR %s\n"
+				"\tcmp eax, %s\n"
+				"\tsetle al\n"
+				"\tmov DWORD PTR %s, al\n"
+						, node->op2->data, node->op1->data, node->res->data);
+	}else if(node->op1->type == SYMBOL_VARIABLE && node->op2->type == SYMBOL_VARIABLE) {
+		fprintf(out, 
+				"\tmov edx, DWORD PTR %s\n"
+				"\tmov eax, DWORD PTR %s\n"
+				"\tcmp edx, eax\n"
+				"\tsetge al\n"
+				"\tmov DWORD PTR %s, al\n"
+						, node->op1->data, node->op2->data, node->res->data);
+	}
     break;
   case TAC_LESS:
+	if(node->op1->type == LIT_INTEGER && node->op2->type == LIT_INTEGER) {
+		if(atoi(node->op1->data) < atoi(node->op2->data))
+			fprintf(out,
+				"\tmov DWORD PTR %s, 1\n"
+					,node->res->data);
+		else 
+			fprintf(out,
+				"\tmov DWORD PTR %s, 0\n"
+						,node->res->data);
+
+
+
+	} else if ((node->op1->type == LIT_CHAR && node->op2->type == LIT_CHAR) || (node->op1->type == LIT_CHAR && node->op2->type == LIT_INTEGER) || (node->op1->type == LIT_INTEGER && node->op2->type == LIT_CHAR)) {
+		fprintf(out,
+			"\tmov eax, %s\n"
+			"\tcmp eax, %s\n"
+			"\tsetl al\n"
+			"\tmov DWORD PTR %s, eax\n"
+				, node->op1->data, node->op2->data, node->res->data);
+	
+	} else if(node->op1->type == SYMBOL_VARIABLE && (node->op2->type == LIT_INTEGER || node->op2->type == LIT_CHAR)) {
+		fprintf(out, 
+				"\tmov eax, DWORD PTR %s\n"
+				"\tcmp eax, %s\n"
+				"\tsetl al\n"
+				"\tmov DWORD PTR %s, al\n"
+						, node->op1->data, node->op2->data, node->res->data);
+	} else if((node->op1->type == LIT_INTEGER || node->op1->type == LIT_CHAR) && node->op2->type == SYMBOL_VARIABLE) {
+		fprintf(out, 
+				"\tmov eax, DWORD PTR %s\n"
+				"\tcmp eax, %s\n"
+				"\tsetg al\n"
+				"\tmov DWORD PTR %s, al\n"
+						, node->op2->data, node->op1->data, node->res->data);
+	}else if(node->op1->type == SYMBOL_VARIABLE && node->op2->type == SYMBOL_VARIABLE) {
+		fprintf(out, 
+				"\tmov edx, DWORD PTR %s\n"
+				"\tmov eax, DWORD PTR %s\n"
+				"\tcmp edx, eax\n"
+				"\tsetl al\n"
+				"\tmov DWORD PTR %s, al\n"
+						, node->op1->data, node->op2->data, node->res->data);
+	}
     break;
   case TAC_GREATER:
-    break;
-  case TAC_AND:
-    break;
-  case TAC_OR:
-    break;
+	if(node->op1->type == LIT_INTEGER && node->op2->type == LIT_INTEGER) {
+		if(atoi(node->op1->data) > atoi(node->op2->data))
+			fprintf(out,
+				"\tmov DWORD PTR %s, 1\n"
+					,node->res->data);
+		else 
+			fprintf(out,
+				"\tmov DWORD PTR %s, 0\n"
+						,node->res->data);
+
+	} else if ((node->op1->type == LIT_CHAR && node->op2->type == LIT_CHAR) || (node->op1->type == LIT_CHAR && node->op2->type == LIT_INTEGER) || (node->op1->type == LIT_INTEGER && node->op2->type == LIT_CHAR)) {
+		fprintf(out,
+			"\tmov eax, %s\n"
+			"\tcmp eax, %s\n"
+			"\tsetg al\n"
+			"\tmov DWORD PTR %s, eax\n"
+				, node->op1->data, node->op2->data, node->res->data);
+	
+	} else if(node->op1->type == SYMBOL_VARIABLE && (node->op2->type == LIT_INTEGER || node->op2->type == LIT_CHAR)) {
+		fprintf(out, 
+				"\tmov eax, DWORD PTR %s\n"
+				"\tcmp eax, %s\n"
+				"\tsetg al\n"
+				"\tmov DWORD PTR %s, al\n"
+						, node->op1->data, node->op2->data, node->res->data);
+	} else if((node->op1->type == LIT_INTEGER || node->op1->type == LIT_CHAR) && node->op2->type == SYMBOL_VARIABLE) {
+		fprintf(out, 
+				"\tmov eax, DWORD PTR %s\n"
+				"\tcmp eax, %s\n"
+				"\tsetl al\n"
+				"\tmov DWORD PTR %s, al\n"
+						, node->op2->data, node->op1->data, node->res->data);
+	}else if(node->op1->type == SYMBOL_VARIABLE && node->op2->type == SYMBOL_VARIABLE) {
+		fprintf(out, 
+				"\tmov edx, DWORD PTR %s\n"
+				"\tmov eax, DWORD PTR %s\n"
+				"\tcmp edx, eax\n"
+				"\tsetg al\n"
+				"\tmov DWORD PTR %s, al\n"
+						, node->op1->data, node->op2->data, node->res->data);
+	}
   case TAC_VARDEC:
 	fprintf(out, "%s:\n", node->res->data);
     break;
