@@ -173,47 +173,52 @@ void asmgen_gennode(tac_node_t * node, FILE * out) {
   case TAC_OR:
     break;
   case TAC_VARDEC:
-	fprintf(out, "	.comm %s,4\n", node->res->data);
+	fprintf(out, "\t.comm %s,4\n", node->res->data);
     break;
   case TAC_VECDEC:
-	fprintf(out, "	.comm %s,%d\n", node->res->data, atoi(node->op1->data) * 4);
+	fprintf(out, "\t.comm %s,%d\n", node->res->data, atoi(node->op1->data) * 4);
     break;
   case TAC_TOVECMOVE:
 	if (node->op2->type == LIT_INTEGER) {
-		fprintf(out, "	mov eax, %s\n", node->op2->data);
-		fprintf(out, "	mov DWORD PTR %s+%d, eax\n", node->res->data, atoi(node->op1->data)*4);
+		fprintf(out, "\tmov eax, %s\n", node->op2->data);
+		fprintf(out, "\tmov DWORD PTR %s+%d, eax\n", node->res->data, atoi(node->op1->data)*4);
 	} else if (node->op2->type == SYMBOL_VARIABLE) {
-		fprintf(out, "	mov eax, DWORD PTR %s\n", node->op2->data);
-		fprintf(out, "	mov DWORD PTR %s+%d, eax\n", node->res->data, atoi(node->op1->data)*4);
+		fprintf(out, "\tmov eax, DWORD PTR %s\n", node->op2->data);
+		fprintf(out, "\tmov DWORD PTR %s+%d, eax\n", node->res->data, atoi(node->op1->data)*4);
 	}
     break;
   case TAC_FROMVECMOVE:
-	
     break;
   case TAC_INPUT:
     break;
   case TAC_OUTPUT:
     break;
   case TAC_RETURN:
-        fprintf(out, "	mov eax, %s\n", node->res->data); // TODO
-        fprintf(out, "	pop ebp\n");
+	if (node->res->type == LIT_INTEGER)
+        	fprintf(out, "\tmov eax, %s\n", node->res->data);
+	else if (node->res->type == SYMBOL_VARIABLE)
+		fprintf(out, "\tmov eax, DWORD PTR %s\n", node->res->data);
+        fprintf(out, "\tpop ebp\n");
     break;
   case TAC_IF:
-	fprintf(out, "	mov eax, %s\n", node->res->data); // TODO
-	fprintf(out, "	test 0, eax\n");
-	fprintf(out, "	jne %s\n", node->op1->data);
-	fprintf(out, "	je %s\n", node->op2->data);
+	if (node->res->type == LIT_INTEGER)
+		fprintf(out, "\tmov eax, %s\n", node->res->data);
+	else if (node->res->type == SYMBOL_VARIABLE)
+		fprintf(out, "\tmov eax, DWORD PTR %s\n", node->res->data);
+	fprintf(out, "\ttest 0, eax\n");
+	fprintf(out, "\tjne %s\n", node->op1->data);
+	fprintf(out, "\tje %s\n", node->op2->data);
     break;
   case TAC_CALL:
-        fprintf(out, "	call %s\n", node->res->data);
+        fprintf(out, "\tcall %s\n", node->res->data);
     break;
   case TAC_PUSHARG:
     break;
   case TAC_POPARG:
     break;
   case TAC_FUNDEC:
-	fprintf(out, "	push ebp\n");
-        fprintf(out, "	mov ebp, esp\n");
+	fprintf(out, "\tpush ebp\n");
+        fprintf(out, "\tmov ebp, esp\n");
     break;
   }
 }
