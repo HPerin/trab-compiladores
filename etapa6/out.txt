@@ -40,9 +40,13 @@ incn:
 	je _label_n1000005
 _label_n1000004:
 	.comm _temp_n1010,4
-	mov DWORD PTR _temp_n1010, 0
+	mov eax, DWORD PTR j
+	imul eax, eax, 2
+	mov DWORD PTR _temp_n1010, eax
 	.comm _temp_n1011,4
-	mov DWORD PTR _temp_n1011, 0
+	mov eax, DWORD PTR _temp_n1010
+	imul eax, eax, 1
+	mov DWORD PTR _temp_n1011, eax
 	.comm _temp_n1012,4
 	mov edx, DWORD PTR a
 	mov eax, DWORD PTR _temp_n1011
@@ -56,7 +60,6 @@ _label_n1000005:
 	add eax, 2
 	mov DWORD PTR _temp_n1008, eax
 	.comm _temp_n1009,4
-	.long _temp_n1009
 	mov eax, DWORD PTR _temp_n1009
 	pop ebp
 	mov eax, 0
@@ -66,8 +69,16 @@ main:
 	mov ebp, esp
 _label_n1000000:
 	.comm _temp_n1000,4
+	mov eax, DWORD PTR i
+	cmp eax, 10
+	setl al
+	mov DWORD PTR _temp_n1000, al
 	.comm _temp_n1001,4
 	.comm _temp_n1002,4
+	mov eax, DWORD PTR _temp_n1001
+	cmp eax, 20
+	setge al
+	mov DWORD PTR _temp_n1002, al
 	.comm _temp_n1003,4
 	mov eax, DWORD PTR _temp_n1003
 	test 0, eax
@@ -80,7 +91,6 @@ _label_n1000003:
 	mov eax, DWORD PTR _temp_n1006
 	mov DWORD PTR a, eax
 	.comm _temp_n1004,4
-	.long _temp_n1004
 	.comm _temp_n1005,4
 	mov eax, DWORD PTR _temp_n1004
 	add eax, 1
