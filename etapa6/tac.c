@@ -74,9 +74,9 @@ tac_node_t* tacGenerate(ast_node_t *aux) {
                         0,
                         0),
                     tacCreate(
-                        TAC_MOVE,
-                        ast_son_get(aux, 1)->hash_node,
+                        TAC_INITVAR,
                         ast_son_get(aux, 2)->hash_node,
+                  	0,
                         0));
 			//generate_code(output, ast_son_get(aux, 0)); // tipo
 			//fprintf(output, " ");
@@ -141,7 +141,8 @@ tac_node_t* tacGenerate(ast_node_t *aux) {
             return tacJoin(
                     tac_aux1,
                     tacJoin(
-                        tacCreate(TAC_TOVECMOVE, hash_vector, hash_aux1, tac_aux1->res),
+			//tacCreate(TAC_TOVECMOVE, hash_vector, hash_aux1, tac_aux1->res),
+                        tacCreate(TAC_INITVAR, tac_aux1->res, 0, 0),
                         tacGenerate(ast_son_get(aux, 1))));
 
 			//generate_code(output, ast_son_get(aux, 0)); // literal
@@ -480,8 +481,8 @@ tac_node_t* tacGenerate(ast_node_t *aux) {
 
             return tacJoin(
 		    tacJoin(tac_aux1,
-			tacCreate(TAC_VARDEC, hash_aux1, 0, 0)),
-                    tacCreate(TAC_FROMVECMOVE, hash_aux1, ast_son_get(aux, 0)->hash_node, tac_aux1->res));
+			tacCreate(TAC_TEMPVARDEC, hash_aux1, 0, 0)),
+                    tacCreate(TAC_INITVAR, hash_aux1, ast_son_get(aux, 0)->hash_node, tac_aux1->res));
 			//generate_code (output, ast_son_get(aux, 0)); // id
 			//fprintf (output, "[");
 			//generate_code (output, ast_son_get(aux, 1)); // expressao
@@ -608,7 +609,7 @@ tac_node_t* tacGenerate(ast_node_t *aux) {
             hash_aux2 = hash_map_maketemp(hash);
 
 			return tacJoin(tacGenerate(ast_son_get(aux, 1)),
-                    tacJoin(tacJoin(tacCreate(TAC_VARDEC, hash_aux2, 0, 0),
+                    tacJoin(tacJoin(tacCreate(TAC_TEMPVARDEC, hash_aux2, 0, 0),
                         tacJoin(
                             tacCreate(TAC_CALL, ast_son_get(aux, 0)->hash_node, hash_aux1, 0),
                             tacCreate(TAC_LABEL, hash_aux1, 0, 0))),
@@ -742,7 +743,7 @@ void tacPrintSingle(tac_node_t* TAC){
 tac_node_t* tacOperation(int type, tac_node_t* TAC1, tac_node_t* TAC2){
 	hash_node_t * haux = hash_map_maketemp(hash);
 
-	return tacJoin(tacJoin(TAC1, TAC2), tacJoin(tacCreate(TAC_VARDEC, haux, 0, 0), tacCreate(type, haux, TAC1 ? TAC1->res : 0, TAC2 ? TAC2->res : 0)));
+	return tacJoin(tacJoin(TAC1, TAC2), tacJoin(tacCreate(TAC_TEMPVARDEC, haux, 0, 0), tacCreate(type, haux, TAC1 ? TAC1->res : 0, TAC2 ? TAC2->res : 0)));
 }
 
 void tacPrint(tac_node_t* TAC){

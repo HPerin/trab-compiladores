@@ -173,10 +173,10 @@ void asmgen_gennode(tac_node_t * node, FILE * out) {
   case TAC_OR:
     break;
   case TAC_VARDEC:
-	fprintf(out, "\t.comm %s,4\n", node->res->data);
+	fprintf(out, "%s:\n", node->res->data);
     break;
   case TAC_VECDEC:
-	fprintf(out, "\t.comm %s,%d\n", node->res->data, atoi(node->op1->data) * 4);
+	fprintf(out, "\t.globl %s\n\t.allign 4\n\t.type %s, @object\n\t.size %s, %d\n%s:\n", node->res->data, node->res->data, node->res->data, atoi(node->op1->data) * 4, node->res->data);
     break;
   case TAC_TOVECMOVE:
 	if (node->op2->type == LIT_INTEGER) {
@@ -219,6 +219,12 @@ void asmgen_gennode(tac_node_t * node, FILE * out) {
   case TAC_FUNDEC:
 	fprintf(out, "\tpush ebp\n");
         fprintf(out, "\tmov ebp, esp\n");
-    break;
+	break;
+  case TAC_INITVAR:
+	fprintf(out, "\t.long %s\n", node->res->data);
+	break;
+  case TAC_TEMPVARDEC:
+	fprintf(out, "\t.comm %s,4\n", node->res->data);
+    	break;
   }
 }

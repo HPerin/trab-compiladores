@@ -1,32 +1,34 @@
-	.comm i,4
-	mov DWORD PTR i, 0
-	.comm j,4
-	mov DWORD PTR j, 3
-	.comm v,40
-	mov eax, 0
-	mov DWORD PTR v+0, eax
-	mov eax, 0
-	mov DWORD PTR v+4, eax
-	mov eax, 0
-	mov DWORD PTR v+8, eax
-	mov eax, 0
-	mov DWORD PTR v+12, eax
-	mov eax, 0
-	mov DWORD PTR v+16, eax
-	mov eax, 0
-	mov DWORD PTR v+20, eax
-	mov eax, 0
-	mov DWORD PTR v+24, eax
-	mov eax, 0
-	mov DWORD PTR v+28, eax
-	mov eax, 0
-	mov DWORD PTR v+32, eax
-	mov eax, 0
-	mov DWORD PTR v+36, eax
-	.comm vas,8
-	.comm mat,4000
-	.comm a,4
-	mov DWORD PTR a, 50
+i:
+	.long 0
+j:
+	.long 3
+	.globl v
+	.allign 4
+	.type v, @object
+	.size v, 40
+v:
+	.long 0
+	.long 0
+	.long 0
+	.long 0
+	.long 0
+	.long 0
+	.long 0
+	.long 0
+	.long 0
+	.long 0
+	.globl vas
+	.allign 4
+	.type vas, @object
+	.size vas, 8
+vas:
+	.globl mat
+	.allign 4
+	.type mat, @object
+	.size mat, 4000
+mat:
+a:
+	.long 50
 incn:
 	push ebp
 	mov ebp, esp
@@ -54,6 +56,7 @@ _label_n1000005:
 	add eax, 2
 	mov DWORD PTR _temp_n1008, eax
 	.comm _temp_n1009,4
+	.long _temp_n1009
 	mov eax, DWORD PTR _temp_n1009
 	pop ebp
 	mov eax, 0
@@ -77,6 +80,7 @@ _label_n1000003:
 	mov eax, DWORD PTR _temp_n1006
 	mov DWORD PTR a, eax
 	.comm _temp_n1004,4
+	.long _temp_n1004
 	.comm _temp_n1005,4
 	mov eax, DWORD PTR _temp_n1004
 	add eax, 1
