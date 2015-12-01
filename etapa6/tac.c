@@ -160,7 +160,7 @@ tac_node_t* tacGenerate(ast_node_t *aux) {
             free(buffer);
 
             return tacJoin(
-                    tacCreate(TAC_LABEL,
+                    tacCreate(TAC_FUNLABEL,
                         ast_son_get(aux, 1)->hash_node,
                         0,
                         0),
@@ -192,7 +192,7 @@ tac_node_t* tacGenerate(ast_node_t *aux) {
             free(buffer);
 
             return tacJoin(
-                    tacCreate(TAC_LABEL,
+                    tacCreate(TAC_FUNLABEL,
                         ast_son_get(aux, 1)->hash_node,
                         0,
                         0),

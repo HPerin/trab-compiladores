@@ -183,6 +183,9 @@ void asmgen_gennode(tac_node_t * node, FILE * out) {
     break;
   case TAC_LABEL:
 	fprintf(out, "%s:\n", node->res->data);
+  case TAC_FUNLABEL:
+	fprintf(out, "\t.globl main\n\t.type main, @function\n");
+	fprintf(out, "%s:\n", node->res->data);
     break;
   case TAC_JMP:
     break;

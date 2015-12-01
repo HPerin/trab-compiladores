@@ -35,7 +35,8 @@ enum {
     TAC_POPARG,
     TAC_FUNDEC,
     TAC_INITVAR,
-    TAC_TEMPVARDEC
+    TAC_TEMPVARDEC,
+    TAC_FUNLABEL
 };
 
 typedef struct tac_node
