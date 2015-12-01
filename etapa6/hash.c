@@ -10,20 +10,20 @@
 #define HASH_MAP_INITIAL_SIZE 997
 
 hash_node_t * hash_map_maketemp(hash_map_t * hash_map) {
-    static int temp_num = 1000;
+    static int temp_num = 0;
 
     char temp_name[128];
-    sprintf(temp_name, "_temp_n%d", temp_num++);
+    sprintf(temp_name, ".t%d", temp_num++);
     hash_map_insert(hash_map, SYMBOL_VARIABLE, temp_name);
 
     return hash_map_search(hash_map, temp_name);
 }
 
 hash_node_t * hash_map_makelabel(hash_map_t * hash_map) {
-    static int label_num = 1000000;
+    static int label_num = 0;
 
     char label_name[128];
-    sprintf(label_name, "_label_n%d", label_num++);
+    sprintf(label_name, ".l%d", label_num++);
     hash_map_insert(hash_map, SYMBOL_LABEL, label_name);
 
     return hash_map_search(hash_map, label_name);

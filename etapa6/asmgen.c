@@ -38,10 +38,10 @@ void asmgen_genvars(tac_node_t * node, FILE * out) {
 
    switch(node->type) {
    case TAC_VARDEC:
-	fprintf(out, "\t.globl %s\n%s:\n", node->res->data, node->res->data);
+	fprintf(out, "%s:\n", node->res->data, node->res->data);
     break;
    case TAC_VECDEC:
-	fprintf(out, "\t.globl %s\n%s:\n", node->res->data, node->res->data);
+	fprintf(out, "%s:\n", node->res->data, node->res->data);
     break;
    case TAC_INITVAR:
 	fprintf(out, "\t.quad %s\n", node->res->data);
@@ -108,17 +108,19 @@ void asmgen_gennode(tac_node_t * node, FILE * out) {
 	
     break;
   case TAC_LABEL:
-	fprintf(out, "\t%s:\n", node->res->data);
+	fprintf(out, "%s:\n", node->res->data);
     break;
   case TAC_FUNLABEL:
+	popArg = 1;
+
 	if (!strcmp(node->res->data, "main")) {
 		fprintf(out, "\n\t.globl main\n");
 		fprintf(out, "main:\n");
 		fprintf(out, "\tpushq %rbp\n");
 		fprintf(out, "\tmovq %rsp, %rbp\n");
 	} else {
-		fprintf(out, "\n\t.globl %s\n");
-		fprintf(out, "%s:\n");
+		fprintf(out, "\n\t.globl %s\n", node->res->data);
+		fprintf(out, "%s:\n", node->res->data);
 		fprintf(out, "\tpushq %rbp\n");
 		fprintf(out, "\tmovq %rsp, %rbp\n");
 	}
@@ -220,13 +222,24 @@ void asmgen_gennode(tac_node_t * node, FILE * out) {
 	fprintf(out, "\tjne %s\n", node->op1->data);
     break;
   case TAC_CALL:
-
+	fprintf(out, "\tcall %s\n", node->res->data);
     break;
   case TAC_PUSHARG:
-	
+	if (node->res->type == SYMBOL_VARIABLE || node->res->type == SYMBOL_VECTOR)
+		fprintf(out, "\tmovq %s(%rip), %rax\n", node->res->data);
+	else
+		fprintf(out, "\tmovq $%s, %rax\n", node->res->data);
+
+	fprintf(out, "\tpush %rax\n");
     break;
   case TAC_POPARG:
-	
+	fprintf(out, "\t.comm %s,8\n", node->res->data);
+	fprintf(out, "\tpop %rbx\n");
+	fprintf(out, "\tpop %rcx\n");
+	fprintf(out, "\tpop %rax\n");
+	fprintf(out, "\tmovq %rax, %s\n", node->res->data);
+	fprintf(out, "\tpush %rcx\n");
+	fprintf(out, "\tpush %rbx\n");
     break;
   case TAC_FUNDEC:
 	

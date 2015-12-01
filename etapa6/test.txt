@@ -1,10 +1,24 @@
+int inc(int i, int j) {
+	output i;
+	output "\n";
+	output j;
+	output "\n";
+	i := i+i;
+	return i;
+};
+
 int main()
 {
+
+a := inc(a, a + v[1]);
+
 a:=v[1];
 
 a := a + a;
 if (a == 10) {
-  output("a = 0\n");
+  output("a = 10\n");
+} else {
+  output("a != 10\n");
 };
 output a, "hu3\n";
 
