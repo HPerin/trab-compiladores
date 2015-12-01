@@ -8,6 +8,9 @@ void asmgen_gennode(tac_node_t * node, FILE * out);
 
 void asmgen_run(tac_node_t * root, FILE * out) {
 	tac_node_t * node = root;
+
+	fprintf(out, "\t.intel_syntax noprefix\n");
+
 	while(node != NULL) {
 		asmgen_gennode(node, out);
 		node = node->next;
@@ -365,7 +368,7 @@ void asmgen_gennode(tac_node_t * node, FILE * out) {
 	fprintf(out, "%s:\n", node->res->data);
     break;
   case TAC_VECDEC:
-	fprintf(out, "\t.globl %s\n\t.allign 4\n\t.type %s, @object\n\t.size %s, %d\n%s:\n", node->res->data, node->res->data, node->res->data, atoi(node->op1->data) * 4, node->res->data);
+	fprintf(out, "\t.globl %s\n\t.align 4\n\t.type %s, @object\n\t.size %s, %d\n%s:\n", node->res->data, node->res->data, node->res->data, atoi(node->op1->data) * 4, node->res->data);
     break;
   case TAC_TOVECMOVE:
 	if (node->op2->type == LIT_INTEGER) {
@@ -394,7 +397,7 @@ void asmgen_gennode(tac_node_t * node, FILE * out) {
 		fprintf(out, "\tmov eax, %s\n", node->res->data);
 	else if (node->res->type == SYMBOL_VARIABLE)
 		fprintf(out, "\tmov eax, DWORD PTR %s\n", node->res->data);
-	fprintf(out, "\ttest 0, eax\n");
+	fprintf(out, "\ttest eax, 0x00000000\n");
 	fprintf(out, "\tjne %s\n", node->op1->data);
 	fprintf(out, "\tje %s\n", node->op2->data);
     break;
