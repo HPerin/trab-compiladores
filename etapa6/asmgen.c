@@ -16,7 +16,8 @@ void asmgen_run(tac_node_t * root, FILE * out) {
 	tac_node_t * node = root;
 
 	fprintf(out, "\t.data\n");
-	fprintf(out, ".intprint:\n\t.string \"%%d\"\n");
+	fprintf(out, ".formatint:\n\t.string \"%%d\"\n");
+	fprintf(out, ".formatdouble:\n\t.string \"%%lf\"\n");
 
 	while(node != NULL) {
 		asmgen_genvars(node, out);
@@ -66,26 +67,68 @@ void asmgen_gennode(tac_node_t * node, FILE * out) {
 	
     break;
  case TAC_MOVE:
-	printf("%s - %d\n", node->op1->data, node->op1->type);
+	fprintf(out, "\t\t#MOV TYPE = %d || %d\n", node->op1->dataType, node->res->dataType);
+
 	if (node->op1->type == SYMBOL_VARIABLE || node->op1->type == SYMBOL_VECTOR)
 		fprintf(out, "\tmovq %s(%rip), %rax\n", node->op1->data);
 	else
 		fprintf(out, "\tmovq $%s, %rax\n", node->op1->data);
-	fprintf(out, "\tmovq %rax, %s(%rip)\n", node->res->data);
+
+	if (node->op1->dataType == DATATYPE_REAL && node->res->dataType != DATATYPE_REAL) {
+		fprintf(out, "\tmovsd %rax, %%xmm0\n");
+		fprintf(out, "\tcvttsd2siq %%xmm0, %s(%rip)\n", node->op1->data);
+	} else if (node->res->dataType == DATATYPE_REAL && node->op1->dataType != DATATYPE_REAL) {
+		fprintf(out, "\tcvtsi2sdq %rax, %%xmm0\n");
+		fprintf(out, "\tmovsd %%xmm0, %s(%rip)\n", node->op1->data);
+	} else {
+		fprintf(out, "\tmovq %rax, %s(%rip)\n", node->res->data);
+	}
     break;
  case TAC_ADD:
-	if (node->op1->type == SYMBOL_VARIABLE || node->op1->type == SYMBOL_VECTOR)
-		fprintf(out, "\tmovq %s(%rip), %rax\n", node->op1->data);
-	else
-		fprintf(out, "\tmovq $%s, %rax\n", node->op1->data);
+	fprintf(out, "\t\t#ADD TYPE = %d || %d\n", node->op1->dataType, node->op2->dataType);
+	if (node->op1->dataType == DATATYPE_REAL || node->op2->dataType == DATATYPE_REAL) {
+		node->res->dataType = DATATYPE_REAL;
 
-	if (node->op2->type == SYMBOL_VARIABLE || node->op2->type == SYMBOL_VECTOR)
-		fprintf(out, "\tmovq %s(%rip), %rbx\n", node->op2->data);
-	else
-		fprintf(out, "\tmovq $%s, %rbx\n", node->op2->data);
+		if (node->op1->type == SYMBOL_VARIABLE) {
+			if (node->op1->dataType == DATATYPE_REAL)
+				fprintf(out, "\tmovsd %s(%rip), %%xmm1\n", node->op1->data);
+			else {
+				fprintf(out, "\tmovq %s(%rip), %rax\n", node->op1->data);
+				fprintf(out, "\tcvtsi2sdq %rax, %%xmm0\n", node->op1->data);
+			}
+		} else {
+			fprintf(out, "\tmovq $%s, %rax\n", node->op1->data);
+			fprintf(out, "\tcvtsi2sdq %rax, %%xmm1\n", node->op1->data);
+		}
 
-	fprintf(out, "\taddq %rbx, %rax\n");
-	fprintf(out, "\tmovq %rax, %s(%rip)\n", node->res->data);
+		if (node->op2->type == SYMBOL_VARIABLE) {
+			if (node->op2->dataType == DATATYPE_REAL)
+				fprintf(out, "\tmovsd %s(%rip), %%xmm0\n", node->op2->data);
+			else {
+				fprintf(out, "\tmovq %s(%rip), %rax\n", node->op1->data);
+				fprintf(out, "\tcvtsi2sdq %rax, %%xmm0\n", node->op1->data);
+			}
+		} else {
+			fprintf(out, "\tmovq $%s, %rax\n", node->op1->data);
+			fprintf(out, "\tcvtsi2sdq %rax, %%xmm0\n", node->op1->data);
+		}
+
+		fprintf(out, "\taddsd %%xmm1, %%xmm0\n");
+		fprintf(out, "\tmovsd %%xmm0, %s(%rip)\n", node->res->data);
+	} else {
+		if (node->op1->type == SYMBOL_VARIABLE || node->op1->type == SYMBOL_VECTOR) {
+			fprintf(out, "\tmovq %s(%rip), %rax\n", node->op1->data);
+		} else
+			fprintf(out, "\tmovq $%s, %rax\n", node->op1->data);
+
+		if (node->op2->type == SYMBOL_VARIABLE || node->op2->type == SYMBOL_VECTOR)
+			fprintf(out, "\tmovq %s(%rip), %rbx\n", node->op2->data);
+		else
+			fprintf(out, "\tmovq $%s, %rbx\n", node->op2->data);
+
+		fprintf(out, "\taddq %rbx, %rax\n");
+		fprintf(out, "\tmovq %rax, %s(%rip)\n", node->res->data);
+	}
     break;
   case TAC_SUB:
 	if (node->op1->type == SYMBOL_VARIABLE || node->op1->type == SYMBOL_VECTOR)
@@ -185,12 +228,19 @@ void asmgen_gennode(tac_node_t * node, FILE * out) {
 	if (node->res->type == SYMBOL_VARIABLE && node->res->dataType == DATATYPE_INT) {
 		fprintf(out, "\tmovq %s(%rip), %rax\n", node->res->data);
 		fprintf(out, "\tmovq %rax, %rsi\n");
-		fprintf(out, "\tmovq $.intprint, %rdi\n");
+		fprintf(out, "\tmovq $.formatint, %rdi\n");
 		fprintf(out, "\tmovq $0, %rax\n");
 		fprintf(out, "\tcall printf\n");
 	} else if (node->res->type == LIT_STRING) {
 		fprintf(out, "\tmovq $.str%d, %rdi\n", stringNum++);
 		fprintf(out, "\tcall puts\n");
+	} else if (node->res->type == SYMBOL_VARIABLE && node->res->dataType == DATATYPE_REAL) {
+		fprintf(out, "\tmovq %s(%rip), %rax\n", node->res->data);
+		fprintf(out, "\tmovq %rax, -8(%rbp)\n");
+		fprintf(out, "\tmovsd -8(%rbp), %%xmm0\n");
+		fprintf(out, "\tmovq $.formatdouble, %rdi\n");
+		fprintf(out, "\tmovq $1, %rax\n");
+		fprintf(out, "\tcall printf\n");
 	}
     break;
   case TAC_RETURN:

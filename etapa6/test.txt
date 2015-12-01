@@ -4,6 +4,11 @@ int inc(int i, int j) {
 	output j;
 	output "\n";
 	i := i+i;
+	output i, "\n";
+	r := i;
+	output r, "\n";
+	r := 2 + r;
+	output r, "\n";
 	return i;
 };
 
