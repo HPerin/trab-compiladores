@@ -193,8 +193,11 @@ void asmgen_gennode(tac_node_t * node, FILE * out) {
 	fprintf(out, "%s:\n", node->res->data);
     break;
   case TAC_JMP:
+	fprintf(out, "\tjmp %s\n", node->res->data);
     break;
   case TAC_RET:
+	fprintf(out, "\tmov eax, %s\n", node->res->data);
+	fprintf(out, "\tret\n");
     break;
   case TAC_EQ:
 	if(node->op1->type == LIT_INTEGER && node->op2->type == LIT_INTEGER) {
@@ -626,6 +629,7 @@ void asmgen_gennode(tac_node_t * node, FILE * out) {
 	else if (node->res->type == SYMBOL_VARIABLE)
 		fprintf(out, "\tmov eax, DWORD PTR %s\n", node->res->data);
         fprintf(out, "\tpop ebp\n");
+	fprintf(out, "\tret\n\n\n");
     break;
   case TAC_IF:
 	if (node->res->type == LIT_INTEGER)
@@ -660,5 +664,8 @@ void asmgen_gennode(tac_node_t * node, FILE * out) {
   case TAC_TEMPVARDEC:
 	fprintf(out, "\t.comm %s,4\n", node->res->data);
     	break;
+  case TAC_VECFILL:
+	fprintf(out, "\t.zero %d\n", atoi(node->res->data) * 4);
+	break;
   }
 }

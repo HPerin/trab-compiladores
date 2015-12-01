@@ -91,11 +91,12 @@ tac_node_t* tacGenerate(ast_node_t *aux) {
 
             return tacJoin(
                     tac_aux1,
-                    tacCreate(
+                    tacJoin(tacCreate(
                         TAC_VECDEC,
                         ast_son_get(aux, 1)->hash_node,
                         tac_aux1->res,
-                        0));
+                        0),
+			tacCreate(TAC_VECFILL, tac_aux1->res, 0, 0)));
 			//generate_code(output, ast_son_get(aux, 0)); // tipo
 			//fprintf (output, " ");
 			//generate_code(output, ast_son_get(aux, 1)); // id
@@ -117,8 +118,9 @@ tac_node_t* tacGenerate(ast_node_t *aux) {
                         ast_son_get(aux, 1)->hash_node,
                         tac_aux1->res,
                         0),
-                    tacGenerate(
-                        ast_son_get(aux, 3)))); // TODO
+                    tacJoin(tacGenerate(
+                        ast_son_get(aux, 3)),
+			tacCreate(TAC_VECFILL, tac_aux1->res, 0, 0)))); // TODO
 			//generate_code(output, ast_son_get(aux, 0)); // tipo
 			//fprintf (output, " ");
 			//generate_code(output, ast_son_get(aux, 1)); // id
