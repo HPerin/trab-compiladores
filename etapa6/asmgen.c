@@ -545,7 +545,9 @@ void asmgen_gennode(tac_node_t * node, FILE * out) {
 	fprintf(out, "\tpush eax\n");
     break;
   case TAC_POPARG:
-	fprintf(out, "\tmov %s, DWORD PTR [ebp+%d]\n", node->res->data, popArg * 4);
+	fprintf(out, "\t.comm %s,4\n", node->res->data);
+	fprintf(out, "\tmov eax, DWORD PTR [ebp+%d]\n", popArg * 4);
+	fprintf(out, "\tmov %s, eax\n", node->res->data);
 	popArg++;
     break;
   case TAC_FUNDEC:
