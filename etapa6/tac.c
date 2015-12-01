@@ -613,7 +613,7 @@ tac_node_t* tacGenerate(ast_node_t *aux) {
                         tacJoin(
                             tacCreate(TAC_CALL, ast_son_get(aux, 0)->hash_node, hash_aux1, 0),
                             tacCreate(TAC_LABEL, hash_aux1, 0, 0))),
-                        tacCreate(TAC_POPARG, hash_aux2, 0, 0)));
+                        NULL));
 
 			//generate_code (output, ast_son_get(aux, 0)); // id
 			//fprintf (output, " (");

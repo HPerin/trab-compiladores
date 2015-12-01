@@ -4,6 +4,8 @@
 #define LIT_CHAR 6
 #define SYMBOL_VARIABLE 9
 
+int popArg = 0;
+
 void asmgen_gennode(tac_node_t * node, FILE * out);
 
 void asmgen_run(tac_node_t * root, FILE * out) {
@@ -183,6 +185,7 @@ void asmgen_gennode(tac_node_t * node, FILE * out) {
     break;
   case TAC_LABEL:
 	fprintf(out, "%s:\n", node->res->data);
+	break;
   case TAC_FUNLABEL:
 	fprintf(out, "\t.globl %s\n\t.type %s, @function\n", node->res->data, node->res->data);
 	fprintf(out, "%s:\n", node->res->data);
@@ -538,10 +541,15 @@ void asmgen_gennode(tac_node_t * node, FILE * out) {
         fprintf(out, "\tcall %s\n", node->res->data);
     break;
   case TAC_PUSHARG:
+	fprintf(out, "\tmov eax, %s\n", node->res->data);
+	fprintf(out, "\tpush eax\n");
     break;
   case TAC_POPARG:
+	fprintf(out, "\tmov %s, DWORD PTR [ebp+%d]\n", node->res->data, popArg * 4);
+	popArg++;
     break;
   case TAC_FUNDEC:
+	popArg = 2;
 	fprintf(out, "\tpush ebp\n");
         fprintf(out, "\tmov ebp, esp\n");
 	break;
