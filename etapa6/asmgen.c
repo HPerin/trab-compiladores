@@ -606,10 +606,19 @@ void asmgen_gennode(tac_node_t * node, FILE * out) {
 	}
     break;
   case TAC_FROMVECMOVE:
+	if (node->op2->type == LIT_INTEGER) {
+		fprintf(out, "\tmov eax, DWORD PTR %s+%d\n", node->op1->data, atoi(node->op2->data)*4);
+		fprintf(out, "\tmov %s, eax\n", node->res->data);
+	} else if (node->op2->type == SYMBOL_VARIABLE) {
+		fprintf(out, "\tmov eax, DWORD PTR %s+%d\n", node->op1->data, atoi(node->op2->data)*4);
+		fprintf(out, "\tmov DWORD PTR %s, eax\n", node->res->data);
+	}
     break;
   case TAC_INPUT:
+	
     break;
   case TAC_OUTPUT:
+
     break;
   case TAC_RETURN:
 	if (node->res->type == LIT_INTEGER)
