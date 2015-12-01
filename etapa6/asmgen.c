@@ -4,6 +4,7 @@
 #define LIT_FALSE 4
 #define LIT_TRUE 5
 #define LIT_CHAR 6
+#define LIT_STRING 7
 #define SYMBOL_VARIABLE 9
 
 int popArg = 0;
@@ -621,6 +622,12 @@ void asmgen_gennode(tac_node_t * node, FILE * out) {
 	
     break;
   case TAC_OUTPUT:
+	if(node->res->type == LIT_STRING)
+		fprintf(out, 
+			"\t.LC0: .string %s\n"
+			"\t push OFFSET FLAT: .LC0\n" 
+			"\t call printf\n" 
+				, node->res->data);
 
     break;
   case TAC_RETURN:
