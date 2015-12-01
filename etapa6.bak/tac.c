@@ -484,7 +484,7 @@ tac_node_t* tacGenerate(ast_node_t *aux) {
             return tacJoin(
 		    tacJoin(tac_aux1,
 			tacCreate(TAC_TEMPVARDEC, hash_aux1, 0, 0)),
-                    tacCreate(TAC_FROMVECMOVE, hash_aux1, ast_son_get(aux, 0)->hash_node, tac_aux1->res));
+                    tacCreate(TAC_MOVE, hash_aux1, ast_son_get(aux, 0)->hash_node, tac_aux1->res));
 			//generate_code (output, ast_son_get(aux, 0)); // id
 			//fprintf (output, "[");
 			//generate_code (output, ast_son_get(aux, 1)); // expressao
