@@ -8,6 +8,7 @@
 #define SYMBOL_VARIABLE 9
 
 int popArg = 0;
+int stringNum = 0;
 
 void asmgen_gennode(tac_node_t * node, FILE * out);
 
@@ -622,13 +623,16 @@ void asmgen_gennode(tac_node_t * node, FILE * out) {
 	
     break;
   case TAC_OUTPUT:
+	
+
 	if(node->res->type == LIT_STRING)
 		fprintf(out, 
-			"\t.LC0: .string %s\n"
-			"\t push OFFSET FLAT: .LC0\n" 
-			"\t call printf\n" 
-				, node->res->data);
+			"\t.LC%d: .string %s\n"
+			"\tpush OFFSET FLAT: .LC%d\n" 
+			"\tcall printf\n" 
+				, stringNum, node->res->data, stringNum);
 
+	stringNum++;
     break;
   case TAC_RETURN:
 	if (node->res->type == LIT_INTEGER)

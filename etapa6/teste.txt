@@ -1,4 +1,4 @@
-int main(int z, char b, bool d)
+int main()
   {
   output "Digite um numero: ";;;;;;;;;;;;;;
   if (i<10 || j>=20 && 2)
@@ -17,6 +17,9 @@ int incn (int x, int n)
 	else {return mat[a+2];};
   };
 
+int z:0;
+int b:2;
+int d:1;
 int i:0;
 int j:3;
 real v[10]: 0 0 0 0 0 0 0 0 0 0; 
