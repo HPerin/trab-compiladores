@@ -69,7 +69,7 @@ void asmgen_gennode(tac_node_t * node, FILE * out) {
  case TAC_MOVE:
 	fprintf(out, "\t\t#MOV TYPE = %d || %d\n", node->op1->dataType, node->res->dataType);
 
-	if (node->op1->type == SYMBOL_VARIABLE || node->op1->type == SYMBOL_VECTOR)
+	if (node->op1->type == SYMBOL_VARIABLE)
 		fprintf(out, "\tmovq %s(%rip), %rax\n", node->op1->data);
 	else
 		fprintf(out, "\tmovq $%s, %rax\n", node->op1->data);
@@ -79,7 +79,7 @@ void asmgen_gennode(tac_node_t * node, FILE * out) {
 		fprintf(out, "\tcvttsd2siq %%xmm0, %s(%rip)\n", node->op1->data);
 	} else if (node->res->dataType == DATATYPE_REAL && node->op1->dataType != DATATYPE_REAL) {
 		fprintf(out, "\tcvtsi2sdq %rax, %%xmm0\n");
-		fprintf(out, "\tmovsd %%xmm0, %s(%rip)\n", node->op1->data);
+		fprintf(out, "\tmovsd %%xmm0, %s(%rip)\n", node->res->data);
 	} else {
 		fprintf(out, "\tmovq %rax, %s(%rip)\n", node->res->data);
 	}
