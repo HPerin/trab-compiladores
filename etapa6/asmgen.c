@@ -111,17 +111,10 @@ void asmgen_gennode(tac_node_t * node, FILE * out) {
 	fprintf(out, "%s:\n", node->res->data);
     break;
   case TAC_FUNLABEL:
-	if (!strcmp(node->res->data, "main")) {
-		fprintf(out, "\n\t.globl main\n");
-		fprintf(out, "main:\n");
-		fprintf(out, "\tpushq %rbp\n");
-		fprintf(out, "\tmovq %rsp, %rbp\n");
-	} else {
-		fprintf(out, "\n\t.globl %s\n", node->res->data);
-		fprintf(out, "%s:\n", node->res->data);
-		fprintf(out, "\tpushq %rbp\n");
-		fprintf(out, "\tmovq %rsp, %rbp\n");
-	}
+	fprintf(out, "\n\t.globl %s\n", node->res->data);
+	fprintf(out, "%s:\n", node->res->data);
+	fprintf(out, "\tpushq %rbp\n");
+	fprintf(out, "\tmovq %rsp, %rbp\n");
     break;
   case TAC_JMP:
 	fprintf(out, "\tjmp %s\n", node->res->data);
