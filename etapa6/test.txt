@@ -12,6 +12,8 @@ int main()
 
 a := inc(a, a + v[1]);
 
+output a, "\n";
+
 a:=v[1];
 
 a := a + a;

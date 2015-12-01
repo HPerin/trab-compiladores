@@ -610,14 +610,13 @@ tac_node_t* tacGenerate(ast_node_t *aux) {
 			break;
 
 		case FUNC_CALL: // 44
-			hash_aux1 = hash_map_makelabel(hash);
             hash_aux2 = hash_map_maketemp(hash);
 
 			return tacJoin(tacGenerate(ast_son_get(aux, 1)),
                     tacJoin(tacJoin(tacCreate(TAC_TEMPVARDEC, hash_aux2, 0, 0),
                         tacJoin(
-                            tacCreate(TAC_CALL, ast_son_get(aux, 0)->hash_node, hash_aux1, 0),
-                            tacCreate(TAC_LABEL, hash_aux1, 0, 0))),
+                            tacCreate(TAC_CALL, ast_son_get(aux, 0)->hash_node, 0, 0),
+                            tacCreate(TAC_ENDCALL, hash_aux2, 0, 0))),
                         NULL));
 
 			//generate_code (output, ast_son_get(aux, 0)); // id

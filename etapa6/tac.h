@@ -38,7 +38,8 @@ enum {
     TAC_TEMPVARDEC,
     TAC_FUNLABEL,
     TAC_CALLEND,
-    TAC_VECFILL
+    TAC_VECFILL,
+    TAC_ENDCALL
 };
 
 typedef struct tac_node

@@ -111,8 +111,6 @@ void asmgen_gennode(tac_node_t * node, FILE * out) {
 	fprintf(out, "%s:\n", node->res->data);
     break;
   case TAC_FUNLABEL:
-	popArg = 1;
-
 	if (!strcmp(node->res->data, "main")) {
 		fprintf(out, "\n\t.globl main\n");
 		fprintf(out, "main:\n");
@@ -207,6 +205,7 @@ void asmgen_gennode(tac_node_t * node, FILE * out) {
 		fprintf(out, "\tmovq %s(%rip), %rax\n", node->res->data);
 	else
 		fprintf(out, "\tmovq $%s, %rax\n", node->res->data);
+
 	fprintf(out, "\tpopq %rbp\n");
 	fprintf(out, "\tret\n");
     break;
@@ -243,6 +242,9 @@ void asmgen_gennode(tac_node_t * node, FILE * out) {
     break;
   case TAC_FUNDEC:
 	
+	break;
+  case TAC_ENDCALL:
+	fprintf(out, "\tmovq %rax, %s(%rip)\n", node->res->data);
 	break;
   }
 }
