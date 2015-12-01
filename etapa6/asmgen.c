@@ -211,7 +211,9 @@ void asmgen_gennode(tac_node_t * node, FILE * out) {
 			"\tmov eax, %s\n"
 			"\tcmp eax, %s\n"
 			"\tsetle al\n"
-			"\tmov DWORD PTR %s, eax\n"
+			"\txor ebx, ebx\n"
+			"\tmov bl, al\n"
+			"\tmov DWORD PTR %s, ebx\n"
 				, node->op1->data, node->op2->data, node->res->data);
 	
 	} else if(node->op1->type == SYMBOL_VARIABLE && (node->op2->type == LIT_INTEGER || node->op2->type == LIT_CHAR)) {
@@ -220,7 +222,7 @@ void asmgen_gennode(tac_node_t * node, FILE * out) {
 				"\tcmp eax, %s\n"
 				"\tsetle al\n"
 				"\txor ebx, ebx\n"
-				"\tmov dl, al\n"
+				"\tmov bl, al\n"
 				"\tmov DWORD PTR %s, ebx\n"
 						, node->op1->data, node->op2->data, node->res->data);
 	} else if((node->op1->type == LIT_INTEGER || node->op1->type == LIT_CHAR) && node->op2->type == SYMBOL_VARIABLE) {
@@ -229,7 +231,7 @@ void asmgen_gennode(tac_node_t * node, FILE * out) {
 				"\tcmp eax, %s\n"
 				"\tsetge al\n"
 				"\txor ebx, ebx\n"
-				"\tmov dl, al\n"
+				"\tmov bl, al\n"
 				"\tmov DWORD PTR %s, ebx\n"
 						, node->op2->data, node->op1->data, node->res->data);
 	}else if(node->op1->type == SYMBOL_VARIABLE && node->op2->type == SYMBOL_VARIABLE) {
@@ -239,7 +241,7 @@ void asmgen_gennode(tac_node_t * node, FILE * out) {
 				"\tcmp edx, eax\n"
 				"\tsetle al\n"
 				"\txor ebx, ebx\n"
-				"\tmov dl, al\n"
+				"\tmov bl, al\n"
 				"\tmov DWORD PTR %s, ebx\n"
 						, node->op1->data, node->op2->data, node->res->data);
 	}
@@ -259,7 +261,9 @@ void asmgen_gennode(tac_node_t * node, FILE * out) {
 			"\tmov eax, %s\n"
 			"\tcmp eax, %s\n"
 			"\tsetge al\n"
-			"\tmov DWORD PTR %s, eax\n"
+			"\txor ebx, ebx\n"
+			"\tmov bl, al\n"
+			"\tmov DWORD PTR %s, ebx\n"
 				, node->op1->data, node->op2->data, node->res->data);
 
 	} else if(node->op1->type == SYMBOL_VARIABLE && (node->op2->type == LIT_INTEGER || node->op2->type == LIT_CHAR)) {
@@ -268,7 +272,7 @@ void asmgen_gennode(tac_node_t * node, FILE * out) {
 				"\tcmp eax, %s\n"
 				"\tsetge al\n"
 				"\txor ebx, ebx\n"
-				"\tmov dl, al\n"
+				"\tmov bl, al\n"
 				"\tmov DWORD PTR %s, ebx\n"
 						, node->op1->data, node->op2->data, node->res->data);
 	} else if((node->op1->type == LIT_INTEGER || node->op1->type == LIT_CHAR) && node->op2->type == SYMBOL_VARIABLE) {
@@ -277,7 +281,7 @@ void asmgen_gennode(tac_node_t * node, FILE * out) {
 				"\tcmp eax, %s\n"
 				"\tsetle al\n"
 				"\txor ebx, ebx\n"
-				"\tmov dl, al\n"
+				"\tmov bl, al\n"
 				"\tmov DWORD PTR %s, ebx\n"
 						, node->op2->data, node->op1->data, node->res->data);
 	}else if(node->op1->type == SYMBOL_VARIABLE && node->op2->type == SYMBOL_VARIABLE) {
@@ -287,7 +291,7 @@ void asmgen_gennode(tac_node_t * node, FILE * out) {
 				"\tcmp edx, eax\n"
 				"\tsetge al\n"
 				"\txor ebx, ebx\n"
-				"\tmov dl, al\n"
+				"\tmov bl, al\n"
 				"\tmov DWORD PTR %s, ebx\n"
 						, node->op1->data, node->op2->data, node->res->data);
 	}
@@ -310,7 +314,9 @@ void asmgen_gennode(tac_node_t * node, FILE * out) {
 			"\tmov eax, %s\n"
 			"\tcmp eax, %s\n"
 			"\tsetl al\n"
-			"\tmov DWORD PTR %s, eax\n"
+			"\txor ebx, ebx\n"
+			"\tmov bl, al\n"
+			"\tmov DWORD PTR %s, ebx\n"
 				, node->op1->data, node->op2->data, node->res->data);
 	
 	} else if(node->op1->type == SYMBOL_VARIABLE && (node->op2->type == LIT_INTEGER || node->op2->type == LIT_CHAR)) {
@@ -319,7 +325,7 @@ void asmgen_gennode(tac_node_t * node, FILE * out) {
 				"\tcmp eax, %s\n"
 				"\tsetl al\n"
 				"\txor ebx, ebx\n"
-				"\tmov dl, al\n"
+				"\tmov bl, al\n"
 				"\tmov DWORD PTR %s, ebx\n"
 						, node->op1->data, node->op2->data, node->res->data);
 	} else if((node->op1->type == LIT_INTEGER || node->op1->type == LIT_CHAR) && node->op2->type == SYMBOL_VARIABLE) {
@@ -328,7 +334,7 @@ void asmgen_gennode(tac_node_t * node, FILE * out) {
 				"\tcmp eax, %s\n"
 				"\tsetg al\n"
 				"\txor ebx, ebx\n"
-				"\tmov dl, al\n"
+				"\tmov bl, al\n"
 				"\tmov DWORD PTR %s, ebx\n"
 						, node->op2->data, node->op1->data, node->res->data);
 	}else if(node->op1->type == SYMBOL_VARIABLE && node->op2->type == SYMBOL_VARIABLE) {
@@ -338,7 +344,7 @@ void asmgen_gennode(tac_node_t * node, FILE * out) {
 				"\tcmp edx, eax\n"
 				"\tsetl al\n"
 				"\txor ebx, ebx\n"
-				"\tmov dl, al\n"
+				"\tmov bl, al\n"
 				"\tmov DWORD PTR %s, ebx\n"
 						, node->op1->data, node->op2->data, node->res->data);
 	}
@@ -359,7 +365,9 @@ void asmgen_gennode(tac_node_t * node, FILE * out) {
 			"\tmov eax, %s\n"
 			"\tcmp eax, %s\n"
 			"\tsetg al\n"
-			"\tmov DWORD PTR %s, eax\n"
+			"\txor ebx, ebx\n"
+			"\tmov bl, al\n"
+			"\tmov DWORD PTR %s, ebx\n"
 				, node->op1->data, node->op2->data, node->res->data);
 	
 	} else if(node->op1->type == SYMBOL_VARIABLE && (node->op2->type == LIT_INTEGER || node->op2->type == LIT_CHAR)) {
@@ -368,7 +376,7 @@ void asmgen_gennode(tac_node_t * node, FILE * out) {
 				"\tcmp eax, %s\n"
 				"\tsetg al\n"
 				"\txor ebx, ebx\n"
-				"\tmov dl, al\n"
+				"\tmov bl, al\n"
 				"\tmov DWORD PTR %s, ebx\n"
 						, node->op1->data, node->op2->data, node->res->data);
 	} else if((node->op1->type == LIT_INTEGER || node->op1->type == LIT_CHAR) && node->op2->type == SYMBOL_VARIABLE) {
@@ -377,7 +385,7 @@ void asmgen_gennode(tac_node_t * node, FILE * out) {
 				"\tcmp eax, %s\n"
 				"\tsetl al\n"
 				"\txor ebx, ebx\n"
-				"\tmov dl, al\n"
+				"\tmov bl, al\n"
 				"\tmov DWORD PTR %s, ebx\n"
 						, node->op2->data, node->op1->data, node->res->data);
 	}else if(node->op1->type == SYMBOL_VARIABLE && node->op2->type == SYMBOL_VARIABLE) {
@@ -387,7 +395,7 @@ void asmgen_gennode(tac_node_t * node, FILE * out) {
 				"\tcmp edx, eax\n"
 				"\tsetg al\n"
 				"\txor ebx, ebx\n"
-				"\tmov dl, al\n"
+				"\tmov bl, al\n"
 				"\tmov DWORD PTR %s, ebx\n"
 						, node->op1->data, node->op2->data, node->res->data);
 	}
