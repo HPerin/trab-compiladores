@@ -336,10 +336,10 @@ tac_node_t* tacGenerate(ast_node_t *aux) {
                     tac_aux1,
                     tac_aux2),
                 tacCreate(
-                    TAC_TOVECMOVE,
+                    TAC_FROMVECMOVE,
+                    tac_aux1->res,
                     ast_son_get(aux, 1)->hash_node,
-                    tac_aux2->res,
-                    tac_aux1->res));
+                    tac_aux2->res));
 			//generate_code (output, ast_son_get(aux, 0)); // expressao
 			//fprintf (output, " =: ");))
 			//generate_code (output, ast_son_get(aux, 1)); // id

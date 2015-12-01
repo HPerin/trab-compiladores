@@ -3,7 +3,7 @@ int main()
   output "Digite um numero: ";;;;;;;;;;;;;;
   if (i<10 || j>=20 && 2)
     {
-    a := incn(2,3);
+    //a := incn(2,3);
     (v[i]) + 1 =: i
 
     } loop;
