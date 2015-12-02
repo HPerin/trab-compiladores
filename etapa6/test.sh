@@ -1,6 +1,6 @@
 make clean
 make
-./etapa6 test.txt out.s
+./etapa6 t.lang out.s
 gcc -g -o out out.s
 gdb out << END_TEXT
 run

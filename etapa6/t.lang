@@ -1,0 +1,100 @@
+int newLine(int ss) {
+	output "\n";
+	ss := ss + 1;
+	return ss;
+};
+
+int sum(int aa, int bb, int cc) {
+	aa := aa + bb + cc;
+	return aa;
+};
+
+int testIntegers() {
+	c := 65;
+	output s, "\t(c := 65) c = ", c;
+	s := newLine(s);
+	
+	a := 10;
+	output s, "\t(a := 10) a = ", a;
+	s := newLine(s);
+
+	b := 20;
+	output s, "\t(b := 20) b = ", b;
+	s := newLine(s);
+
+	b := b + a;
+	output s, "\t(b := b + a) b = ", b;
+	s := newLine(s);
+
+	a := sum(a, b, c);
+	output s, "\t(a := sum(a, b, c) a = ", a;
+	s := newLine(s);
+
+	if (a == b) a := 1
+	else a := 0;
+	output s, "\t(if (a == b) a := 1 else a := 0;) a = ", a;
+	s := newLine(s);
+
+	if (a != 1) a := 1
+	else a := 0;
+	output s, "\t(if (a != 1) a := 1 else a := 0;) a = ", a;
+	s := newLine(s);
+
+	if (a >= 1) a := 10
+	else a := 0;
+	output s, "\t(if (a >= 1) a := 10 else a := 0;) a = ", a;
+	s := newLine(s);
+
+	if (a < 10) a := 5
+	else a := 1;
+	output s, "\t(if (a < 10) a := 5 else a := 1;) a = ", a;
+	s := newLine(s);
+
+	if (a > 0) a := a * a
+	else a := a - a;
+	output s, "\t(if (a > 0) a := a * a", " else a := a - a;) a = ", a;
+	s := newLine(s);
+	
+	if (a <= a * a) a := a / 2
+	else a := 0;
+	output s, "\t(if (a <= a * a) a := a / 2", " else a := 0;) a = ", a;
+	s := newLine(s);
+
+	if (a < 100) a := a + 1
+	loop;
+	output s, "\t(if (a < 100) a := a + 1 ", "loop;) a = ", a;
+	s := newLine(s);
+
+	return 0;
+};
+
+int testReal() {
+	r := 10;
+	output s, "\t(r := 10;) r = ", r;
+	s := newLine(s);
+
+	t := 5;
+	output s, "\t(t := 5;) t = ", t;
+	s := newLine(s);
+
+	r := r / t;
+	output s, "\t(r := r / t;) t = ", r;
+	s := newLine(s);
+
+	return 0;
+};
+
+int main() {
+	s := testIntegers();
+	s := testReal();
+
+	return 0;
+};
+
+int s:0;
+int a:0;
+int b:0;
+char c:0;
+
+real r:0;
+real t:0;
