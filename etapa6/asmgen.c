@@ -9,6 +9,7 @@
 
 int popArg = 0;
 int stringNum = 0;
+int rl = 0;
 
 void asmgen_gennode(tac_node_t * node, FILE * out);
 
@@ -291,9 +292,54 @@ void asmgen_gennode(tac_node_t * node, FILE * out) {
 	
     break;
   case TAC_EQ:
-	if (node->op1->dataType == DATATYPE_REAL || node->op2->dataType == DATATYPE_REAL) {
+	fprintf(out, "\t\t#EQ TYPE = %d || %d\n", node->op1->dataType, node->op2->dataType);
+
+	if ((node->op1->dataType == DATATYPE_REAL || node->op1->dataType == DATATYPE_REAL) && (node->op1->dataType != node->op2->dataType)) {
+
+		int rl1 = rl++;
+		int rl2 = rl++;
+
+		if (node->op1->dataType == DATATYPE_REAL) {
+			fprintf(out, "\tmovsd %s(%rip), %%xmm1\n", node->op1->data);
+			if (node->op2->type == SYMBOL_VARIABLE) fprintf(out, "\tmovq %s(%rip), %rax\n", node->op2->data);
+			else fprintf(out, "\tmovq $%s, %rax\n", node->op2->data);
+			fprintf(out, "\tcvtsi2sdq %rax, %%xmm0\n");
+		} else {
+			fprintf(out, "\tmovsd %s(%rip), %%xmm1\n", node->op2->data);
+			if (node->op2->type == SYMBOL_VARIABLE) fprintf(out, "\tmovq %s(%rip), %rax\n", node->op1->data);
+			else fprintf(out, "\tmovq $%s, %rax\n", node->op1->data);
+			fprintf(out, "\tcvtsi2sdq %rax, %%xmm0\n");
+		}
+
+		fprintf(out, "\tucomisd %%xmm0, %%xmm1\n");
+		fprintf(out, "\tjp .rl%d\n", rl1);
+		fprintf(out, "\tucomisd %%xmm0, %%xmm1\n");
+		fprintf(out, "\tjne .rl%d\n", rl1);
+		fprintf(out, "\tmovq $1, %rax\n");
+		fprintf(out, "\tjmp .rl%d\n", rl2);
+		fprintf(out, ".rl%d:\n", rl1);
+		fprintf(out, "\tmovq $0, %rax\n");
+		fprintf(out, ".rl%d:\n", rl2);
+		fprintf(out, "\tmovq %rax, %s(%rip)\n", node->res->data);
 		
 
+	} else if (node->op1->dataType == node->op2->dataType && node->op2->dataType == DATATYPE_REAL) {
+		int rl1 = rl++;
+		int rl2 = rl++;
+
+		fprintf(out, "\tmovsd %s(%rip), %%xmm0\n", node->op2->data);
+		fprintf(out, "\tmovsd %s(%rip), %%xmm1\n", node->op1->data);
+		fprintf(out, "\tucomisd %%xmm0, %%xmm1\n");
+		fprintf(out, "\tjp .rl%d\n", rl1);
+		fprintf(out, "\tucomisd %%xmm0, %%xmm1\n");
+		fprintf(out, "\tjne .rl%d\n", rl1);
+		fprintf(out, "\tmovq $1, %rax\n");
+		fprintf(out, "\tjmp .rl%d\n", rl2);
+		fprintf(out, ".rl%d:\n", rl1);
+		fprintf(out, "\tmovq $0, %rax\n");
+		fprintf(out, ".rl%d:\n", rl2);
+		fprintf(out, "\tmovq %rax, %s(%rip)\n", node->res->data);
+	
 	} else {
 		if (node->op1->type == SYMBOL_VARIABLE || node->op1->type == SYMBOL_VECTOR)
 			fprintf(out, "\tmovq %s(%rip), %rax\n", node->op1->data);
