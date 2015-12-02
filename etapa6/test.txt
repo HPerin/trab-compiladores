@@ -8,6 +8,13 @@ int inc(int i, int j) {
 	i := i+i;
 	output i, "\n";
 	r := i;
+
+	v[2] := r;
+	output v[2], "\n";
+
+	v[2] := r * 4;
+	r := v[2];
+
 	output r, "\n";
 	r := r * 3;
 	output r, "\n";
