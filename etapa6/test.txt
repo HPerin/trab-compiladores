@@ -1,4 +1,6 @@
 int inc(int i, int j) {
+	c := 65;
+	output c, "\n";
 	output i;
 	output "\n";
 	output j;
@@ -7,7 +9,7 @@ int inc(int i, int j) {
 	output i, "\n";
 	r := i;
 	output r, "\n";
-	r := 2 + r;
+	r := r - 1;
 	output r, "\n";
 	return i;
 };
@@ -33,6 +35,8 @@ a := a + a;
 
 return a;
 };
+
+char c:1;
 int v[10]:0 5 0 0 0;
 int a:1;
 real r:0;

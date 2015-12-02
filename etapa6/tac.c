@@ -629,10 +629,10 @@ tac_node_t* tacGenerate(ast_node_t *aux) {
             tac_aux1 = tacGenerate(ast_son_get(aux, 0));
 
             return tacJoin(
+		    tacGenerate(ast_son_get(aux, 1)),
                     tacJoin(
                         tac_aux1,
-                            tacCreate(TAC_PUSHARG, tac_aux1->res, 0, 0)),
-                    tacGenerate(ast_son_get(aux, 1)));
+                        tacCreate(TAC_PUSHARG, tac_aux1->res, 0, 0)));
 			//generate_code (output, ast_son_get(aux, 0)); // expressao
 			//generate_code (output, ast_son_get(aux, 1)); // resto_parametros_passados
 			break;
