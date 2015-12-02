@@ -9,7 +9,9 @@ int inc(int i, int j) {
 	output i, "\n";
 	r := i;
 	output r, "\n";
-	r := r - 1;
+	r := r * 3;
+	output r, "\n";
+	r := r / 4;
 	output r, "\n";
 	return i;
 };

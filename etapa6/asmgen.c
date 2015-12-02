@@ -94,7 +94,7 @@ void asmgen_gennode(tac_node_t * node, FILE * out) {
 				fprintf(out, "\tmovsd %s(%rip), %%xmm1\n", node->op1->data);
 			else {
 				fprintf(out, "\tmovq %s(%rip), %rax\n", node->op1->data);
-				fprintf(out, "\tcvtsi2sdq %rax, %%xmm0\n", node->op1->data);
+				fprintf(out, "\tcvtsi2sdq %rax, %%xmm1\n", node->op1->data);
 			}
 		} else {
 			fprintf(out, "\tmovq $%s, %rax\n", node->op1->data);
@@ -140,7 +140,7 @@ void asmgen_gennode(tac_node_t * node, FILE * out) {
 				fprintf(out, "\tmovsd %s(%rip), %%xmm1\n", node->op1->data);
 			else {
 				fprintf(out, "\tmovq %s(%rip), %rax\n", node->op1->data);
-				fprintf(out, "\tcvtsi2sdq %rax, %%xmm0\n", node->op1->data);
+				fprintf(out, "\tcvtsi2sdq %rax, %%xmm1\n", node->op1->data);
 			}
 		} else {
 			fprintf(out, "\tmovq $%s, %rax\n", node->op1->data);
@@ -180,7 +180,34 @@ void asmgen_gennode(tac_node_t * node, FILE * out) {
   case TAC_MUL:
 	fprintf(out, "\t\t#MUL TYPE = %d || %d\n", node->op1->dataType, node->op2->dataType);
 	if (node->op1->dataType == DATATYPE_REAL || node->op2->dataType == DATATYPE_REAL) {
-		
+		node->res->dataType = DATATYPE_REAL;
+
+		if (node->op1->type == SYMBOL_VARIABLE) {
+			if (node->op1->dataType == DATATYPE_REAL)
+				fprintf(out, "\tmovsd %s(%rip), %%xmm1\n", node->op1->data);
+			else {
+				fprintf(out, "\tmovq %s(%rip), %rax\n", node->op1->data);
+				fprintf(out, "\tcvtsi2sdq %rax, %%xmm1\n", node->op1->data);
+			}
+		} else {
+			fprintf(out, "\tmovq $%s, %rax\n", node->op1->data);
+			fprintf(out, "\tcvtsi2sdq %rax, %%xmm1\n", node->op1->data);
+		}
+
+		if (node->op2->type == SYMBOL_VARIABLE) {
+			if (node->op2->dataType == DATATYPE_REAL)
+				fprintf(out, "\tmovsd %s(%rip), %%xmm0\n", node->op2->data);
+			else {
+				fprintf(out, "\tmovq %s(%rip), %rax\n", node->op2->data);
+				fprintf(out, "\tcvtsi2sdq %rax, %%xmm0\n", node->op2->data);
+			}
+		} else {
+			fprintf(out, "\tmovq $%s, %rax\n", node->op2->data);
+			fprintf(out, "\tcvtsi2sdq %rax, %%xmm0\n", node->op2->data);
+		}
+
+		fprintf(out, "\tmulsd %%xmm0, %%xmm1\n");
+		fprintf(out, "\tmovsd %%xmm1, %s(%rip)\n", node->res->data);
 
 	} else {
 		if (node->op1->type == SYMBOL_VARIABLE || node->op1->type == SYMBOL_VECTOR)
@@ -200,7 +227,34 @@ void asmgen_gennode(tac_node_t * node, FILE * out) {
   case TAC_DIV:
 	fprintf(out, "\t\t#DIV TYPE = %d || %d\n", node->op1->dataType, node->op2->dataType);
 	if (node->op1->dataType == DATATYPE_REAL || node->op2->dataType == DATATYPE_REAL) {
-		
+		node->res->dataType = DATATYPE_REAL;
+
+		if (node->op1->type == SYMBOL_VARIABLE) {
+			if (node->op1->dataType == DATATYPE_REAL)
+				fprintf(out, "\tmovsd %s(%rip), %%xmm1\n", node->op1->data);
+			else {
+				fprintf(out, "\tmovq %s(%rip), %rax\n", node->op1->data);
+				fprintf(out, "\tcvtsi2sdq %rax, %%xmm1\n", node->op1->data);
+			}
+		} else {
+			fprintf(out, "\tmovq $%s, %rax\n", node->op1->data);
+			fprintf(out, "\tcvtsi2sdq %rax, %%xmm1\n", node->op1->data);
+		}
+
+		if (node->op2->type == SYMBOL_VARIABLE) {
+			if (node->op2->dataType == DATATYPE_REAL)
+				fprintf(out, "\tmovsd %s(%rip), %%xmm0\n", node->op2->data);
+			else {
+				fprintf(out, "\tmovq %s(%rip), %rax\n", node->op2->data);
+				fprintf(out, "\tcvtsi2sdq %rax, %%xmm0\n", node->op2->data);
+			}
+		} else {
+			fprintf(out, "\tmovq $%s, %rax\n", node->op2->data);
+			fprintf(out, "\tcvtsi2sdq %rax, %%xmm0\n", node->op2->data);
+		}
+
+		fprintf(out, "\tdivsd %%xmm0, %%xmm1\n");
+		fprintf(out, "\tmovsd %%xmm1, %s(%rip)\n", node->res->data);
 
 	} else {
 		if (node->op1->type == SYMBOL_VARIABLE || node->op1->type == SYMBOL_VECTOR)
