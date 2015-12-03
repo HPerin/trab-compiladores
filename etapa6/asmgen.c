@@ -431,22 +431,466 @@ void asmgen_gennode(tac_node_t * node, FILE * out) {
   case TAC_LE:
 	fprintf(out, "\t\t#LE TYPE = %d || %d\n", node->op1->dataType, node->op2->dataType);
 	
+	if ((node->op1->dataType == DATATYPE_REAL || node->op1->dataType == DATATYPE_REAL) && (node->op1->dataType != node->op2->dataType)) {
+
+		int rl1 = rl++;
+		int rl2 = rl++;
+
+		if (node->op1->dataType == DATATYPE_REAL) {
+			fprintf(out, "\tmovsd %s(%rip), %%xmm1\n", node->op1->data);
+			if (node->op2->type == SYMBOL_VARIABLE) fprintf(out, "\tmovq %s(%rip), %rax\n", node->op2->data);
+			else fprintf(out, "\tmovq $%s, %rax\n", node->op2->data);
+			fprintf(out, "\tcvtsi2sdq %rax, %%xmm0\n");
+		} else {
+			fprintf(out, "\tmovsd %s(%rip), %%xmm1\n", node->op2->data);
+			if (node->op2->type == SYMBOL_VARIABLE) fprintf(out, "\tmovq %s(%rip), %rax\n", node->op1->data);
+			else fprintf(out, "\tmovq $%s, %rax\n", node->op1->data);
+			fprintf(out, "\tcvtsi2sdq %rax, %%xmm0\n");
+		}
+
+		fprintf(out, "\tucomisd %%xmm0, %%xmm1\n");
+		fprintf(out, "\tjp .rl%d\n", rl1);
+		fprintf(out, "\tmovq $1, %rax\n");
+		fprintf(out, "\tjmp .rl%d\n", rl2);
+		fprintf(out, ".rl%d:\n", rl1);
+		fprintf(out, "\tmovq $0, %rax\n");
+		fprintf(out, ".rl%d:\n", rl2);
+		fprintf(out, "\tmovq %rax, %s(%rip)\n", node->res->data);
+		
+
+	} else if (node->op1->dataType == node->op2->dataType && node->op2->dataType == DATATYPE_REAL) {
+		int rl1 = rl++;
+		int rl2 = rl++;
+
+		fprintf(out, "\tmovsd %s(%rip), %%xmm0\n", node->op2->data);
+		fprintf(out, "\tmovsd %s(%rip), %%xmm1\n", node->op1->data);
+		fprintf(out, "\tucomisd %%xmm0, %%xmm1\n");
+		fprintf(out, "\tjp .rl%d\n", rl1);
+		fprintf(out, "\tmovq $1, %rax\n");
+		fprintf(out, "\tjmp .rl%d\n", rl2);
+		fprintf(out, ".rl%d:\n", rl1);
+		fprintf(out, "\tmovq $0, %rax\n");
+		fprintf(out, ".rl%d:\n", rl2);
+		fprintf(out, "\tmovq %rax, %s(%rip)\n", node->res->data);
+	
+	} else {
+		if (node->op1->type == SYMBOL_VARIABLE || node->op1->type == SYMBOL_VECTOR)
+			fprintf(out, "\tmovq %s(%rip), %rax\n", node->op1->data);
+		else
+			fprintf(out, "\tmovq $%s, %rax\n", node->op1->data);
+
+		if (node->op2->type == SYMBOL_VARIABLE || node->op2->type == SYMBOL_VECTOR)
+			fprintf(out, "\tmovq %s(%rip), %rbx\n", node->op2->data);
+		else
+			fprintf(out, "\tmovq $%s, %rbx\n", node->op2->data);
+	
+		fprintf(out, "\tcmpq %rbx, %rax\n");
+		fprintf(out, "\tsetle %%al\n");
+		fprintf(out, "\tmovzbq %%al, %rax\n");
+		fprintf(out, "\tmovq %rax, %s(%rip)\n", node->res->data);
+	}
     break;
   case TAC_GE:	
 	fprintf(out, "\t\t#GE TYPE = %d || %d\n", node->op1->dataType, node->op2->dataType);
 	
+	if ((node->op1->dataType == DATATYPE_REAL || node->op1->dataType == DATATYPE_REAL) && (node->op1->dataType != node->op2->dataType)) {
+
+		int rl1 = rl++;
+		int rl2 = rl++;
+
+		if (node->op1->dataType == DATATYPE_REAL) {
+			fprintf(out, "\tmovsd %s(%rip), %%xmm1\n", node->op1->data);
+			if (node->op2->type == SYMBOL_VARIABLE) fprintf(out, "\tmovq %s(%rip), %rax\n", node->op2->data);
+			else fprintf(out, "\tmovq $%s, %rax\n", node->op2->data);
+			fprintf(out, "\tcvtsi2sdq %rax, %%xmm0\n");
+		} else {
+			fprintf(out, "\tmovsd %s(%rip), %%xmm1\n", node->op2->data);
+			if (node->op2->type == SYMBOL_VARIABLE) fprintf(out, "\tmovq %s(%rip), %rax\n", node->op1->data);
+			else fprintf(out, "\tmovq $%s, %rax\n", node->op1->data);
+			fprintf(out, "\tcvtsi2sdq %rax, %%xmm0\n");
+		}
+
+		fprintf(out, "\tucomisd %%xmm0, %%xmm1\n");
+		fprintf(out, "\tjb .rl%d\n", rl1);
+		fprintf(out, "\tmovq $1, %rax\n");
+		fprintf(out, "\tjmp .rl%d\n", rl2);
+		fprintf(out, ".rl%d:\n", rl1);
+		fprintf(out, "\tmovq $0, %rax\n");
+		fprintf(out, ".rl%d:\n", rl2);
+		fprintf(out, "\tmovq %rax, %s(%rip)\n", node->res->data);
+		
+
+	} else if (node->op1->dataType == node->op2->dataType && node->op2->dataType == DATATYPE_REAL) {
+		int rl1 = rl++;
+		int rl2 = rl++;
+
+		fprintf(out, "\tmovsd %s(%rip), %%xmm0\n", node->op2->data);
+		fprintf(out, "\tmovsd %s(%rip), %%xmm1\n", node->op1->data);
+		fprintf(out, "\tucomisd %%xmm0, %%xmm1\n");
+		fprintf(out, "\tjb .rl%d\n", rl1);
+		fprintf(out, "\tmovq $1, %rax\n");
+		fprintf(out, "\tjmp .rl%d\n", rl2);
+		fprintf(out, ".rl%d:\n", rl1);
+		fprintf(out, "\tmovq $0, %rax\n");
+		fprintf(out, ".rl%d:\n", rl2);
+		fprintf(out, "\tmovq %rax, %s(%rip)\n", node->res->data);
+	
+	} else {
+		if (node->op1->type == SYMBOL_VARIABLE || node->op1->type == SYMBOL_VECTOR)
+			fprintf(out, "\tmovq %s(%rip), %rax\n", node->op1->data);
+		else
+			fprintf(out, "\tmovq $%s, %rax\n", node->op1->data);
+
+		if (node->op2->type == SYMBOL_VARIABLE || node->op2->type == SYMBOL_VECTOR)
+			fprintf(out, "\tmovq %s(%rip), %rbx\n", node->op2->data);
+		else
+			fprintf(out, "\tmovq $%s, %rbx\n", node->op2->data);
+	
+		fprintf(out, "\tcmpq %rbx, %rax\n");
+		fprintf(out, "\tsetge %%al\n");
+		fprintf(out, "\tmovzbq %%al, %rax\n");
+		fprintf(out, "\tmovq %rax, %s(%rip)\n", node->res->data);
+	}
+    break;
+  case TAC_GREATER:
+	fprintf(out, "\t\t#GREATER TYPE = %d || %d\n", node->op1->dataType, node->op2->dataType);
+    
+	if ((node->op1->dataType == DATATYPE_REAL || node->op1->dataType == DATATYPE_REAL) && (node->op1->dataType != node->op2->dataType)) {
+
+		int rl1 = rl++;
+		int rl2 = rl++;
+
+		if (node->op1->dataType == DATATYPE_REAL) {
+			fprintf(out, "\tmovsd %s(%rip), %%xmm1\n", node->op1->data);
+			if (node->op2->type == SYMBOL_VARIABLE) fprintf(out, "\tmovq %s(%rip), %rax\n", node->op2->data);
+			else fprintf(out, "\tmovq $%s, %rax\n", node->op2->data);
+			fprintf(out, "\tcvtsi2sdq %rax, %%xmm0\n");
+		} else {
+			fprintf(out, "\tmovsd %s(%rip), %%xmm1\n", node->op2->data);
+			if (node->op2->type == SYMBOL_VARIABLE) fprintf(out, "\tmovq %s(%rip), %rax\n", node->op1->data);
+			else fprintf(out, "\tmovq $%s, %rax\n", node->op1->data);
+			fprintf(out, "\tcvtsi2sdq %rax, %%xmm0\n");
+		}
+
+		fprintf(out, "\tucomisd %%xmm0, %%xmm1\n");
+		fprintf(out, "\tjbe .rl%d\n", rl1);
+		fprintf(out, "\tmovq $1, %rax\n");
+		fprintf(out, "\tjmp .rl%d\n", rl2);
+		fprintf(out, ".rl%d:\n", rl1);
+		fprintf(out, "\tmovq $0, %rax\n");
+		fprintf(out, ".rl%d:\n", rl2);
+		fprintf(out, "\tmovq %rax, %s(%rip)\n", node->res->data);
+		
+
+	} else if (node->op1->dataType == node->op2->dataType && node->op2->dataType == DATATYPE_REAL) {
+		int rl1 = rl++;
+		int rl2 = rl++;
+
+		fprintf(out, "\tmovsd %s(%rip), %%xmm0\n", node->op2->data);
+		fprintf(out, "\tmovsd %s(%rip), %%xmm1\n", node->op1->data);
+		fprintf(out, "\tucomisd %%xmm0, %%xmm1\n");
+		fprintf(out, "\tjbe .rl%d\n", rl1);
+		fprintf(out, "\tmovq $1, %rax\n");
+		fprintf(out, "\tjmp .rl%d\n", rl2);
+		fprintf(out, ".rl%d:\n", rl1);
+		fprintf(out, "\tmovq $0, %rax\n");
+		fprintf(out, ".rl%d:\n", rl2);
+		fprintf(out, "\tmovq %rax, %s(%rip)\n", node->res->data);
+	
+	} else {
+		if (node->op1->type == SYMBOL_VARIABLE || node->op1->type == SYMBOL_VECTOR)
+			fprintf(out, "\tmovq %s(%rip), %rax\n", node->op1->data);
+		else
+			fprintf(out, "\tmovq $%s, %rax\n", node->op1->data);
+
+		if (node->op2->type == SYMBOL_VARIABLE || node->op2->type == SYMBOL_VECTOR)
+			fprintf(out, "\tmovq %s(%rip), %rbx\n", node->op2->data);
+		else
+			fprintf(out, "\tmovq $%s, %rbx\n", node->op2->data);
+	
+		fprintf(out, "\tcmpq %rbx, %rax\n");
+		fprintf(out, "\tsetg %%al\n");
+		fprintf(out, "\tmovzbq %%al, %rax\n");
+		fprintf(out, "\tmovq %rax, %s(%rip)\n", node->res->data);
+	}
     break;
   case TAC_LESS:
 	fprintf(out, "\t\t#LESS TYPE = %d || %d\n", node->op1->dataType, node->op2->dataType);
     
+	if ((node->op1->dataType == DATATYPE_REAL || node->op1->dataType == DATATYPE_REAL) && (node->op1->dataType != node->op2->dataType)) {
+
+		int rl1 = rl++;
+		int rl2 = rl++;
+
+		if (node->op1->dataType == DATATYPE_REAL) {
+			fprintf(out, "\tmovsd %s(%rip), %%xmm1\n", node->op1->data);
+			if (node->op2->type == SYMBOL_VARIABLE) fprintf(out, "\tmovq %s(%rip), %rax\n", node->op2->data);
+			else fprintf(out, "\tmovq $%s, %rax\n", node->op2->data);
+			fprintf(out, "\tcvtsi2sdq %rax, %%xmm0\n");
+		} else {
+			fprintf(out, "\tmovsd %s(%rip), %%xmm1\n", node->op2->data);
+			if (node->op2->type == SYMBOL_VARIABLE) fprintf(out, "\tmovq %s(%rip), %rax\n", node->op1->data);
+			else fprintf(out, "\tmovq $%s, %rax\n", node->op1->data);
+			fprintf(out, "\tcvtsi2sdq %rax, %%xmm0\n");
+		}
+
+		fprintf(out, "\tucomisd %%xmm1, %%xmm0\n");
+		fprintf(out, "\tjbe .rl%d\n", rl1);
+		fprintf(out, "\tmovq $1, %rax\n");
+		fprintf(out, "\tjmp .rl%d\n", rl2);
+		fprintf(out, ".rl%d:\n", rl1);
+		fprintf(out, "\tmovq $0, %rax\n");
+		fprintf(out, ".rl%d:\n", rl2);
+		fprintf(out, "\tmovq %rax, %s(%rip)\n", node->res->data);
+		
+
+	} else if (node->op1->dataType == node->op2->dataType && node->op2->dataType == DATATYPE_REAL) {
+		int rl1 = rl++;
+		int rl2 = rl++;
+
+		fprintf(out, "\tmovsd %s(%rip), %%xmm0\n", node->op2->data);
+		fprintf(out, "\tmovsd %s(%rip), %%xmm1\n", node->op1->data);
+		fprintf(out, "\tucomisd %%xmm1, %%xmm0\n");
+		fprintf(out, "\tjbe .rl%d\n", rl1);
+		fprintf(out, "\tmovq $1, %rax\n");
+		fprintf(out, "\tjmp .rl%d\n", rl2);
+		fprintf(out, ".rl%d:\n", rl1);
+		fprintf(out, "\tmovq $0, %rax\n");
+		fprintf(out, ".rl%d:\n", rl2);
+		fprintf(out, "\tmovq %rax, %s(%rip)\n", node->res->data);
+	
+	} else {
+		if (node->op1->type == SYMBOL_VARIABLE || node->op1->type == SYMBOL_VECTOR)
+			fprintf(out, "\tmovq %s(%rip), %rax\n", node->op1->data);
+		else
+			fprintf(out, "\tmovq $%s, %rax\n", node->op1->data);
+
+		if (node->op2->type == SYMBOL_VARIABLE || node->op2->type == SYMBOL_VECTOR)
+			fprintf(out, "\tmovq %s(%rip), %rbx\n", node->op2->data);
+		else
+			fprintf(out, "\tmovq $%s, %rbx\n", node->op2->data);
+	
+		fprintf(out, "\tcmpq %rbx, %rax\n");
+		fprintf(out, "\tsetl %%al\n");
+		fprintf(out, "\tmovzbq %%al, %rax\n");
+		fprintf(out, "\tmovq %rax, %s(%rip)\n", node->res->data);
+	}
     break;
   case TAC_OR:
 	fprintf(out, "\t\t#OR TYPE = %d || %d\n", node->op1->dataType, node->op2->dataType);
 		
+	if ((node->op1->dataType == DATATYPE_REAL || node->op1->dataType == DATATYPE_REAL) && (node->op1->dataType != node->op2->dataType)) {
+
+		int rl1 = rl++;
+		int rl2 = rl++;
+		int rl3 = rl++;
+		int rl4 = rl++;
+
+		if (node->op1->dataType == DATATYPE_REAL) {
+			fprintf(out, "\tmovsd %s(%rip), %%xmm1\n", node->op1->data);
+			if (node->op2->type == SYMBOL_VARIABLE) fprintf(out, "\tmovq %s(%rip), %rax\n", node->op2->data);
+			else fprintf(out, "\tmovq $%s, %rax\n", node->op2->data);
+			fprintf(out, "\tcvtsi2sdq %rax, %%xmm0\n");
+		} else {
+			fprintf(out, "\tmovsd %s(%rip), %%xmm1\n", node->op2->data);
+			if (node->op2->type == SYMBOL_VARIABLE) fprintf(out, "\tmovq %s(%rip), %rax\n", node->op1->data);
+			else fprintf(out, "\tmovq $%s, %rax\n", node->op1->data);
+			fprintf(out, "\tcvtsi2sdq %rax, %%xmm0\n");
+		}
+
+		fprintf(out, "\txorpd %%xmm0, %%xmm0\n");
+		fprintf(out, "\txorpd %%xmm0, %%xmm1\n");
+		fprintf(out, "\tjp .rl%d\n", rl1);
+		fprintf(out, "\txorpd %%xmm0, %%xmm0\n");
+		fprintf(out, "\txorpd %%xmm0, %%xmm1\n");
+		fprintf(out, "\tjne .rl%d\n", rl1);
+		fprintf(out, "\tmovq $0, %rax\n");
+		fprintf(out, "\tjmp .rl%d\n", rl2);
+		fprintf(out, ".rl%d:\n", rl1);
+		fprintf(out, "\tmovq $1, %rax\n");
+		fprintf(out, "\tjmp .rl%d\n", rl3);
+		fprintf(out, ".rl%d:\n", rl2);
+
+		fprintf(out, "\txorpd %%xmm1, %%xmm1\n");
+		fprintf(out, "\txorpd %%xmm1, %%xmm0\n");
+		fprintf(out, "\tjp .rl%d\n", rl4);
+		fprintf(out, "\txorpd %%xmm1, %%xmm1\n");
+		fprintf(out, "\txorpd %%xmm1, %%xmm0\n");
+		fprintf(out, "\tjne .rl%d\n", rl4);
+		fprintf(out, "\tmovq $0, %rax\n");
+		fprintf(out, "\tjmp .rl%d\n", rl3);
+		fprintf(out, ".rl%d:\n", rl4);
+		fprintf(out, "\tmovq $1, %rax\n");
+
+		fprintf(out, ".rl%d:\n", rl3);
+		fprintf(out, "\tmovq %rax, %s(%rip)\n", node->res->data);
+		
+
+	} else if (node->op1->dataType == node->op2->dataType && node->op2->dataType == DATATYPE_REAL) {
+		int rl1 = rl++;
+		int rl2 = rl++;	
+		int rl3 = rl++;
+		int rl4 = rl++;
+
+		fprintf(out, "\tmovsd %s(%rip), %%xmm0\n", node->op2->data);
+		fprintf(out, "\tmovsd %s(%rip), %%xmm1\n", node->op1->data);
+		fprintf(out, "\txorpd %%xmm0, %%xmm0\n");
+		fprintf(out, "\txorpd %%xmm0, %%xmm1\n");
+		fprintf(out, "\tjp .rl%d\n", rl1);
+		fprintf(out, "\txorpd %%xmm0, %%xmm0\n");
+		fprintf(out, "\txorpd %%xmm0, %%xmm1\n");
+		fprintf(out, "\tjne .rl%d\n", rl1);
+		fprintf(out, "\tmovq $0, %rax\n");
+		fprintf(out, "\tjmp .rl%d\n", rl2);
+		fprintf(out, ".rl%d:\n", rl1);
+		fprintf(out, "\tmovq $1, %rax\n");
+		fprintf(out, "\tjmp .rl%d\n", rl3);
+		fprintf(out, ".rl%d:\n", rl2);
+
+		fprintf(out, "\txorpd %%xmm1, %%xmm1\n");
+		fprintf(out, "\txorpd %%xmm1, %%xmm0\n");
+		fprintf(out, "\tjp .rl%d\n", rl4);
+		fprintf(out, "\txorpd %%xmm1, %%xmm1\n");
+		fprintf(out, "\txorpd %%xmm1, %%xmm0\n");
+		fprintf(out, "\tjne .rl%d\n", rl4);
+		fprintf(out, "\tmovq $0, %rax\n");
+		fprintf(out, "\tjmp .rl%d\n", rl3);
+		fprintf(out, ".rl%d:\n", rl4);
+		fprintf(out, "\tmovq $1, %rax\n");
+
+		fprintf(out, ".rl%d:\n", rl3);
+		fprintf(out, "\tmovq %rax, %s(%rip)\n", node->res->data);
+	
+	} else {
+		if (node->op1->type == SYMBOL_VARIABLE || node->op1->type == SYMBOL_VECTOR)
+			fprintf(out, "\tmovq %s(%rip), %rax\n", node->op1->data);
+		else
+			fprintf(out, "\tmovq $%s, %rax\n", node->op1->data);
+
+		if (node->op2->type == SYMBOL_VARIABLE || node->op2->type == SYMBOL_VECTOR)
+			fprintf(out, "\tmovq %s(%rip), %rbx\n", node->op2->data);
+		else
+			fprintf(out, "\tmovq $%s, %rbx\n", node->op2->data);
+		int rl1 = rl++;
+		int rl2 = rl++;
+	
+		fprintf(out, "\ttestq %rax, %rax\n");
+		fprintf(out, "\tjne .rl%d\n", rl1);
+		fprintf(out, "\ttestq %rbx, %rbx\n");
+		fprintf(out, "\tjne .rl%d\n", rl1);
+		fprintf(out, "\tmovq $0, %rax\n");
+		fprintf(out, "\tjmp .rl%d\n", rl2);
+		fprintf(out, "\t.rl%d:\n", rl1);
+		fprintf(out, "\tmovq $1, %rax\n");
+		fprintf(out, "\t.rl%d:\n", rl2);
+		fprintf(out, "\tmovq %rax, %s(%rip)\n", node->res->data);
+	}
     break;
   case TAC_AND:
 	fprintf(out, "\t\t#AND TYPE = %d || %d\n", node->op1->dataType, node->op2->dataType);
 		
+	if ((node->op1->dataType == DATATYPE_REAL || node->op1->dataType == DATATYPE_REAL) && (node->op1->dataType != node->op2->dataType)) {
+
+		int rl1 = rl++;
+		int rl2 = rl++;
+		int rl3 = rl++;
+		int rl4 = rl++;
+
+		if (node->op1->dataType == DATATYPE_REAL) {
+			fprintf(out, "\tmovsd %s(%rip), %%xmm1\n", node->op1->data);
+			if (node->op2->type == SYMBOL_VARIABLE) fprintf(out, "\tmovq %s(%rip), %rax\n", node->op2->data);
+			else fprintf(out, "\tmovq $%s, %rax\n", node->op2->data);
+			fprintf(out, "\tcvtsi2sdq %rax, %%xmm0\n");
+		} else {
+			fprintf(out, "\tmovsd %s(%rip), %%xmm1\n", node->op2->data);
+			if (node->op2->type == SYMBOL_VARIABLE) fprintf(out, "\tmovq %s(%rip), %rax\n", node->op1->data);
+			else fprintf(out, "\tmovq $%s, %rax\n", node->op1->data);
+			fprintf(out, "\tcvtsi2sdq %rax, %%xmm0\n");
+		}
+
+		fprintf(out, "\txorpd %%xmm0, %%xmm0\n");
+		fprintf(out, "\tucomisd %%xmm0, %%xmm1\n");
+		fprintf(out, "\tjp .rl%d\n", rl2);
+		fprintf(out, "\txorpd %%xmm0, %%xmm0\n");
+		fprintf(out, "\tucomisd %%xmm0, %%xmm1\n");
+		fprintf(out, "\tjne .rl%d\n", rl2);
+		fprintf(out, "\tmovq $0, %rax\n");
+		fprintf(out, "\tjmp .rl%d\n", rl3);
+		fprintf(out, ".rl%d:\n", rl2);
+
+		fprintf(out, "\txorpd %%xmm1, %%xmm1\n");
+		fprintf(out, "\tucomisd %%xmm1, %%xmm0\n");
+		fprintf(out, "\tjp .rl%d\n", rl4);
+		fprintf(out, "\txorpd %%xmm1, %%xmm1\n");
+		fprintf(out, "\tucomisd %%xmm1, %%xmm0\n");
+		fprintf(out, "\tjne .rl%d\n", rl4);
+		fprintf(out, "\tmovq $0, %rax\n");
+		fprintf(out, "\tjmp .rl%d\n", rl3);
+		fprintf(out, ".rl%d:\n", rl4);
+		fprintf(out, "\tmovq $1, %rax\n");
+
+		fprintf(out, ".rl%d:\n", rl3);
+		fprintf(out, "\tmovq %rax, %s(%rip)\n", node->res->data);
+		
+
+	} else if (node->op1->dataType == node->op2->dataType && node->op2->dataType == DATATYPE_REAL) {
+		int rl1 = rl++;
+		int rl2 = rl++;	
+		int rl3 = rl++;
+		int rl4 = rl++;
+
+		fprintf(out, "\tmovsd %s(%rip), %%xmm0\n", node->op2->data);
+		fprintf(out, "\tmovsd %s(%rip), %%xmm1\n", node->op1->data);
+		fprintf(out, "\txorpd %%xmm0, %%xmm0\n");
+		fprintf(out, "\tucomisd %%xmm0, %%xmm1\n");
+		fprintf(out, "\tjp .rl%d\n", rl2);
+		fprintf(out, "\txorpd %%xmm0, %%xmm0\n");
+		fprintf(out, "\tucomisd %%xmm0, %%xmm1\n");
+		fprintf(out, "\tje .rl%d\n", rl1);
+		fprintf(out, "\tjmp .rl%d\n", rl2);
+		fprintf(out, ".rl%d:\n", rl1);
+		fprintf(out, "\tmovq $0, %rax\n");
+		fprintf(out, "\tjmp .rl%d\n", rl3);
+		fprintf(out, ".rl%d:\n", rl2);
+
+		fprintf(out, "\txorpd %%xmm1, %%xmm1\n");
+		fprintf(out, "\tucomisd %%xmm1, %%xmm0\n");
+		fprintf(out, "\tjp .rl%d\n", rl4);
+		fprintf(out, "\txorpd %%xmm1, %%xmm1\n");
+		fprintf(out, "\tucomisd %%xmm1, %%xmm0\n");
+		fprintf(out, "\tje .rl%d\n", rl4);
+		fprintf(out, "\tmovq $1, %rax\n");
+		fprintf(out, "\tjmp .rl%d\n", rl3);
+		fprintf(out, ".rl%d:\n", rl4);
+		fprintf(out, "\tmovq $0, %rax\n");
+
+		fprintf(out, ".rl%d:\n", rl3);
+		fprintf(out, "\tmovq %rax, %s(%rip)\n", node->res->data);
+	
+	} else {
+		if (node->op1->type == SYMBOL_VARIABLE || node->op1->type == SYMBOL_VECTOR)
+			fprintf(out, "\tmovq %s(%rip), %rax\n", node->op1->data);
+		else
+			fprintf(out, "\tmovq $%s, %rax\n", node->op1->data);
+
+		if (node->op2->type == SYMBOL_VARIABLE || node->op2->type == SYMBOL_VECTOR)
+			fprintf(out, "\tmovq %s(%rip), %rbx\n", node->op2->data);
+		else
+			fprintf(out, "\tmovq $%s, %rbx\n", node->op2->data);
+		int rl1 = rl++;
+		int rl2 = rl++;
+	
+		fprintf(out, "\ttestq %rax, %rax\n");
+		fprintf(out, "\tje .rl%d\n", rl1);
+		fprintf(out, "\ttestq %rbx, %rbx\n");
+		fprintf(out, "\tje .rl%d\n", rl1);
+		fprintf(out, "\tmovq $1, %rax\n");
+		fprintf(out, "\tjmp .rl%d\n", rl2);
+		fprintf(out, "\t.rl%d:\n", rl1);
+		fprintf(out, "\tmovq $0, %rax\n");
+		fprintf(out, "\t.rl%d:\n", rl2);
+		fprintf(out, "\tmovq %rax, %s(%rip)\n", node->res->data);
+	}
     break;
   case TAC_TOVECMOVE:
 	fprintf(out, "\t\t#TOVECMOVE TYPE = %d || %d\n", node->res->dataType, node->op2->dataType);

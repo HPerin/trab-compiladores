@@ -10,6 +10,11 @@ int sum(int aa, int bb, int cc) {
 };
 
 int testIntegers() {
+	output s, "\tINTEGER TEST:";
+	s := newLine(s);
+	output s;
+	s := newLine(s);
+
 	c := 65;
 	output s, "\t(c := 65) c = ", c;
 	s := newLine(s);
@@ -46,8 +51,8 @@ int testIntegers() {
 	s := newLine(s);
 
 	if (a < 10) a := 5
-	else a := 1;
-	output s, "\t(if (a < 10) a := 5 else a := 1;) a = ", a;
+	else a := 4;
+	output s, "\t(if (a < 10) a := 5 else a := 4;) a = ", a;
 	s := newLine(s);
 
 	if (a > 0) a := a * a
@@ -65,10 +70,47 @@ int testIntegers() {
 	output s, "\t(if (a < 100) a := a + 1 ", "loop;) a = ", a;
 	s := newLine(s);
 
+	if (1 || 0) a := 1
+	else a := 0;
+	output s, "\t(if (1 || 0) a = 1 else a = 0) a = ", a;
+	s := newLine(s);
+
+	if (a || a) a := 1
+	else a := 0;
+	output s, "\t(if (a || a) a = 1 else a = 0) a = ", a;
+	s := newLine(s);
+
+	if (0 || 0) a := 1
+	else a := 0;
+	output s, "\t(if (0 || 0) a = 1 else a = 0) a = ", a;
+	s := newLine(s);
+
+	if (0 && 1) a := 1
+	else a := 0;
+	output s, "\t(if (0 && 1) a = 1 else a = 0) a = ", a;
+	s := newLine(s);
+
+	if (1 && 1) a := 1
+	else a := 0;
+	output s, "\t(if (1 && 1) a = 1 else a = 0) a = ", a;
+	s := newLine(s);
+
+	if (0 && 0) a := 1
+	else a := 0;
+	output s, "\t(if (0 && 0) a = 1 else a = 0) a = ", a;
+
+	s := newLine(s);
+	s := newLine(s);
+
 	return 0;
 };
 
 int testReal() {
+	output s, "\tREAL TEST:";
+	s := newLine(s);
+	output s;
+	s := newLine(s);
+
 	r := 10;
 	output s, "\t(r := 10;) r = ", r;
 	s := newLine(s);
@@ -81,13 +123,93 @@ int testReal() {
 	output s, "\t(r := r / t;) t = ", r;
 	s := newLine(s);
 
+	if (r < t) r := 10
+	else r := 1;
+	output s, "\t(if (r < t) r = 10 else r = 1) r = ", r;
+	s := newLine(s);
+
+	if (r == (t + 5)) r := 3
+	else r := 1;
+	output s, "\t(if (r == (t - 4)) r = 3 ", "else r = 1) r = ", r;
+	s := newLine(s);
+
+	if (r >= 3) r := 10
+	else r := 0;
+	output s, "\t(if (r >= 3) r := 10 else r := 0;) r = ", r;
+	s := newLine(s);
+
+	if (r != 1) r := 2
+	else r := 0;
+	output s, "\t(if (r != 1) r := 2 else r := 0;) r = ", r;
+	s := newLine(s);
+
+	if (r > 0) r := r * r
+	else r := r - r;
+	output s, "\t(if (r > 0) r := r * r", " else r := r - r;) r = ", r;
+	s := newLine(s);
+
+	if (r <= r * r) r := r / 2
+	else r := 0;
+	output s, "\t(if (r <= r * r) r := r / 2", " else r := 0;) r = ", r;
+	s := newLine(s);
+
+	if (r || r) r := 1
+	else r := 0;
+	output s, "\t(if (r || r) r = 1 else r = 0) r = ", r;
+	s := newLine(s);
+
+	if (r || 0) r := 0
+	else r := 1;
+	output s, "\t(if (r || 0) r = 0 else r = 1) r = ", r;
+	s := newLine(s);
+
+	if (r && r) r := 0
+	else r := 1;
+	output s, "\t(if (r && r) r = 0 else r = 1) r = ", r;
+	s := newLine(s);
+
+	if (r && 0) r := 1
+	else r := 0;
+	output s, "\t(if (r && 0) r = 1 else r = 0) r = ", r;
+	s := newLine(s);
+
+	s := newLine(s);
+	s := newLine(s);
+
 	return 0;
+};
+
+int testVector() {
+	output s, "\tVECTOR TEST:";
+	s := newLine(s);
+	output s;
+	s := newLine(s);
+
+	i := 0;
+	if (i < 10) {
+		v[i] := i * i;
+		i := i + 1;
+	} loop;
+	output s, "\tv[i] := i * i";
+	s := newLine(s);	
+
+	output s, "\tv = { ";
+	i := 0;
+	if (i < 10) {
+		output v[i], " ";
+		i := i + 1;
+	} loop;
+	output "};";
+	s := newLine(s);
+
+	s := newLine(s);
+	s := newLine(s);
 };
 
 int main() {
 	s := testIntegers();
 	s := testReal();
-
+	s := testVector();
 	return 0;
 };
 
@@ -98,3 +220,6 @@ char c:0;
 
 real r:0;
 real t:0;
+
+int i:0;
+int v[10]:0 0 0 0 0 0 0 0 0 0;
