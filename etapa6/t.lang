@@ -206,10 +206,45 @@ int testVector() {
 	s := newLine(s);
 };
 
+int testBool() {
+	output s, "\tBOOL TEST:";
+	s := newLine(s);
+	output s;
+	s := newLine(s);
+
+	k := TRUE;
+	output s, "\t(k := TRUE) k = ", k;
+	s := newLine(s);
+
+	k := FALSE;
+	output s, "\t(k := FALSE) k = ", k;
+	s := newLine(s);
+
+	if (k) k := FALSE
+	else k := TRUE;
+	output s, "\t(if (k) k := FALSE else k := TRUE) k = ", k;
+	s := newLine(s);
+
+	if (k) k := TRUE
+	else k := FALSE;
+	output s, "\t(if (k) k := TRUE else k := FALSE) k = ", k;
+	s := newLine(s);
+
+	k := 1 || 0;
+	output s, "\t(k := 1 || 0) k = ", k;
+	s := newLine(s);
+
+	s := newLine(s);
+	s := newLine(s);
+
+	return 0;
+};
+
 int main() {
 	s := testIntegers();
 	s := testReal();
 	s := testVector();
+	s := testBool();
 	return 0;
 };
 
@@ -223,3 +258,6 @@ real t:0;
 
 int i:0;
 int v[10]:0 0 0 0 0 0 0 0 0 0;
+
+bool k:TRUE;
+bool g:FALSE;

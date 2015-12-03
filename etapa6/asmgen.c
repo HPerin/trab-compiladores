@@ -1,4 +1,7 @@
 #include "asmgen.h"
+#include "string.h"
+#include "stdio.h"
+#include "stdlib.h"
 
 #define LIT_INTEGER 3
 #define LIT_FALSE 4
@@ -38,6 +41,26 @@ void asmgen_run(tac_node_t * root, FILE * out) {
 
 void asmgen_genvars(tac_node_t * node, FILE * out) {
    if (!node) return;
+
+   if (node->res) {
+   	if (!strcmp(node->res->data, "TRUE"))
+		strcpy(node->res->data, "1");
+   	else if (!strcmp(node->res->data, "FALSE"))
+		strcpy(node->res->data, "0");
+   }
+   if (node->op1) {
+   	if (!strcmp(node->op1->data, "TRUE"))
+		strcpy(node->op1->data, "1");
+   	else if (!strcmp(node->op1->data, "FALSE"))
+		strcpy(node->op1->data, "0");
+   }
+   if (node->op2) {
+   	if (!strcmp(node->op2->data, "TRUE"))
+		strcpy(node->op2->data, "1");
+   	else if (!strcmp(node->op2->data, "FALSE"))
+		strcpy(node->op2->data, "0");
+   }
+	
 
    switch(node->type) {
    case TAC_VARDEC:
@@ -984,7 +1007,7 @@ void asmgen_gennode(tac_node_t * node, FILE * out) {
 	} else if (node->res->type == SYMBOL_VARIABLE && node->res->dataType == DATATYPE_CHAR) {
 		fprintf(out, "\tmovq %s(%rip), %rdi\n", node->res->data);
 		fprintf(out, "\tcall putchar\n");
-	} else if (node->res->type == SYMBOL_VARIABLE && node->res->dataType == DATATYPE_BOOL) { // TODO
+	} else if (node->res->type == SYMBOL_VARIABLE && node->res->dataType == DATATYPE_BOOL) {
 		fprintf(out, "\tmovq %s(%rip), %rsi\n", node->res->data);
 		fprintf(out, "\tmovq $.formatint, %rdi\n");
 		fprintf(out, "\tmovq $0, %rax\n");
