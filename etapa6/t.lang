@@ -123,9 +123,9 @@ int testReal() {
 	output s, "\t(r := r / t;) t = ", r;
 	s := newLine(s);
 
-	if (r < t) r := 10
+	if (r < t) r := 10 - 1
 	else r := 1;
-	output s, "\t(if (r < t) r = 10 else r = 1) r = ", r;
+	output s, "\t(if (r < t) r = 10 - 1 else r = 1) r = ", r;
 	s := newLine(s);
 
 	if (r == (t + 5)) r := 3
@@ -187,10 +187,10 @@ int testVector() {
 
 	i := 0;
 	if (i < 10) {
-		v[i] := i * i;
+		v[i] := (i * i) + 3 - 1;
 		i := i + 1;
 	} loop;
-	output s, "\tv[i] := i * i";
+	output s, "\tv[i] := (i * i) + 3 - 1";
 	s := newLine(s);	
 
 	output s, "\tv = { ";
