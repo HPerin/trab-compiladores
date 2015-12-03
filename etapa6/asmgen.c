@@ -19,6 +19,7 @@ void asmgen_run(tac_node_t * root, FILE * out) {
 	fprintf(out, "\t.data\n");
 	fprintf(out, ".formatint:\n\t.string \"%%d\"\n");
 	fprintf(out, ".formatdouble:\n\t.string \"%%lf\"\n");
+	fprintf(out, ".formatstring:\n\t.string \"%s\"\n", "%s");
 
 	while(node != NULL) {
 		asmgen_genvars(node, out);
@@ -527,8 +528,10 @@ void asmgen_gennode(tac_node_t * node, FILE * out) {
 		fprintf(out, "\tmovq $0, %rax\n");
 		fprintf(out, "\tcall printf\n");
 	} else if (node->res->type == LIT_STRING) {
-		fprintf(out, "\tmovq $.str%d, %rdi\n", stringNum++);
-		fprintf(out, "\tcall puts\n");
+		fprintf(out, "\tmovq $.str%d, %rsi\n", stringNum++);
+		fprintf(out, "\tmovq $.formatstring, %rdi\n");
+		fprintf(out, "\tmovq $0, %rax\n");
+		fprintf(out, "\tcall printf\n");
 	} else if (node->res->type == SYMBOL_VARIABLE && node->res->dataType == DATATYPE_REAL) {
 		fprintf(out, "\tmovsd %s(%rip), %%xmm0\n", node->res->data);
 		fprintf(out, "\tmovq $.formatdouble, %rdi\n");
@@ -596,7 +599,7 @@ void asmgen_gennode(tac_node_t * node, FILE * out) {
 	
 	break;
   case TAC_ENDCALL:
-	fprintf(out, "\t\t#ENDCALL TYPE = %d (%d)\n", node->res->dataType, node->res->type);
+	fprintf(out, "\t\t#ENDCALL	 TYPE = %d (%d)\n", node->res->dataType, node->res->type);
 
 	fprintf(out, "\tmovq %rax, %s(%rip)\n", node->res->data);
 	break;
