@@ -8,7 +8,5 @@ END_TEXT
 gcc -g -o out out.s
 gdb out << END_TEXT
 run
-10
-a
-3.65
+10a3.65
 END_TEXT

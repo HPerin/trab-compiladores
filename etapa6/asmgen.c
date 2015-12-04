@@ -23,6 +23,7 @@ void asmgen_run(tac_node_t * root, FILE * out) {
 	fprintf(out, ".formatint:\n\t.string \"%%d\"\n");
 	fprintf(out, ".formatdouble:\n\t.string \"%%lf\"\n");
 	fprintf(out, ".formatstring:\n\t.string \"%s\"\n", "%s");
+	fprintf(out, ".formatchar:\n\t.string \"%%c\"\n");
 
 	while(node != NULL) {
 		asmgen_genvars(node, out);
@@ -986,23 +987,24 @@ void asmgen_gennode(tac_node_t * node, FILE * out) {
   case TAC_INPUT:
 	fprintf(out, "\t\t#INPUT TYPE = %d (%d)\n", node->res->dataType, node->res->type);
 	if(node->res->dataType == DATATYPE_INT) {
-		fprintf(out, "\tmovl $%s, %%esi\n", node->res->data);
-		fprintf(out, "\tmovl $.formatint, %%edi\n");
-		fprintf(out, "\tmovl $0, %%eax\n");
+		fprintf(out, "\tmovq $%s, %%rsi\n", node->res->data);
+		fprintf(out, "\tmovq $.formatint, %%rdi\n");
+		fprintf(out, "\tmovq $0, %%rax\n");
 		fprintf(out, "\tcall scanf\n");
 	}
 
 	else if(node->res->dataType == DATATYPE_REAL) {
-		fprintf(out, "\tmovl $%s, %%esi\n", node->res->data);
-		fprintf(out, "\tmovl $.formatdouble, %%edi\n");
-		fprintf(out, "\tmovl $0, %%eax\n");
+		fprintf(out, "\tmovq $%s, %%rsi\n", node->res->data);
+		fprintf(out, "\tmovq $.formatdouble, %%rdi\n");
+		fprintf(out, "\tmovq $0, %%rax\n");
 		fprintf(out, "\tcall scanf\n");
 	}
 
 	else if(node->res->dataType == DATATYPE_CHAR) {
-		fprintf(out, "\tmovl $0, %%eax\n");
-		fprintf(out, "\tcall getchar\n");
-		fprintf(out, "\tmovb %%al, %s(%rip)\n", node->res->data);
+		fprintf(out, "\tmovq $%s, %rsi\n", node->res->data);
+		fprintf(out, "\tmovq $.formatchar, %rdi\n");
+		fprintf(out, "\tmovq $0, %rax\n");
+		fprintf(out, "\tcall scanf\n");
 	}	
 	
     break;
