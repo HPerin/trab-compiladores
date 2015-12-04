@@ -920,7 +920,7 @@ void asmgen_gennode(tac_node_t * node, FILE * out) {
 	fprintf(out, "\t\t#TOVECMOVE TYPE = %d || %d\n", node->res->dataType, node->op2->dataType);
 
 	if ((node->op1->dataType == DATATYPE_REAL || node->res->dataType == DATATYPE_REAL) && (node->op1->dataType != node->res->dataType)) {
-		if (node->op1->type == SYMBOL_VARIABLE || node->op1->type == SYMBOL_VECTOR)
+		if (node->op2->type == SYMBOL_VARIABLE || node->op2->type == SYMBOL_VECTOR)
 			fprintf(out, "\tmovq %s(%rip), %rax\n", node->op2->data);
 		else
 			fprintf(out, "\tmovq $%s, %rax\n", node->op2->data);
@@ -929,7 +929,11 @@ void asmgen_gennode(tac_node_t * node, FILE * out) {
 			fprintf(out, "\tmovsd %s(%rip), %%xmm0\n", node->res->data);
 			fprintf(out, "\tcvttsd2siq %%xmm0, %rbx\n");
 		} else {
-			fprintf(out, "\tmovq %s(%rip), %rbx\n", node->res->data);
+			if (node->res->type == SYMBOL_VARIABLE || node->res->type == SYMBOL_VECTOR)
+				fprintf(out, "\tmovq %s(%rip), %rbx\n", node->res->data);
+			else
+				fprintf(out, "\tmovq $%s, %rbx\n", node->res->data);
+
 			fprintf(out, "\tcvtsi2sdq %rbx, %%xmm0\n");
 			fprintf(out, "\tmovsd %%xmm0, %s(,%rax,8)\n", node->op1->data);
 			fprintf(out, "\tmovq %s(,%rax,8), %rbx\n", node->op1->data);
@@ -1065,6 +1069,8 @@ void asmgen_gennode(tac_node_t * node, FILE * out) {
 	fprintf(out, "\tcall %s\n", node->res->data);
     break;
   case TAC_PUSHARG:
+	fprintf(out, "\t\t#PUSHARG TYPE = %d (%d)\n", node->res->dataType, node->res->type);
+
 	if (node->res->type == SYMBOL_VARIABLE || node->res->type == SYMBOL_VECTOR)
 		fprintf(out, "\tmovq %s(%rip), %rax\n", node->res->data);
 	else

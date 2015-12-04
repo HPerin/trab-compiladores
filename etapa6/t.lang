@@ -123,10 +123,6 @@ int testReal() {
 	output s, "\t(t := 5;) t = ", t;
 	s := newLine(s);
 
-	t / r =: u[1];
-	output s, "\t(t / r =: u[1]) u[1] = ", u[1];
-	s := newLine(s);
-
 	r := r / t;
 	output s, "\t(r := r / t;) t = ", r;
 	s := newLine(s);
@@ -208,6 +204,20 @@ int testVector() {
 		i := i + 1;
 	} loop;
 	output "};";
+	s := newLine(s);
+
+	t := 5;
+	t =: u[0];
+	output s, "\t(t := 5; t =: u[0]) u[0] = ", u[0];
+	s := newLine(s);
+
+	r := 10;
+	(t / r) =: u[1];
+	output s, "\t(r := 10; t / r =: u[1]) u[1] = ", u[1];
+	s := newLine(s);
+
+	2 =: u[2];
+	output s, "\t(2 =: u[2]) u[2] = ", u[2];
 	s := newLine(s);
 
 	s := newLine(s);

@@ -317,9 +317,9 @@ tac_node_t* tacGenerate(ast_node_t *aux) {
                         tac_aux2),
                     tacCreate(
                         TAC_TOVECMOVE,
+			tac_aux2->res,
                         ast_son_get(aux, 0)->hash_node,
-                        tac_aux1->res,
-                        tac_aux2->res));
+                        tac_aux1->res));
 			//generate_code (output, ast_son_get(aux, 0)); // id
 			//fprintf (output, "[");
 			//generate_code (output, ast_son_get(aux, 1)); // expressao
