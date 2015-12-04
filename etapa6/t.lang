@@ -285,12 +285,20 @@ int testInput() {
 	
 };
 
+int fat(int f) {
+	if (f == 1) return 1;
+	f := fat(f - 1) * f;
+	return f;
+};
+
 int main() {
 	s := testIntegers();
 	s := testReal();
 	s := testVector();
 	s := testBool();
         s := testInput();
+	s := fat(5);
+	output "\n\nfat(5) = ", s;
 	return 0;
 };
 
