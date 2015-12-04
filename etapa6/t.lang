@@ -18,6 +18,10 @@ int testIntegers() {
 	c := 65;
 	output s, "\t(c := 65) c = ", c;
 	s := newLine(s);
+
+	20 + c =: b;
+	output s, "\t(20+c=:b) b = ", b;
+	s := newLine(s);
 	
 	a := 10;
 	output s, "\t(a := 10) a = ", a;
@@ -117,6 +121,10 @@ int testReal() {
 
 	t := 5;
 	output s, "\t(t := 5;) t = ", t;
+	s := newLine(s);
+
+	t / r =: u[1];
+	output s, "\t(t / r =: u[1]) u[1] = ", u[1];
 	s := newLine(s);
 
 	r := r / t;
@@ -283,6 +291,7 @@ char c:0;
 
 real r:0;
 real t:0;
+real u[3]: 0 0 0;
 
 int i:0;
 int v[10]:0 0 0 0 0 0 0 0 0 0;
