@@ -257,6 +257,11 @@ int testInput() {
 
 	input r;
 	output s, "\t(input r //3.65, real) r = ", r;
+	
+	s := newLine(s);
+	s := newLine(s);
+
+	return 0;
 
 	
 };
