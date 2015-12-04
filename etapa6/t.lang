@@ -240,11 +240,33 @@ int testBool() {
 	return 0;
 };
 
+int testInput() {
+
+	output s, "\t INPUT TEST:";
+	s := newLine(s);
+	output s;
+	s := newLine(s);
+        
+	input a;
+	output s, "\t(input a //10, int) a = ", a;
+	s := newLine(s);
+
+	input c
+	output s, "\t(input c //a, char) c = ", c;
+	s:= newLine(s);
+
+	input r
+	output s, "\t(input r //3.65, real) r = ", r;
+
+	
+};
+
 int main() {
 	s := testIntegers();
 	s := testReal();
 	s := testVector();
 	s := testBool();
+        s := testInput();
 	return 0;
 };
 

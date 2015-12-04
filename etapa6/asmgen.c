@@ -985,6 +985,25 @@ void asmgen_gennode(tac_node_t * node, FILE * out) {
     break;
   case TAC_INPUT:
 	fprintf(out, "\t\t#INPUT TYPE = %d (%d)\n", node->res->dataType, node->res->type);
+	if(node->res->dataType == DATATYPE_INT) {
+		fprintf(out, "\tmovl $%s, %%esi\n", node->res->data);
+		fprintf(out, "\tmovl $.formatint, %%edi\n");
+		fprintf(out, "\tmovl $0, %%eax\n");
+		fprintf(out, "\tcall scanf\n");
+	}
+
+	else if(node->res->dataType == DATATYPE_REAL) {
+		fprintf(out, "\tmovl $%s, %%esi\n", node->res->data);
+		fprintf(out, "\tmovl $.formatdouble, %%edi\n");
+		fprintf(out, "\tmovl $0, %%eax\n");
+		fprintf(out, "\tcall scanf\n");
+	}
+
+	else if(node->res->dataType == DATATYPE_CHAR) {
+		fprintf(out, "\tmovl $0, %%eax\n");
+		fprintf(out, "\tcall getchar\n");
+		fprintf(out, "\tmovb %%al, %s(%rip)\n", node->res->data);
+	}	
 	
     break;
   case TAC_OUTPUT:
