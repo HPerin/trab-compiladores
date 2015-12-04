@@ -251,11 +251,11 @@ int testInput() {
 	output s, "\t(input a //10, int) a = ", a;
 	s := newLine(s);
 
-	input c
+	input c;
 	output s, "\t(input c //a, char) c = ", c;
 	s:= newLine(s);
 
-	input r
+	input r;
 	output s, "\t(input r //3.65, real) r = ", r;
 
 	
