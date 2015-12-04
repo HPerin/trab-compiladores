@@ -34,7 +34,7 @@ tar cvzf etapa6.tgz .
 cd ../
 mv etapa6/etapa6.tgz public_html/etapa6.tgz
 
-sftp lhperin@html.inf.ufrgs.br << END_TEXT
+sftp user@localhost << END_TEXT
 put -r public_html
 put public_html/etapa1.tgz public_html/etapa1.tgz
 put public_html/etapa2.tgz public_html/etapa2.tgz
