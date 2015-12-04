@@ -336,7 +336,7 @@ tac_node_t* tacGenerate(ast_node_t *aux) {
                     tac_aux1,
                     tac_aux2),
                 tacCreate(
-                    TAC_FROMVECMOVE,
+                    TAC_TOVECMOVE,
                     tac_aux1->res,
                     ast_son_get(aux, 1)->hash_node,
                     tac_aux2->res));
